@@ -4,15 +4,21 @@
   <img src="./images/logo.png" alt="Cursor Pro Logo" width="200"/>
 </p>
 </div>
+<p align="center">
 
 [![Release](https://img.shields.io/github/v/release/yeongpin/cursor-free-vip?style=flat-square&logo=github&color=blue)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 [![Stars](https://img.shields.io/github/stars/yeongpin/cursor-free-vip?style=flat-square&logo=github)](https://github.com/yeongpin/cursor-free-vip/stargazers)
 
+</p>
+
 This is a tool to automatically bypass Cursor's membership check, automatically upgrade to "pro" membership, support Windows and macOS systems, send Token requests in real-time, and reset Cursor's configuration.
 
 這是一個自動化工具，自動繞過Cursor的會員檢查，自動升級為 "pro" 會員，支持 Windows 和 macOS 系統，實時發送Token請求，重置Cursor的配置。
 
+<p align="center">
+  <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="400"/><br>
+</p>
 
 ## 🔄 更新日志
 <details>
