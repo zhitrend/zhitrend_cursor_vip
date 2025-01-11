@@ -23,6 +23,16 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 ## 🔄 更新日志
 <details>
+<summary>v1.0.1</summary>
+
+1. Fix: Reset machine ID | 修復了重置機器ID的問題
+2. Fix: Bypass membership check | 修復了 繞過會員檢查的問題
+3. Fix: Auto upgrade to "pro" membership | 修復了 自動升級為pro會員的問題
+4. Fix: Real-time send Token request | 修復了 實時發送Token請求的問題
+5. Fix: Reset Cursor's configuration | 修復了 重置Cursor的配置的問題
+</details>
+
+<details>
 <summary>v1.0</summary>
 1. Preview Image | 預覽圖<br>
 <p align="center">
