@@ -18,38 +18,16 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 * Reset Cursor's configuration<br>重置Cursor的配置<br>
 
-<div id="divider"></div>
 
-### System Support | 系統支持
+## System Support | 系統支持
 
-<table>
-<tr>
-<td>
+|Windows|x64|✅|macOS|Intel|✅|
+|:---:|:---:|:---:|:---:|:---:|:---:|
+|Windows|x86|✅|macOS|Apple Silicon|✅|
+|Linux|x64|✅|Linux|x86|✅|
+|Linux|ARM64|✅|Linux|ARM64|✅|
 
-**Windows** ✅
-- x64 (64-bit)
-- x86 (32-bit)
-
-</td>
-<td>
-
-**macOS** ✅
-- Intel (x64)
-- Apple Silicon (M1/M2)
-
-</td>
-<td>
-
-**Linux** ✅
-- x64 (64-bit)
-- x86 (32-bit)
-- ARM64
-
-</td>
-</tr>
-</table>
-
-### How to use | 如何使用
+## How to use | 如何使用
 <details open>
 <summary><b>腳本自動化運行</b></summary>
 
@@ -68,9 +46,12 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/master/scripts/in
 
 ## Note | 注意事項
 
-* Confirm that Cursor is closed before running the script <br>請確保在運行腳本前已經關閉 Cursor
-* Do not close this script when using Cursor <br>使用Cursor時請勿關閉此腳本
-* This tool is only for learning and research purposes <br>此工具僅供學習和研究使用
+* Confirm that Cursor is closed before running the script <br>請確保在運行腳本前已經關閉 Cursor<br>
+
+* Do not close this script when using Cursor <br>使用Cursor時請勿關閉此腳本<br>
+
+* This tool is only for learning and research purposes <br>此工具僅供學習和研究使用<br>
+
 * Please comply with the relevant software usage terms when using this tool <br>使用本工具時請遵守相關軟件使用條款
 
 
@@ -91,5 +72,6 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/master/scripts/in
 
 ## Disclaimer | 免責聲明
 
-本工具僅供學習和研究使用，使用本工具所產生的任何後果由使用者自行承擔。 <br> 
+本工具僅供學習和研究使用，使用本工具所產生的任何後果由使用者自行承擔。 <br>
+
 This tool is only for learning and research purposes, and any consequences arising from the use of this tool are borne by the user.
