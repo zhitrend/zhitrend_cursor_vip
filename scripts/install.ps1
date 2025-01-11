@@ -174,7 +174,7 @@ function Install-CursorFreeVIP {
 
 # Run installation
 try {
-    Install-CursorModifier
+    Install-CursorFreeVIP
 }
 catch {
     Write-Host "Installation failed: $_" -ForegroundColor Red
