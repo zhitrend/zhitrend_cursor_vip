@@ -69,12 +69,12 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 **Linux/macOS**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/master/scripts/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.sh | sudo bash
 ```
 
 **Windows**
 ```powershell
-irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/master/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1 | iex
 ```
 </details>
 
