@@ -3,7 +3,7 @@
 <p align="center">
   <img src="./images/logo.png" alt="Cursor Pro Logo" width="200"/>
 </p>
-</div>
+
 <p align="center">
 
 [![Release](https://img.shields.io/github/v/release/yeongpin/cursor-free-vip?style=flat-square&logo=github&color=blue)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
@@ -19,6 +19,7 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 <p align="center">
   <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="400"/><br>
 </p>
+</div>
 
 ## 🔄 更新日志
 <details>
