@@ -61,6 +61,9 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 |Linux|ARM64|✅|Linux|ARM64|✅|
 
 ## How to use | 如何使用
+|⚠️Must logout your account before running the script⚠️|⚠️必須先登出你的帳戶再運行腳本⚠️ |
+|:---:|:---:|
+<br>
 <details open>
 <summary><b>腳本自動化運行</b></summary>
 
