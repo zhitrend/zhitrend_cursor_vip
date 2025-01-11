@@ -68,7 +68,10 @@ if (-NOT $isAdmin) {
     }
     
     try {
-        Start-Process -FilePath $pwshPath -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`"" -Wait
+        $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`" -WindowStyle Normal"
+        Start-Process -FilePath $pwshPath -Verb RunAs -ArgumentList $arguments
+        Write-Host "`n請在新開啟的管理員權限視窗中繼續操作..." -ForegroundColor $Theme.Primary
+        Start-Sleep -Seconds 3
         exit
     }
     catch {
