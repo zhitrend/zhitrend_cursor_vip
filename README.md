@@ -19,6 +19,10 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 <p align="center">
   <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="400"/><br>
 </p>
+<p align="center">
+  <img src="./images/pro_2025-01-11_22-33-09.gif" alt="Cursor Pro Logo" width="600"/><br>
+</p>
+
 </div>
 
 ## 🔄 更新日志
