@@ -1,10 +1,36 @@
-# Cursor Pro 設置工具
+# Cursor Free VIP
+<div align="center">
+<p align="center">
+  <img src="./images/logo.png" alt="Cursor Pro Logo" width="200"/>
+</p>
+</div>
+
+[![Release](https://img.shields.io/github/v/release/yeongpin/cursor-free-vip?style=flat-square&logo=github&color=blue)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+[![Stars](https://img.shields.io/github/stars/yeongpin/cursor-free-vip?style=flat-square&logo=github)](https://github.com/yeongpin/cursor-free-vip/stargazers)
+
 This is a tool to automatically bypass Cursor's membership check, automatically upgrade to "pro" membership, support Windows and macOS systems, send Token requests in real-time, and reset Cursor's configuration.
-<br>
 
 這是一個自動化工具，自動繞過Cursor的會員檢查，自動升級為 "pro" 會員，支持 Windows 和 macOS 系統，實時發送Token請求，重置Cursor的配置。
 
-<div id="divider"></div>
+
+## 🔄 更新日志
+<details>
+<summary>v1.0</summary>
+1. Preview Image | 預覽圖<br>
+<p align="center">
+  <img src="./images/pro_2025-01-11_00-50-40.png" alt="Cursor Pro Logo" width="200"/><br>
+</p>
+<p align="center">
+  <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="200"/><br>
+</p>
+2. Add usage period,but can be contacted by leaving MachineID | 不得已才添加，但可以通過留下MachineID 聯繫作者
+<br>
+
+<p align="center">
+  <img src="./images/pro_2025-01-11_16-24-03.png" alt="Cursor Pro Logo" width="200"/><br>
+</p>
+</details>
 
 ## Features | 功能特點
 
