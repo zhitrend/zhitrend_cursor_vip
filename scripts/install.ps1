@@ -160,7 +160,7 @@ function Install-CursorFreeVIP {
     
     # Run the program
     try {
-        & "$InstallDir\cursor-id-modifier.exe"
+        & "$InstallDir\CursorFreeVIP.exe"
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Failed to run cursor-free-vip" -ForegroundColor Red
             exit 1
