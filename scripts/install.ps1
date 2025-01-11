@@ -64,6 +64,20 @@ if (-NOT $isAdmin) {
     Write-Styled "需要管理員權限來安裝" -Color $Theme.Warning -Prefix "權限"
     Write-Styled "正在請求管理員權限..." -Color $Theme.Primary -Prefix "提升"
     
+    # 顯示操作選項
+    Write-Host "`n選擇操作:" -ForegroundColor $Theme.Primary
+    Write-Host "1. 請求管理員權限" -ForegroundColor $Theme.Info
+    Write-Host "2. 退出程序" -ForegroundColor $Theme.Info
+    
+    $choice = Read-Host "`n請輸入選項 (1-2)"
+    
+    if ($choice -ne "1") {
+        Write-Styled "安裝已取消" -Color $Theme.Warning -Prefix "取消"
+        Write-Host "`n按任意鍵退出..." -ForegroundColor $Theme.Info
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+        exit
+    }
+    
     $pwshPath = if (Get-Command "pwsh" -ErrorAction SilentlyContinue) {
         (Get-Command "pwsh").Source
     } elseif (Test-Path "$env:ProgramFiles\PowerShell\7\pwsh.exe") {
@@ -76,12 +90,18 @@ if (-NOT $isAdmin) {
         $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`" -Elevated -WindowStyle Normal"
         Start-Process -FilePath $pwshPath -Verb RunAs -ArgumentList $arguments
         Write-Host "`n請在新開啟的管理員權限視窗中繼續操作..." -ForegroundColor $Theme.Primary
-        Start-Sleep -Seconds 3
+        
+        # 等待用戶確認
+        Write-Host "`n按任意鍵退出此窗口..." -ForegroundColor $Theme.Info
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
         exit
     }
     catch {
         Write-Styled "無法獲取管理員權限" -Color $Theme.Error -Prefix "錯誤"
         Write-Styled "請以管理員身份運行 PowerShell 後重試" -Color $Theme.Warning -Prefix "提示"
+        Write-Styled "您可以：" -Color $Theme.Info
+        Write-Host "1. 右鍵點擊 PowerShell，選擇「以系統管理員身分執行」" -ForegroundColor $Theme.Info
+        Write-Host "2. 然後重新運行此安裝程序" -ForegroundColor $Theme.Info
         Write-Host "`n按任意鍵退出..." -ForegroundColor $Theme.Info
         $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
         exit 1
