@@ -19,16 +19,16 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 <summary>v1.0</summary>
 1. Preview Image | 預覽圖<br>
 <p align="center">
-  <img src="./images/pro_2025-01-11_00-50-40.png" alt="Cursor Pro Logo" width="200"/><br>
+  <img src="./images/pro_2025-01-11_00-50-40.png" alt="Cursor Pro Logo" width="400"/><br>
 </p>
 <p align="center">
-  <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="200"/><br>
+  <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="400"/><br>
 </p>
 2. Add usage period,but can be contacted by leaving MachineID | 不得已才添加，但可以通過留下MachineID 聯繫作者
 <br>
 
 <p align="center">
-  <img src="./images/pro_2025-01-11_16-24-03.png" alt="Cursor Pro Logo" width="200"/><br>
+  <img src="./images/pro_2025-01-11_16-24-03.png" alt="Cursor Pro Logo" width="400"/><br>
 </p>
 </details>
 
