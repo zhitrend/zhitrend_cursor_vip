@@ -1,3 +1,8 @@
+# 檢查是否是通過權限提升啟動的
+param(
+    [switch]$Elevated
+)
+
 # 設置顏色主題
 $Theme = @{
     Primary   = 'Cyan'
@@ -68,7 +73,7 @@ if (-NOT $isAdmin) {
     }
     
     try {
-        $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`" -WindowStyle Normal"
+        $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`" -Elevated -WindowStyle Normal"
         Start-Process -FilePath $pwshPath -Verb RunAs -ArgumentList $arguments
         Write-Host "`n請在新開啟的管理員權限視窗中繼續操作..." -ForegroundColor $Theme.Primary
         Start-Sleep -Seconds 3
@@ -77,9 +82,15 @@ if (-NOT $isAdmin) {
     catch {
         Write-Styled "無法獲取管理員權限" -Color $Theme.Error -Prefix "錯誤"
         Write-Styled "請以管理員身份運行 PowerShell 後重試" -Color $Theme.Warning -Prefix "提示"
-        pause
+        Write-Host "`n按任意鍵退出..." -ForegroundColor $Theme.Info
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
         exit 1
     }
+}
+
+# 如果是提升權限後的窗口，等待一下確保窗口可見
+if ($Elevated) {
+    Start-Sleep -Seconds 1
 }
 
 # 獲取版本號函數
