@@ -29,6 +29,10 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 ### If this start with Pro Trial, you can use it, don't hurry to upgrade to Pro, unless you can't use Pro, because Pro sometimes will be slow mode
 
 ### 如果啟動後是 Pro Trial 會員，可以使用就使用，不用著急升級到Pro 會員，除非不能使用Pro會員，因為Pro 會員有時候會 慢速模式 
+
+##### If Using Pro Membership, if it is slow mode, please switch to gpt-4o-mini /cursor-slow /cursor-fast mode
+
+##### 如果使用Pro會員，是慢速模式的話，請切換到gpt-4o-mini /cursor-slow /cursor-fast 模式
 </p>
 </div>
 
