@@ -39,6 +39,18 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 ## 🔄 更新日志
 <details>
+<summary>v1.0.2</summary>
+1. Fix: Some known issues | 修復了一些已知問題
+2. Add cloud control device code | 增加雲端控制設備碼
+3. Cloud reset device code | 雲端重置設備碼
+4. Remove official WatchDog monitoring | 移除官方WatchDog監控
+5. Remove Proxy official prompt | 移除Proxy 官方提示
+6. Fix: Too Many Computer | 修復Too Many Computer 問題
+7. Fix Billing Issue | 修復計費問題
+8. Fix: Cursor's configuration | 修復Cursor的配置問題
+9. Fix cursor-slow mode | 修復cursor-slow模式
+</details>
+<details>
 <summary>v1.0.1</summary>
 
 1. Fix: Reset machine ID | 修復了重置機器ID的問題
