@@ -40,6 +40,7 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 ## 🔄 更新日志
 <details>
 <summary>v1.0.2</summary>
+  
 1. Fix: Some known issues | 修復了一些已知問題
 2. Add cloud control device code | 增加雲端控制設備碼
 3. Cloud reset device code | 雲端重置設備碼
