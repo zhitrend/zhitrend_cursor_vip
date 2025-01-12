@@ -23,7 +23,15 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
   <img src="./images/pro_2025-01-11_22-33-09.gif" alt="Cursor Pro Logo" width="600"/><br>
 </p>
 
+<br>
+<p align="center">
+
+### If this start with Pro Trial, you can use it, don't hurry to upgrade to Pro, unless you can't use Pro, because Pro sometimes will be slow mode
+
+### 如果啟動後是 Pro Trial 會員，可以使用就使用，不用著急升級到Pro 會員，除非不能使用Pro會員，因為Pro 會員有時候會 慢速模式 
+</p>
 </div>
+
 
 ## 🔄 更新日志
 <details>
