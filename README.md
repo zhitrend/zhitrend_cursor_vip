@@ -38,13 +38,17 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 
 ## 🔄 更新日志
-<details>
+<details open>
 <summary>v1.0.3</summary>
 
 1. Fix: Cursor's configuration | 修復Cursor的配置問題
 2. Add Manual Reset Machine | 增加手動重置機器
 3. Add CDN Cloud Control WatchDog | 增加CDN雲端控制WatchDog
 4. Add Mac OS Support | 增加Mac OS支持
+5. 759 ++ People use , but star only a few | 759 ++人使用，但只有幾個人點贊
+<p align="center">
+  <img src="./images/what_2025-01-13_13-32-54.png" alt="Why" width="400"/><br>
+</p>
 </details>
 <details>
 <summary>v1.0.2</summary>
