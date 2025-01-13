@@ -39,6 +39,14 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 ## 🔄 更新日志
 <details>
+<summary>v1.0.3</summary>
+
+1. Fix: Cursor's configuration | 修復Cursor的配置問題
+2. Add Manual Reset Machine | 增加手動重置機器
+3. Add CDN Cloud Control WatchDog | 增加CDN雲端控制WatchDog
+4. Add Mac OS Support | 增加Mac OS支持
+</details>
+<details>
 <summary>v1.0.2</summary>
   
 1. Fix: Some known issues | 修復了一些已知問題
