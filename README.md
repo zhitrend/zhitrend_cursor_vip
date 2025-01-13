@@ -42,6 +42,12 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.4</summary>
+
+1. Fix: Cursor's configuration | 修復Cursor的配置問題
+2. Fix Cloud Lame | 修復雲端慢速模式
+</details>
+<details>
 <summary>v1.0.3</summary>
 
 1. Fix: Cursor's configuration | 修復Cursor的配置問題
