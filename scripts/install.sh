@@ -78,18 +78,28 @@ install_cursor_free_vip() {
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✅ 安裝完成！${NC}"
-        echo -e "${CYAN}ℹ️ 正在啟動程序...${NC}"
         
         # 确保有执行权限
         chmod +x "$binary_path"
         
-        # 直接在前台启动程序
+        # 获取实际用户
+        REAL_USER=$SUDO_USER
+        if [ -z "$REAL_USER" ]; then
+            REAL_USER=$(whoami)
+        fi
+        
+        # 修改所有权
+        chown $REAL_USER "$binary_path"
+        
+        echo -e "${CYAN}ℹ️ 正在以普通用戶身份啟動程序...${NC}"
+        
+        # 以普通用户身份运行程序
         if [[ "$(uname)" == "Darwin" ]]; then
             # macOS
-            sudo -u $SUDO_USER "$binary_path"
+            su - $REAL_USER -c "$binary_path"
         else
             # Linux
-            "$binary_path"
+            su - $REAL_USER -c "$binary_path"
         fi
     else
         echo -e "${RED}❌ 安裝失敗${NC}"
