@@ -20,7 +20,7 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
   <img src="./images/pro_2025-01-11_00-51-07.png" alt="win" width="400"/><br>
 </p>
 <p align="center">
-  <img src="./images/macpro_2025-01-13_13-49-55.png" alt="mac" width="400"/><br>
+  <img src="./images/pro_2025-01-13_13-49-55.png" alt="mac" width="400"/><br>
 </p>
 <p align="center">
   <img src="./images/pro_2025-01-11_22-33-09.gif" alt="Cursor Pro Logo" width="600"/><br>
