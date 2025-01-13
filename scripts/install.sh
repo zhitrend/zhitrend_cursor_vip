@@ -83,23 +83,13 @@ install_cursor_free_vip() {
         # 确保有执行权限
         chmod +x "$binary_path"
         
-        # 使用完整路径启动程序
+        # 直接在前台启动程序
         if [[ "$(uname)" == "Darwin" ]]; then
             # macOS
-            sudo -u $SUDO_USER nohup "$binary_path" > /dev/null 2>&1 &
+            sudo -u $SUDO_USER "$binary_path"
         else
             # Linux
-            nohup "$binary_path" > /dev/null 2>&1 &
-        fi
-        
-        # 等待一下确保程序启动
-        sleep 1
-        
-        # 检查程序是否在运行
-        if pgrep -f "cursor-free-vip" > /dev/null; then
-            echo -e "${GREEN}✅ 程序已在後台啟動${NC}"
-        else
-            echo -e "${RED}❌ 程序啟動失敗，請手動運行 'cursor-free-vip'${NC}"
+            "$binary_path"
         fi
     else
         echo -e "${RED}❌ 安裝失敗${NC}"
