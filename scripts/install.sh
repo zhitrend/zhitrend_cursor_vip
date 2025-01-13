@@ -93,10 +93,10 @@ install_cursor_free_vip() {
         
         echo -e "${CYAN}ℹ️ 正在以普通用戶身份啟動程序...${NC}"
         
-        # 以普通用户身份运行程序
         if [[ "$(uname)" == "Darwin" ]]; then
-            # macOS
-            su - $REAL_USER -c "$binary_path"
+            # macOS: 使用 sudo -u 并保持环境变量
+            HOME_DIR=$(eval echo ~$REAL_USER)
+            sudo -u $REAL_USER HOME=$HOME_DIR "$binary_path"
         else
             # Linux
             su - $REAL_USER -c "$binary_path"
