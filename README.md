@@ -104,7 +104,7 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 |:---:|:---:|
 <br>
 <details open>
-<summary><b>腳本自動化運行</b></summary>
+<summary><b>Auto Run Script | 腳本自動化運行</b></summary>
 
 **Linux/macOS**
 ```bash
@@ -114,6 +114,20 @@ curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scrip
 **Windows**
 ```powershell
 irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1 | iex
+```
+</details>
+
+<details open>
+<summary><b>Manual Reset Machine | 手動運行重置機器</b></summary>
+
+**Linux/macOS**
+```bash
+curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.sh | sudo bash
+```
+
+**Windows**
+```powershell
+irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.ps1 | iex
 ```
 </details>
 
