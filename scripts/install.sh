@@ -77,7 +77,10 @@ install_cursor_free_vip() {
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✅ 安裝完成！${NC}"
-        echo -e "${CYAN}ℹ️ 您可以通過運行 'cursor-free-vip' 來啟動程序${NC}"
+        echo -e "${CYAN}ℹ️ 正在啟動程序...${NC}"
+        # 使用 nohup 在后台运行程序
+        nohup "${install_dir}/cursor-free-vip" > /dev/null 2>&1 &
+        echo -e "${GREEN}✅ 程序已在後台啟動${NC}"
     else
         echo -e "${RED}❌ 安裝失敗${NC}"
         exit 1
