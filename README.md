@@ -17,7 +17,10 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 這是一個自動化工具，自動繞過Cursor的會員檢查，自動升級為 "pro" 會員，支持 Windows 和 macOS 系統，實時發送Token請求，重置Cursor的配置。
 
 <p align="center">
-  <img src="./images/pro_2025-01-11_00-51-07.png" alt="Cursor Pro Logo" width="400"/><br>
+  <img src="./images/pro_2025-01-11_00-51-07.png" alt="win" width="400"/><br>
+</p>
+<p align="center">
+  <img src="./images/macpro_2025-01-13_13-49-55.png" alt="mac" width="400"/><br>
 </p>
 <p align="center">
   <img src="./images/pro_2025-01-11_22-33-09.gif" alt="Cursor Pro Logo" width="600"/><br>
