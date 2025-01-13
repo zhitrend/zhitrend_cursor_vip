@@ -63,6 +63,7 @@ create_temp_dir() {
 install_cursor_free_vip() {
     local install_dir="/usr/local/bin"
     local binary_name="CursorFreeVIP_${VERSION}_${OS}"
+    local binary_path="${install_dir}/cursor-free-vip"
     local download_url="https://github.com/yeongpin/cursor-free-vip/releases/download/v${VERSION}/${binary_name}"
     
     echo -e "${CYAN}ℹ️ 正在下載...${NC}"
@@ -73,14 +74,33 @@ install_cursor_free_vip() {
     
     echo -e "${CYAN}ℹ️ 正在安裝...${NC}"
     chmod +x "${TMP_DIR}/${binary_name}"
-    mv "${TMP_DIR}/${binary_name}" "${install_dir}/cursor-free-vip"
+    mv "${TMP_DIR}/${binary_name}" "$binary_path"
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✅ 安裝完成！${NC}"
         echo -e "${CYAN}ℹ️ 正在啟動程序...${NC}"
-        # 使用 nohup 在后台运行程序
-        nohup "${install_dir}/cursor-free-vip" > /dev/null 2>&1 &
-        echo -e "${GREEN}✅ 程序已在後台啟動${NC}"
+        
+        # 确保有执行权限
+        chmod +x "$binary_path"
+        
+        # 使用完整路径启动程序
+        if [[ "$(uname)" == "Darwin" ]]; then
+            # macOS
+            sudo -u $SUDO_USER nohup "$binary_path" > /dev/null 2>&1 &
+        else
+            # Linux
+            nohup "$binary_path" > /dev/null 2>&1 &
+        fi
+        
+        # 等待一下确保程序启动
+        sleep 1
+        
+        # 检查程序是否在运行
+        if pgrep -f "cursor-free-vip" > /dev/null; then
+            echo -e "${GREEN}✅ 程序已在後台啟動${NC}"
+        else
+            echo -e "${RED}❌ 程序啟動失敗，請手動運行 'cursor-free-vip'${NC}"
+        fi
     else
         echo -e "${RED}❌ 安裝失敗${NC}"
         exit 1
