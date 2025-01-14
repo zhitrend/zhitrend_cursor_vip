@@ -215,28 +215,29 @@ class BrowserControl:
     def get_verification_code(self):
         """从邮件中获取验证码"""
         try:
-            # 使用新的 XPath 定位验证码
-            code_div = self.browser.ele('xpath://div[contains(@style, "font-family:-apple-system") and contains(@style, "font-size:28px") and contains(@style, "letter-spacing:2px") and contains(@style, "color:#202020")]')
+            # 尝试所有可能的样式组合
+            selectors = [
+                # 新样式
+                'xpath://div[contains(@style, "font-family:-apple-system") and contains(@style, "font-size:28px") and contains(@style, "letter-spacing:2px") and contains(@style, "color:#202020")]',
+                # 带行高的样式
+                'xpath://div[contains(@style, "font-size:28px") and contains(@style, "letter-spacing:2px") and contains(@style, "line-height:30px")]',
+                # rgba 颜色样式
+                'xpath://div[contains(@style, "font-size: 28px") and contains(@style, "letter-spacing: 2px") and contains(@style, "color: rgba(32, 32, 32, 1)")]',
+                # 宽松样式
+                'xpath://div[contains(@style, "font-size:28px") and contains(@style, "letter-spacing:2px")]'
+            ]
             
-            # 如果找不到，尝试备用选择器
-            if not code_div:
-                code_div = self.browser.ele('xpath://div[contains(@style, "font-size:28px") and contains(@style, "letter-spacing:2px") and contains(@style, "line-height:30px")]')
-                
-            # 如果还找不到，尝试更宽松的选择器
-            if not code_div:
-                code_div = self.browser.ele('xpath://div[contains(@style, "font-size:28px") and contains(@style, "letter-spacing:2px")]')
-
-            if code_div:
-                verification_code = code_div.text.strip()
-                if verification_code.isdigit() and len(verification_code) == 6:
-                    print(f"{Fore.GREEN}Found Verification Code | 找到验证码: {verification_code}{Style.RESET_ALL}")
-                    return verification_code
-                else:
-                    print(f"{Fore.RED}Verification Code Format Error | 验证码格式不正确: {verification_code}{Style.RESET_ALL}")
-                    return None
-            else:
-                print(f"{Fore.YELLOW}No Verification Code Found | 未找到验证码{Style.RESET_ALL}")
-                return None
+            # 依次尝试每个选择器
+            for selector in selectors:
+                code_div = self.browser.ele(selector)
+                if code_div:
+                    verification_code = code_div.text.strip()
+                    if verification_code.isdigit() and len(verification_code) == 6:
+                        print(f"{Fore.GREEN}Found Verification Code | 找到验证码: {verification_code}{Style.RESET_ALL}")
+                        return verification_code
+                    
+            print(f"{Fore.YELLOW}No Valid Verification Code Found | 未找到有效验证码{Style.RESET_ALL}")
+            return None
             
         except Exception as e:
             print(f"{Fore.RED}Get Verification Code Error | 获取验证码时发生错误: {str(e)}{Style.RESET_ALL}")

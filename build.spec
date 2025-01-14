@@ -18,11 +18,15 @@ a = Analysis(
         ('uBlock0.chromium', 'uBlock0.chromium'),
         ('cursor_auth.py', '.'),
         ('reset_machine_manual.py', '.'),
-        ('cursor_register.py', '.')
+        ('cursor_register.py', '.'),
+        ('browser.py', '.'),
+        ('control.py', '.')
     ],
     hiddenimports=[
         'cursor_auth',
-        'reset_machine_manual'
+        'reset_machine_manual',
+        'browser',
+        'control'
     ],
     hookspath=[],
     hooksconfig={},
