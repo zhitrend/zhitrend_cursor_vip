@@ -24,8 +24,10 @@ This is a tool to automatically register (except for Google verification code), 
 <p align="center">
 
 ## ⚠️ Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify ⚠️
+### If you dont have google chrome , you can download it from [here](https://www.google.com/intl/en_pk/chrome/)
 
 ## ⚠️ 郵箱驗證 需要手動驗證，不要那麼懶，動一動手指，驗證一下，不然會一直提示你驗證 ⚠️
+### 如果沒有Google Chrome，可以從[這裡](https://www.google.com/intl/en_pk/chrome/)下載
 
 </p>
 </div>
