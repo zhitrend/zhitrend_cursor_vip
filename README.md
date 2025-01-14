@@ -12,36 +12,37 @@
 
 </p>
 
-This is a tool to automatically bypass Cursor's membership check, automatically upgrade to "pro" membership, support Windows and macOS systems, send Token requests in real-time, and reset Cursor's configuration.
+This is a tool to automatically register (except for Google verification code), support Windows and macOS systems, complete Auth verification, and reset Cursor's configuration.
 
-這是一個自動化工具，自動繞過Cursor的會員檢查，自動升級為 "pro" 會員，支持 Windows 和 macOS 系統，實時發送Token請求，重置Cursor的配置。
+這是一個自動化工具，自動註冊（除了Google驗證碼)，支持 Windows 和 macOS 系統，完成Auth驗證，重置Cursor的配置。
 
 <p align="center">
-  <img src="./images/pro_2025-01-11_00-51-07.png" alt="win" width="400"/><br>
-</p>
-<p align="center">
-  <img src="./images/pro_2025-01-13_13-49-55.png" alt="mac" width="400"/><br>
-</p>
-<p align="center">
-  <img src="./images/pro_2025-01-11_22-33-09.gif" alt="Cursor Pro Logo" width="600"/><br>
+  <img src="./images/pro_2025-01-14_14-40-37.png" alt="new" width="400"/><br>
 </p>
 
 <br>
 <p align="center">
 
-### If this start with Pro Trial, you can use it, don't hurry to upgrade to Pro, unless you can't use Pro, because Pro sometimes will be slow mode
+### Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify
 
-### 如果啟動後是 Pro Trial 會員，可以使用就使用，不用著急升級到Pro 會員，除非不能使用Pro會員，因為Pro 會員有時候會 慢速模式 
+### 郵箱驗證 需要手動驗證，不要那麼懶，動一動手指，驗證一下，不然會一直提示你驗證
 
-##### If Using Pro Membership, if it is slow mode, please switch to gpt-4o-mini /cursor-slow /cursor-fast mode
-
-##### 如果使用Pro會員，是慢速模式的話，請切換到gpt-4o-mini /cursor-slow /cursor-fast 模式
 </p>
 </div>
 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.5</summary>
+1. Remove MachineID | 移除機器碼ID
+2. Change to automatic registration account | 全面改為自動註冊賬號
+3. Use your own exclusive new account | 使用自己獨享的新賬號
+4. Fully automatic reset machine configuration | 全面自動化重置機器配置
+<p align="center">
+  <img src="./images/pro_2025-01-14_14-40-37.png" alt="Why" width="400"/><br>
+</p>
+</details>
+<details>
 <summary>v1.0.4</summary>
 
 1. Fix: Cursor's configuration | 修復Cursor的配置問題
@@ -101,13 +102,13 @@ This is a tool to automatically bypass Cursor's membership check, automatically 
 
 ## ✨ Features | 功能特點
 
-* Auto bypass Cursor's membership check<br>自動繞過Cursor的會員檢查<br>
+* Automatically register Cursor membership<br>自動註冊Cursor會員<br>
 
-* Auto upgrade to "pro" membership<br>自動升級為 "pro" 會員<br>
+* Except for Google verification code<br>除了Google驗證碼<br>
 
 * Support Windows and macOS systems<br>支持 Windows 和 macOS 系統<br>
 
-* Real-time send Token request<br>實時發送Token請求<br>
+* Complete Auth verification<br>完成Auth驗證<br>
 
 * Reset Cursor's configuration<br>重置Cursor的配置<br>
 

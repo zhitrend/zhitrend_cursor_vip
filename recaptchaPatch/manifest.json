@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "Recaptcha Blocker",
+    "version": "1.0",
+    "description": "Blocks reCAPTCHA from loading",
+    "content_scripts": [
+        {
+            "matches": ["*://yopmail.com/zh/wm*"],
+            "js": ["script.js"],
+            "run_at": "document_start",
+            "all_frames": true
+        }
+    ],
+    "permissions": [
+        "webNavigation",
+         "activeTab"
+    ],
+    "host_permissions": [
+    "*://yopmail.com/*",
+    "*://*.google.com/*"
+    ]
+}
