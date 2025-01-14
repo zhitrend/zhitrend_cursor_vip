@@ -41,6 +41,7 @@ This is a tool to automatically register (except for Google verification code), 
 
 1. Fix: Mac Browser Control | 修復Mac瀏覽器控制問題
 2. Fix: Verification Code Cant Patch | 修復驗證碼無法修復問題
+3. Add Linux Support | 增加Linux支持
 <p align="center">
   <img src="./images/fix_2025-01-14_21-30-43.png" alt="fix" width="400"/><br>
 </p>
