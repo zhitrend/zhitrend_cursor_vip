@@ -1,11 +1,21 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os
+import platform
 from dotenv import load_dotenv
 
 # 加載環境變量獲取版本號
 load_dotenv()
 version = os.getenv('VERSION', '1.0.0')
-os_type = "windows" if os.name == "nt" else "mac"
+
+# 根据系统类型设置输出名称
+system = platform.system().lower()
+if system == "windows":
+    os_type = "windows"
+elif system == "linux":
+    os_type = "linux"
+else:  # Darwin
+    os_type = "mac"
+
 output_name = f"CursorFreeVIP_{version}_{os_type}"
 
 a = Analysis(
@@ -45,7 +55,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name=output_name,
+    name=output_name,  # 使用动态生成的名称
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

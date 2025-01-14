@@ -72,17 +72,23 @@ def build():
         loading = LoadingAnimation()
         loading.start("Building in progress")
         
-        # 構建命令
-        os_type = "windows" if os.name == "nt" else "mac"
+        # 根据系统类型设置输出名称
+        system = platform.system().lower()
+        if system == "windows":
+            os_type = "windows"
+            ext = ".exe"
+        elif system == "linux":
+            os_type = "linux"
+            ext = ""
+        else:  # Darwin
+            os_type = "mac"
+            ext = ""
+            
         output_name = f"CursorFreeVIP_{version}_{os_type}"
         
-        # 根据操作系统类型设置不同的构建命令和输出路径
-        if os_type == "windows":
-            build_command = f'pyinstaller --clean --noconfirm build.spec'
-            output_path = os.path.join('dist', f'{output_name}.exe')
-        else:
-            build_command = f'pyinstaller --clean --noconfirm build.mac.spec'  # 使用 mac 专用的 spec 文件
-            output_path = os.path.join('dist', output_name)  # Mac 应用不需要扩展名
+        # 构建命令
+        build_command = f'pyinstaller --clean --noconfirm build.spec'
+        output_path = os.path.join('dist', f'{output_name}{ext}')
         
         os.system(build_command)
         
