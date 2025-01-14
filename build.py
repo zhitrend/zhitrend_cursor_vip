@@ -76,15 +76,21 @@ def build():
         os_type = "windows" if os.name == "nt" else "mac"
         output_name = f"CursorFreeVIP_{version}_{os_type}"
         
-        build_command = f'pyinstaller --clean --noconfirm build.spec'
+        # 根据操作系统类型设置不同的构建命令和输出路径
+        if os_type == "windows":
+            build_command = f'pyinstaller --clean --noconfirm build.spec'
+            output_path = os.path.join('dist', f'{output_name}.exe')
+        else:
+            build_command = f'pyinstaller --clean --noconfirm build.mac.spec'  # 使用 mac 专用的 spec 文件
+            output_path = os.path.join('dist', output_name)  # Mac 应用不需要扩展名
+        
         os.system(build_command)
         
         loading.stop()
 
-        exe_path = os.path.join('dist', f'{output_name}.exe')
-        if os.path.exists(exe_path):
+        if os.path.exists(output_path):
             print(f"\n\033[92m✅ 構建完成！")
-            print(f"📦 可執行文件位於: {exe_path}\033[0m")
+            print(f"📦 可執行文件位於: {output_path}\033[0m")
         else:
             print("\n\033[91m❌ 構建失敗：未找到輸出文件\033[0m")
             return False
