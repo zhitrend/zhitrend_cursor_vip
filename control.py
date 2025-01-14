@@ -25,20 +25,20 @@ class BrowserControl:
             # 保存新标签页
             self.signup_tab = new_browser
             
-            print(f"{Fore.GREEN}成功创建新窗口{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Create New Tab Success | 成功创建新窗口{Style.RESET_ALL}")
             return new_browser
         except Exception as e:
-            print(f"{Fore.RED}创建新窗口时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Create New Tab Failed | 创建新窗口时发生错误: {str(e)}{Style.RESET_ALL}")
             return None
 
     def switch_to_tab(self, browser):
         """切换到指定浏览器窗口"""
         try:
             self.browser = browser
-            print(f"{Fore.GREEN}成功切换窗口{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Switch Tab Success | 成功切换窗口{Style.RESET_ALL}")
             return True
         except Exception as e:
-            print(f"{Fore.RED}切换窗口时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Switch Tab Failed | 切换窗口时发生错误: {str(e)}{Style.RESET_ALL}")
             return False
 
     def get_current_tab(self):
@@ -48,24 +48,24 @@ class BrowserControl:
     def generate_new_email(self):
         """点击新的按钮生成新邮箱"""
         try:
-            print(f"{Fore.CYAN}点击生成新邮箱...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Click Generate New Email | 点击生成新邮箱...{Style.RESET_ALL}")
             new_button = self.browser.ele('xpath://button[contains(@class, "egenbut")]')
             if new_button:
                 new_button.click()
                 time.sleep(1)  # 等待生成
-                print(f"{Fore.GREEN}成功生成新邮箱{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}Generate New Email | 成功生成新邮箱{Style.RESET_ALL}")
                 return True
             else:
-                print(f"{Fore.RED}未找到生成按钮{Style.RESET_ALL}")
+                print(f"{Fore.RED}No Generate Button Found | 未找到生成按钮{Style.RESET_ALL}")
                 return False
         except Exception as e:
-            print(f"{Fore.RED}生成新邮箱时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Generate New Email Failed | 生成新邮箱时发生错误: {str(e)}{Style.RESET_ALL}")
             return False
 
     def select_email_domain(self, domain_index=None):
         """选择邮箱域名，如果不指定index则随机选择"""
         try:
-            print(f"{Fore.CYAN}选择邮箱域名...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Select Email Domain | 选择邮箱域名...{Style.RESET_ALL}")
             # 找到下拉框
             select_element = self.browser.ele('xpath://select[@id="seldom"]')
             if select_element:
@@ -88,21 +88,21 @@ class BrowserControl:
                     if domain_index < len(all_options):
                         # 获取选中选项的文本
                         selected_domain = all_options[domain_index].text
-                        print(f"{Fore.CYAN}选择域名: {selected_domain}{Style.RESET_ALL}")
+                        print(f"{Fore.CYAN}Select Email Domain | 选择域名: {selected_domain}{Style.RESET_ALL}")
                         
                         # 点击选择
                         all_options[domain_index].click()
                         time.sleep(1)
-                        print(f"{Fore.GREEN}成功选择邮箱域名{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}Select Email Domain | 成功选择邮箱域名{Style.RESET_ALL}")
                         return True
                     
-                print(f"{Fore.RED}未找到可用的域名选项，总共有 {len(all_options)} 个选项{Style.RESET_ALL}")
+                print(f"{Fore.RED}No Available Domain Options | 未找到可用的域名选项，总共有 {len(all_options)} 个选项{Style.RESET_ALL}")
                 return False
             else:
-                print(f"{Fore.RED}未找到域名选择框{Style.RESET_ALL}")
+                print(f"{Fore.RED}No Domain Select Box Found | 未找到域名选择框{Style.RESET_ALL}")
                 return False
         except Exception as e:
-            print(f"{Fore.RED}选择邮箱域名时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Select Email Domain Failed | 选择邮箱域名时发生错误: {str(e)}{Style.RESET_ALL}")
             return False
 
     def wait_for_page_load(self, seconds=2):
@@ -112,18 +112,18 @@ class BrowserControl:
     def navigate_to(self, url):
         """导航到指定URL"""
         try:
-            print(f"{Fore.CYAN}正在访问 {url}...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Navigate to {url} | 正在访问 {url}...{Style.RESET_ALL}")
             self.browser.get(url)
             self.wait_for_page_load()
             return True
         except Exception as e:
-            print(f"{Fore.RED}访问 {url} 时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Visit {url} Failed | 访问 {url} 时发生错误: {str(e)}{Style.RESET_ALL}")
             return False 
 
     def copy_and_get_email(self):
         """获取邮箱地址"""
         try:
-            print(f"{Fore.CYAN}获取邮箱信息...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Get Email Info | 获取邮箱信息...{Style.RESET_ALL}")
             
             # 等待元素加载
             time.sleep(1)
@@ -133,12 +133,12 @@ class BrowserControl:
                 email_div = self.browser.ele('xpath://div[@class="segen"]//div[contains(@style, "color: #e5e5e5")]')
                 if email_div:
                     email_name = email_div.text.split()[0]
-                    print(f"{Fore.CYAN}找到邮箱名称: {email_name}{Style.RESET_ALL}")
+                    print(f"{Fore.CYAN}Get Email Name | 找到邮箱名称: {email_name}{Style.RESET_ALL}")
                 else:
-                    print(f"{Fore.RED}无法找到邮箱名称元素{Style.RESET_ALL}")
+                    print(f"{Fore.RED}Get Email Name Failed | 无法找到邮箱名称元素{Style.RESET_ALL}")
                     return None
             except Exception as e:
-                print(f"{Fore.RED}获取邮箱名称时出错: {str(e)}{Style.RESET_ALL}")
+                print(f"{Fore.RED}Get Email Name Failed | 获取邮箱名称时出错: {str(e)}{Style.RESET_ALL}")
                 return None
             
             # 直接使用上一步选择的域名
@@ -152,45 +152,45 @@ class BrowserControl:
             
             # 组合完整邮箱地址
             full_email = f"{email_name}{domain}"
-            print(f"{Fore.GREEN}完整邮箱地址: {full_email}{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Get Email Address | 完整邮箱地址: {full_email}{Style.RESET_ALL}")
             return full_email
             
         except Exception as e:
-            print(f"{Fore.RED}获取邮箱地址时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Get Email Address Failed | 获取邮箱地址时发生错误: {str(e)}{Style.RESET_ALL}")
             return None 
 
     def view_mailbox(self):
         """点击查看邮箱按钮"""
         try:
-            print(f"{Fore.CYAN}正在进入邮箱...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Enter Mailbox | 正在进入邮箱...{Style.RESET_ALL}")
             view_button = self.browser.ele('xpath://button[contains(@class, "egenbut") and contains(.//span, "查看邮箱")]')
             if view_button:
                 view_button.click()
                 time.sleep(2)  # 等待页面加载
-                print(f"{Fore.GREEN}成功进入邮箱{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}Successfully Entered Mailbox | 成功进入邮箱{Style.RESET_ALL}")
                 return True
             else:
-                print(f"{Fore.RED}未找到查看邮箱按钮{Style.RESET_ALL}")
+                print(f"{Fore.RED}No View Mailbox Button Found | 未找到查看邮箱按钮{Style.RESET_ALL}")
                 return False
         except Exception as e:
-            print(f"{Fore.RED}进入邮箱时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Enter Mailbox Failed | 进入邮箱时发生错误: {str(e)}{Style.RESET_ALL}")
             return False 
 
     def refresh_mailbox(self):
         """刷新邮箱获取最新信息"""
         try:
-            print(f"{Fore.CYAN}正在刷新邮箱...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Refresh Mailbox | 正在刷新邮箱...{Style.RESET_ALL}")
             refresh_button = self.browser.ele('xpath://button[@id="refresh"]')
             if refresh_button:
                 refresh_button.click()
                 time.sleep(2)  # 等待刷新完成
-                print(f"{Fore.GREEN}邮箱刷新成功{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}Mailbox Refreshed Successfully | 邮箱刷新成功{Style.RESET_ALL}")
                 return True
             else:
-                print(f"{Fore.RED}未找到刷新按钮{Style.RESET_ALL}")
+                print(f"{Fore.RED}No Refresh Button Found | 未找到刷新按钮{Style.RESET_ALL}")
                 return False
         except Exception as e:
-            print(f"{Fore.RED}刷新邮箱时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Refresh Mailbox Failed | 刷新邮箱时发生错误: {str(e)}{Style.RESET_ALL}")
             return False 
 
     def check_and_click_recaptcha(self):
@@ -204,12 +204,12 @@ class BrowserControl:
             
             # 直接点击预设坐标
             self.browser.page.mouse.click(click_x, click_y)
-            print(f"{Fore.GREEN}已点击 reCAPTCHA 位置{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Clicked reCAPTCHA Position | 已点击 reCAPTCHA 位置{Style.RESET_ALL}")
             time.sleep(1)
             return True
             
         except Exception as e:
-            print(f"{Fore.YELLOW}点击 reCAPTCHA 失败: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Click reCAPTCHA Failed | 点击 reCAPTCHA 失败: {str(e)}{Style.RESET_ALL}")
             return False 
 
     def get_verification_code(self):
@@ -220,10 +220,10 @@ class BrowserControl:
             if code_div:
                 verification_code = code_div.text.strip()
                 if verification_code.isdigit() and len(verification_code) == 6:
-                    print(f"{Fore.GREEN}找到验证码: {verification_code}{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}Found Verification Code | 找到验证码: {verification_code}{Style.RESET_ALL}")
                     return verification_code
                 else:
-                    print(f"{Fore.RED}验证码格式不正确: {verification_code}{Style.RESET_ALL}")
+                    print(f"{Fore.RED}Verification Code Format Error | 验证码格式不正确: {verification_code}{Style.RESET_ALL}")
                     return None
             else:
                 # 尝试备用XPath
@@ -231,22 +231,22 @@ class BrowserControl:
                 if code_div:
                     verification_code = code_div.text.strip()
                     if verification_code.isdigit() and len(verification_code) == 6:
-                        print(f"{Fore.GREEN}找到验证码: {verification_code}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}Found Verification Code | 找到验证码: {verification_code}{Style.RESET_ALL}")
                         return verification_code
-                print(f"{Fore.RED}未找到验证码{Style.RESET_ALL}")
+                print(f"{Fore.RED}No Verification Code Found | 未找到验证码{Style.RESET_ALL}")
                 return None
         except Exception as e:
-            print(f"{Fore.RED}获取验证码时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Get Verification Code Failed | 获取验证码时发生错误: {str(e)}{Style.RESET_ALL}")
             return None
 
     def fill_verification_code(self, code):
         """填写验证码"""
         try:
             if not code or len(code) != 6:
-                print(f"{Fore.RED}验证码格式不正确{Style.RESET_ALL}")
+                print(f"{Fore.RED}Verification Code Format Error | 验证码格式不正确{Style.RESET_ALL}")
                 return False
 
-            print(f"{Fore.CYAN}正在填写验证码...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Fill Verification Code | 正在填写验证码...{Style.RESET_ALL}")
             
             # 记住当前标签页（邮箱页面）
             email_tab = self.browser
@@ -260,10 +260,10 @@ class BrowserControl:
                 self.browser.actions.input(digit)
                 time.sleep(random.uniform(0.1, 0.3))
             
-            print(f"{Fore.GREEN}验证码填写完成{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Verification Code Filled | 验证码填写完成{Style.RESET_ALL}")
             
             # 等待页面加载和登录完成
-            print(f"{Fore.CYAN}等待登录完成...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}Wait for Login | 等待登录完成...{Style.RESET_ALL}")
             time.sleep(5)
             
             # 先访问登录页面确保登录状态
@@ -274,7 +274,7 @@ class BrowserControl:
             # 获取cookies（第一次尝试）
             token = self.get_cursor_session_token()
             if not token:
-                print(f"{Fore.YELLOW}首次获取token失败，等待后重试...{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}Get Token Failed | 首次获取token失败，等待后重试...{Style.RESET_ALL}")
                 time.sleep(3)
                 token = self.get_cursor_session_token()
             
@@ -283,7 +283,7 @@ class BrowserControl:
                 
                 # 获取到token后再访问设置页面
                 settings_url = "https://www.cursor.com/settings"
-                print(f"{Fore.CYAN}正在访问设置页面获取账户信息...{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}Get Account Info | 正在访问设置页面获取账户信息...{Style.RESET_ALL}")
                 self.browser.get(settings_url)
                 time.sleep(2)
                 
@@ -298,9 +298,9 @@ class BrowserControl:
                     if usage_ele:
                         usage_info = usage_ele.text
                         total_usage = usage_info.split("/")[-1].strip()
-                        print(f"{Fore.GREEN}账户可用额度上限: {total_usage}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}Account Usage Limit | 账户可用额度上限: {total_usage}{Style.RESET_ALL}")
                 except Exception as e:
-                    print(f"{Fore.RED}获取账户额度信息失败: {str(e)}{Style.RESET_ALL}")
+                    print(f"{Fore.RED}Get Account Usage Failed | 获取账户额度信息失败: {str(e)}{Style.RESET_ALL}")
             
             # 切换回邮箱页面
             self.switch_to_tab(email_tab)
@@ -308,7 +308,7 @@ class BrowserControl:
             return True
             
         except Exception as e:
-            print(f"{Fore.RED}填写验证码时发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}Fill Verification Code Failed | 填写验证码时发生错误: {str(e)}{Style.RESET_ALL}")
             return False 
 
     def check_and_click_turnstile(self):
@@ -320,19 +320,19 @@ class BrowserControl:
             # 查找验证框
             verify_checkbox = self.browser.ele('xpath://label[contains(@class, "cb-lb")]//input[@type="checkbox"]')
             if verify_checkbox:
-                print(f"{Fore.CYAN}找到 Turnstile 验证框，尝试点击...{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}Find Turnstile Verification Box | 找到 Turnstile 验证框，尝试点击...{Style.RESET_ALL}")
                 verify_checkbox.click()
                 time.sleep(2)  # 等待验证完成
-                print(f"{Fore.GREEN}已点击 Turnstile 验证框{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}Clicked Turnstile Verification Box | 已点击 Turnstile 验证框{Style.RESET_ALL}")
                 return True
             return False
         except Exception as e:
-            print(f"{Fore.YELLOW}未找到 Turnstile 验证框或点击失败: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Check and Click Turnstile Failed | 未找到 Turnstile 验证框或点击失败: {str(e)}{Style.RESET_ALL}")
             return False 
 
     def get_cursor_session_token(self, max_attempts=3, retry_interval=2):
         """获取Cursor会话token"""
-        print(f"{Fore.CYAN}开始获取cookie...{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}Get Cursor Session Token | 开始获取cookie...{Style.RESET_ALL}")
         attempts = 0
 
         while attempts < max_attempts:
@@ -349,16 +349,16 @@ class BrowserControl:
 
                 attempts += 1
                 if attempts < max_attempts:
-                    print(f"{Fore.YELLOW}第 {attempts} 次尝试未获取到CursorSessionToken，{retry_interval}秒后重试...{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW} Try | 第  {attempts} 次尝试未获取到CursorSessionToken，{retry_interval}秒后重试...{Style.RESET_ALL}")
                     time.sleep(retry_interval)
                 else:
-                    print(f"{Fore.RED}已达到最大尝试次数({max_attempts})，获取CursorSessionToken失败{Style.RESET_ALL}")
+                    print(f"{Fore.RED}Reach Max Attempts ({max_attempts}) | 已达到最大尝试次数({max_attempts})，获取CursorSessionToken失败{Style.RESET_ALL}")
 
             except Exception as e:
                 print(f"{Fore.RED}获取cookie失败: {str(e)}{Style.RESET_ALL}")
                 attempts += 1
                 if attempts < max_attempts:
-                    print(f"{Fore.YELLOW}将在 {retry_interval} 秒后重试...{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}Will Retry in {retry_interval} seconds | 将在 {retry_interval} 秒后重试...{Style.RESET_ALL}")
                     time.sleep(retry_interval)
 
         return None
@@ -369,6 +369,6 @@ class BrowserControl:
             with open('cursor_tokens.txt', 'a', encoding='utf-8') as f:
                 f.write(f"Token: {token}\n")
                 f.write("-" * 50 + "\n")
-            print(f"{Fore.GREEN}Token已保存到 cursor_tokens.txt{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Token Saved to cursor_tokens.txt | Token已保存到 cursor_tokens.txt{Style.RESET_ALL}")
         except Exception as e:
-            print(f"{Fore.RED}保存Token时发生错误: {str(e)}{Style.RESET_ALL}") 
+            print(f"{Fore.RED}Save Token Failed | 保存Token时发生错误: {str(e)}{Style.RESET_ALL}") 
