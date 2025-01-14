@@ -247,7 +247,7 @@ class CursorRegistration:
         print(f"{Fore.YELLOW}{EMOJI['VERIFY']} Handle Turnstile | 处理 Turnstile 验证...{Style.RESET_ALL}")
         
         # 设置最大等待时间（秒）
-        max_wait_time = 5
+        max_wait_time = 10  # 增加等待时间
         start_time = time.time()
         
         while True:
@@ -255,32 +255,49 @@ class CursorRegistration:
                 # 检查是否超时
                 if time.time() - start_time > max_wait_time:
                     print(f"{Fore.YELLOW}{EMOJI['WAIT']} Not Detect Turnstile | 未检测到 Turnstile 验证，继续下一步...{Style.RESET_ALL}")
+                    time.sleep(2)  # 添加短暂延迟
                     break
                     
                 # 检查是否存在验证框
-                challengeCheck = (
-                    self.signup_tab.ele("@id=cf-turnstile", timeout=1)
-                    .child()
-                    .shadow_root.ele("tag:iframe")
-                    .ele("tag:body")
-                    .sr("tag:input")
-                )
+                try:
+                    challengeCheck = (
+                        self.signup_tab.ele("@id=cf-turnstile", timeout=1)
+                        .child()
+                        .shadow_root.ele("tag:iframe")
+                        .ele("tag:body")
+                        .sr("tag:input")
+                    )
 
-                if challengeCheck:
-                    challengeCheck.click()
-                    time.sleep(2)
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Turnstile Passed | 验证通过{Style.RESET_ALL}")
-                    break
+                    if challengeCheck:
+                        challengeCheck.click()
+                        time.sleep(3)  # 增加点击后的等待时间
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Turnstile Passed | 验证通过{Style.RESET_ALL}")
+                        time.sleep(2)  # 确保验证完全完成
+                        break
+                except:
+                    pass
                     
                 # 检查是否已经通过验证（检查下一步的元素是否存在）
-                if self.signup_tab.ele("@name=password"):
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Verification Passed | 验证已通过{Style.RESET_ALL}")
-                    break
+                try:
+                    if (self.signup_tab.ele("@name=password", timeout=0.5) or 
+                        self.signup_tab.ele("@name=email", timeout=0.5) or
+                        self.signup_tab.ele("@data-index=0", timeout=0.5)):
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Verification Passed | 验证已通过{Style.RESET_ALL}")
+                        time.sleep(2)  # 添加短暂延迟
+                        break
+                except:
+                    pass
                     
-            except:
                 # 等待短暂时间后继续检查
-                time.sleep(0.5)
-                continue
+                time.sleep(1)
+                
+            except Exception as e:
+                print(f"{Fore.RED}{EMOJI['ERROR']} Turnstile Error | Turnstile 处理出错: {str(e)}{Style.RESET_ALL}")
+                time.sleep(2)  # 出错时等待更长时间
+                break
+
+        # 最后再等待一下，确保页面加载完成
+        time.sleep(2)
 
     def _get_account_info(self):
         """获取账户信息和 Token"""
