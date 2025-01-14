@@ -144,7 +144,7 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/inst
 ```
 </details>
 
-<details open>
+<details>
 <summary><b>⭐ Manual Reset Machine | 手動運行重置機器</b></summary>
 
 **Linux/macOS**
@@ -180,7 +180,7 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 
 
 
-## 🤩 貢獻 | Contribution
+## 🤩 Contribution | 貢獻
 
 歡迎提交 Issue 和 Pull Request！
 
@@ -189,5 +189,7 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 ## 📩 Disclaimer | 免責聲明
 
 本工具僅供學習和研究使用，使用本工具所產生的任何後果由使用者自行承擔。 <br>
+
+源代碼靈感來之 | Original code inspiration from [Here](https://github.com/hmhm2022/gpt-cursor-auto)
 
 This tool is only for learning and research purposes, and any consequences arising from the use of this tool are borne by the user.
