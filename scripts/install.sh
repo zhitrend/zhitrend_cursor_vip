@@ -22,11 +22,17 @@ EOF
     echo -e "${NC}"
 }
 
-# 檢查是否為 root 用戶
-check_root() {
-    if [ "$EUID" -ne 0 ]; then
-        echo -e "${RED}❌ 錯誤: 請使用 sudo 運行此腳本${NC}"
-        exit 1
+# 获取下载文件夹路径
+get_downloads_dir() {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "$HOME/Downloads"
+    else
+        if [ -f "$HOME/.config/user-dirs.dirs" ]; then
+            . "$HOME/.config/user-dirs.dirs"
+            echo "${XDG_DOWNLOAD_DIR:-$HOME/Downloads}"
+        else
+            echo "$HOME/Downloads"
+        fi
     fi
 }
 
@@ -53,54 +59,29 @@ detect_os() {
     fi
 }
 
-# 創建臨時目錄
-create_temp_dir() {
-    TMP_DIR=$(mktemp -d)
-    trap 'rm -rf "$TMP_DIR"' EXIT
-}
-
 # 下載並安裝
 install_cursor_free_vip() {
-    local install_dir="/usr/local/bin"
+    local downloads_dir=$(get_downloads_dir)
     local binary_name="CursorFreeVIP_${VERSION}_${OS}"
-    local binary_path="${install_dir}/cursor-free-vip"
+    local binary_path="${downloads_dir}/cursor-free-vip"
     local download_url="https://github.com/yeongpin/cursor-free-vip/releases/download/v${VERSION}/${binary_name}"
     
-    echo -e "${CYAN}ℹ️ 正在下載...${NC}"
-    if ! curl -L -o "${TMP_DIR}/${binary_name}" "$download_url"; then
+    echo -e "${CYAN}ℹ️ 正在下載到 ${downloads_dir}...${NC}"
+    if ! curl -L -o "${binary_path}" "$download_url"; then
         echo -e "${RED}❌ 下載失敗${NC}"
         exit 1
     fi
     
-    echo -e "${CYAN}ℹ️ 正在安裝...${NC}"
-    chmod +x "${TMP_DIR}/${binary_name}"
-    mv "${TMP_DIR}/${binary_name}" "$binary_path"
+    echo -e "${CYAN}ℹ️ 正在設置執行權限...${NC}"
+    chmod +x "${binary_path}"
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✅ 安裝完成！${NC}"
+        echo -e "${CYAN}ℹ️ 程序已下載到: ${binary_path}${NC}"
+        echo -e "${CYAN}ℹ️ 正在啟動程序...${NC}"
         
-        # 确保有执行权限
-        chmod +x "$binary_path"
-        
-        # 获取实际用户
-        REAL_USER=$SUDO_USER
-        if [ -z "$REAL_USER" ]; then
-            REAL_USER=$(whoami)
-        fi
-        
-        # 修改所有权
-        chown $REAL_USER "$binary_path"
-        
-        echo -e "${CYAN}ℹ️ 正在以普通用戶身份啟動程序...${NC}"
-        
-        if [[ "$(uname)" == "Darwin" ]]; then
-            # macOS: 使用 sudo -u 并保持环境变量
-            HOME_DIR=$(eval echo ~$REAL_USER)
-            sudo -u $REAL_USER HOME=$HOME_DIR "$binary_path"
-        else
-            # Linux
-            su - $REAL_USER -c "$binary_path"
-        fi
+        # 直接运行程序
+        "${binary_path}"
     else
         echo -e "${RED}❌ 安裝失敗${NC}"
         exit 1
@@ -110,10 +91,8 @@ install_cursor_free_vip() {
 # 主程序
 main() {
     print_logo
-    check_root
     get_latest_version
     detect_os
-    create_temp_dir
     install_cursor_free_vip
 }
 
