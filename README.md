@@ -22,7 +22,8 @@ This is a tool to automatically register (except for Google verification code), 
 
 <br>
 <p align="center">
-
+  <img src="./images/free_2025-01-14_14-59-15.png" alt="free" width="400"/><br>
+</p>
 ## ⚠️ Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify ⚠️
 ### If you dont have google chrome , you can download it from [here](https://www.google.com/intl/en_pk/chrome/)
 
