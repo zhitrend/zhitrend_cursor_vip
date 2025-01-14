@@ -23,9 +23,9 @@ This is a tool to automatically register (except for Google verification code), 
 <br>
 <p align="center">
 
-### Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify
+## ⚠️ Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify ⚠️
 
-### 郵箱驗證 需要手動驗證，不要那麼懶，動一動手指，驗證一下，不然會一直提示你驗證
+## ⚠️ 郵箱驗證 需要手動驗證，不要那麼懶，動一動手指，驗證一下，不然會一直提示你驗證 ⚠️
 
 </p>
 </div>
@@ -34,6 +34,7 @@ This is a tool to automatically register (except for Google verification code), 
 ## 🔄 更新日志
 <details open>
 <summary>v1.0.5</summary>
+
 1. Remove MachineID | 移除機器碼ID
 2. Change to automatic registration account | 全面改為自動註冊賬號
 3. Use your own exclusive new account | 使用自己獨享的新賬號
