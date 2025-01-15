@@ -1,5 +1,8 @@
 # main.py
 # This script allows the user to choose which script to run.
+import os
+import sys
+import json
 from logo import print_logo
 from colorama import Fore, Style, init
 
@@ -16,18 +19,76 @@ EMOJI = {
     "RESET": "🔄",
     "MENU": "📋",
     "ARROW": "➜",
+    "LANG": "🌐"
 }
+
+class Translator:
+    def __init__(self):
+        self.current_language = 'zh_tw'  # 默认语言
+        self.translations = {}
+        self.load_translations()
+    
+    def load_translations(self):
+        """加载所有可用的翻译"""
+        locales_dir = os.path.join(os.path.dirname(__file__), 'locales')
+        if hasattr(sys, '_MEIPASS'):
+            locales_dir = os.path.join(sys._MEIPASS, 'locales')
+            
+        for file in os.listdir(locales_dir):
+            if file.endswith('.json'):
+                lang_code = file[:-5]  # 移除 .json
+                with open(os.path.join(locales_dir, file), 'r', encoding='utf-8') as f:
+                    self.translations[lang_code] = json.load(f)
+    
+    def get(self, key, **kwargs):
+        """获取翻译文本"""
+        keys = key.split('.')
+        value = self.translations.get(self.current_language, {})
+        for k in keys:
+            value = value.get(k, key)
+        return value.format(**kwargs) if kwargs else value
+    
+    def set_language(self, lang_code):
+        """设置当前语言"""
+        if lang_code in self.translations:
+            self.current_language = lang_code
+            return True
+        return False
+
+# 创建翻译器实例
+translator = Translator()
 
 def print_menu():
     """打印菜单选项"""
-    print(f"\n{Fore.CYAN}{EMOJI['MENU']} Available Options | 可用选项:{Style.RESET_ALL}")
+    print(f"\n{Fore.CYAN}{EMOJI['MENU']} {translator.get('menu.title')}:{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
-    print(f"{Fore.GREEN}0{Style.RESET_ALL}. {EMOJI['ERROR']} Exit Program | 退出程序")
-    print(f"{Fore.GREEN}1{Style.RESET_ALL}. {EMOJI['RESET']} Reset Machine Manual | 重置机器标识")
-    print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['SUCCESS']} Register Cursor | 注册 Cursor")
-    print(f"{Fore.GREEN}3{Style.RESET_ALL}. {EMOJI['ERROR']} Quit Cursor | 退出 Cursor")
-    # 在这里添加更多选项
+    print(f"{Fore.GREEN}0{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.exit')}")
+    print(f"{Fore.GREEN}1{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.reset')}")
+    print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['SUCCESS']} {translator.get('menu.register')}")
+    print(f"{Fore.GREEN}3{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.quit')}")
+    print(f"{Fore.GREEN}4{Style.RESET_ALL}. {EMOJI['LANG']} {translator.get('menu.select_language')}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
+
+def select_language():
+    """语言选择菜单"""
+    print(f"\n{Fore.CYAN}{EMOJI['LANG']} {translator.get('menu.select_language')}:{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
+    
+    languages = translator.get('languages')
+    for i, (code, name) in enumerate(languages.items()):
+        print(f"{Fore.GREEN}{i}{Style.RESET_ALL}. {name}")
+    
+    try:
+        choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices='0-' + str(len(languages)-1))}: {Style.RESET_ALL}")
+        if choice.isdigit() and 0 <= int(choice) < len(languages):
+            lang_code = list(languages.keys())[int(choice)]
+            translator.set_language(lang_code)
+            return True
+    except (ValueError, IndexError):
+        pass
+    
+    print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
+    return False
 
 def main():
     print_logo()
@@ -35,39 +96,42 @@ def main():
     
     while True:
         try:
-            choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}Enter your choice (0-3) | 输入选择 (0-3): {Style.RESET_ALL}")
+            choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices='0-4')}: {Style.RESET_ALL}")
 
             if choice == "0":
-                print(f"\n{Fore.YELLOW}{EMOJI['INFO']} Exiting program... | 正在退出程序...{Style.RESET_ALL}")
+                print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.exit')}...{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}{'═' * 50}{Style.RESET_ALL}")
-                return  # 直接返回，不等待按键
+                return
             elif choice == "1":
                 import reset_machine_manual
-                reset_machine_manual.run()
+                reset_machine_manual.run(translator)
                 break
             elif choice == "2":
                 import cursor_register
-                cursor_register.main()
+                cursor_register.main(translator)
                 break
             elif choice == "3":
                 import quit_cursor
-                quit_cursor.quit_cursor()
+                quit_cursor.quit_cursor(translator)
                 break
+            elif choice == "4":
+                if select_language():
+                    print_menu()
+                continue
             else:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Invalid choice. Please try again | 无效选择，请重试{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
                 print_menu()
 
         except KeyboardInterrupt:
-            print(f"\n{Fore.YELLOW}{EMOJI['INFO']} Program terminated by user | 程序被用户终止{Style.RESET_ALL}")
+            print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.program_terminated')}{Style.RESET_ALL}")
             print(f"{Fore.CYAN}{'═' * 50}{Style.RESET_ALL}")
-            return  # 直接返回，不等待按键
+            return
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} An error occurred | 发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.error_occurred', error=str(e))}{Style.RESET_ALL}")
             break
 
-    # 只有在执行完其他选项后才显示按键退出提示
     print(f"\n{Fore.CYAN}{'═' * 50}{Style.RESET_ALL}")
-    input(f"{EMOJI['INFO']} Press Enter to Exit | 按回车键退出...{Style.RESET_ALL}")
+    input(f"{EMOJI['INFO']} {translator.get('menu.press_enter')}...{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main() 

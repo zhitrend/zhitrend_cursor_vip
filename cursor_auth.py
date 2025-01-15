@@ -14,11 +14,13 @@ EMOJI = {
     'ERROR': '❌',
     'WARN': '⚠️',
     'INFO': 'ℹ️',
-    'KEY': '🔑'
+    'FILE': '📄',
+    'KEY': '🔐'
 }
 
 class CursorAuth:
-    def __init__(self):
+    def __init__(self, translator=None):
+        self.translator = translator
         # 判断操作系统
         if os.name == "nt":  # Windows
             self.db_path = os.path.join(
@@ -54,7 +56,7 @@ class CursorAuth:
 
             # 重新连接数据库
             conn = sqlite3.connect(self.db_path)
-            print(f"{EMOJI['INFO']} {Fore.GREEN}Successfully connected to database | 成功连接到数据库{Style.RESET_ALL}")
+            print(f"{EMOJI['INFO']} {Fore.GREEN}{self.translator.get('auth.connected_to_database')}{Style.RESET_ALL}")
             cursor = conn.cursor()
             
             # 增加超时和其他优化设置
@@ -91,7 +93,7 @@ class CursorAuth:
                     print(f"{EMOJI['INFO']} {Fore.CYAN}Updating {key.split('/')[-1]}...{Style.RESET_ALL}")
                 
                 cursor.execute("COMMIT")
-                print(f"{EMOJI['SUCCESS']} {Fore.GREEN}Database updated successfully | 数据库更新成功{Style.RESET_ALL}")
+                print(f"{EMOJI['SUCCESS']} {Fore.GREEN}{self.translator.get('auth.database_updated_successfully')}{Style.RESET_ALL}")
                 return True
                 
             except Exception as e:
@@ -99,14 +101,14 @@ class CursorAuth:
                 raise e
 
         except sqlite3.Error as e:
-            print(f"\n{EMOJI['ERROR']} {Fore.RED}Database error | 数据库错误: {str(e)}{Style.RESET_ALL}")
+            print(f"\n{EMOJI['ERROR']} {Fore.RED}{self.translator.get('auth.database_error', error=str(e))}{Style.RESET_ALL}")
             return False
         except Exception as e:
-            print(f"\n{EMOJI['ERROR']} {Fore.RED}An error occurred | 发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"\n{EMOJI['ERROR']} {Fore.RED}{self.translator.get('auth.an_error_occurred', error=str(e))}{Style.RESET_ALL}")
             return False
         finally:
             if conn:
                 conn.close()
-                print(f"{EMOJI['DB']} {Fore.CYAN}Database connection closed | 数据库连接已关闭{Style.RESET_ALL}")
+                print(f"{EMOJI['DB']} {Fore.CYAN}{self.translator.get('auth.database_connection_closed')}{Style.RESET_ALL}")
 
 

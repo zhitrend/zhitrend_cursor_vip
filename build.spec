@@ -26,6 +26,7 @@ a = Analysis(
         ('turnstilePatch', 'turnstilePatch'),
         ('recaptchaPatch', 'recaptchaPatch'),
         ('uBlock0.chromium', 'uBlock0.chromium'),
+        ('locales', 'locales'),
         ('cursor_auth.py', '.'),
         ('reset_machine_manual.py', '.'),
         ('cursor_register.py', '.'),

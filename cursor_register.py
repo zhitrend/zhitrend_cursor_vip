@@ -13,7 +13,7 @@ os.environ["PYINSTALLER_VERBOSE"] = "0"
 # 初始化colorama
 init()
 
-# 定义emoji和颜色常量
+# 定义emoji常量
 EMOJI = {
     'START': '🚀',
     'FORM': '📝',
@@ -24,13 +24,15 @@ EMOJI = {
     'ERROR': '❌',
     'WAIT': '⏳',
     'SUCCESS': '✅',
-    'MAIL': '��',
+    'MAIL': '📧',
     'KEY': '🔐',
-    'UPDATE': '🔄'
+    'UPDATE': '🔄',
+    'INFO': 'ℹ️'
 }
 
 class CursorRegistration:
-    def __init__(self):
+    def __init__(self, translator=None):
+        self.translator = translator
         # 设置为显示模式
         os.environ['BROWSER_HEADLESS'] = 'False'
         self.browser_manager = BrowserManager()
@@ -60,11 +62,11 @@ class CursorRegistration:
         return first_letter + rest_letters
 
     def setup_email(self):
-        """Setup Temporary Email"""
+        """设置邮箱"""
         try:
-            print(f"{Fore.CYAN}Staring Browser | 正在启动浏览器...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.browser_start')}...{Style.RESET_ALL}")
             self.browser = self.browser_manager.init_browser()
-            self.controller = BrowserControl(self.browser)
+            self.controller = BrowserControl(self.browser, self.translator)
             
             # 打开邮箱生成器页面（第一个标签页）
             self.controller.navigate_to(self.mail_url)
@@ -80,7 +82,7 @@ class CursorRegistration:
             # 获取邮箱地址
             self.email_address = self.controller.copy_and_get_email()
             if self.email_address:
-                print(f"{Fore.CYAN}Get Email Address | 获取到的邮箱地址: {self.email_address}{Style.RESET_ALL}")
+                print(f"{EMOJI['MAIL']}{Fore.CYAN} {self.translator.get('register.get_email_address')}: {self.email_address}{Style.RESET_ALL}")
                 
                 # 进入邮箱
                 if self.controller.view_mailbox():
@@ -89,14 +91,14 @@ class CursorRegistration:
             return False
             
         except Exception as e:
-            print(f"{Fore.RED}Error Occured | 发生错误: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.setup_error', error=str(e))}{Style.RESET_ALL}")
             return False
 
     def register_cursor(self):
-        """注册 Cursor 账号"""
+        """注册 Cursor"""
         signup_browser_manager = None
         try:
-            print(f"\n{Fore.CYAN}{EMOJI['START']}Start Register | 开始 Cursor 注册流程{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.register_start')}...{Style.RESET_ALL}")
             
             # 创建新的浏览器实例用于注册
             from browser import BrowserManager
@@ -109,7 +111,7 @@ class CursorRegistration:
 
             # 填写注册表单
             if self.signup_tab.ele("@name=first_name"):
-                print(f"{Fore.YELLOW}{EMOJI['FORM']}Fill Form | 填写注册信息...{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}{EMOJI['FORM']} {self.translator.get('register.filling_form')}...{Style.RESET_ALL}")
                 
                 self.signup_tab.ele("@name=first_name").input(self.first_name)
                 time.sleep(random.uniform(1, 2))
@@ -121,14 +123,14 @@ class CursorRegistration:
                 time.sleep(random.uniform(1, 2))
                 
                 self.signup_tab.ele("@type=submit").click()
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Basic Info Submitted | 基本信息提交完成{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.basic_info_submitted')}...{Style.RESET_ALL}")
 
             # 处理 Turnstile 验证
             self._handle_turnstile()
 
             # 设置密码
             if self.signup_tab.ele("@name=password"):
-                print(f"{Fore.YELLOW}{EMOJI['PASSWORD']} Set Password | 设置密码...{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}{EMOJI['PASSWORD']} {self.translator.get('register.set_password')}...{Style.RESET_ALL}")
                 self.signup_tab.ele("@name=password").input(self.password)
                 time.sleep(random.uniform(1, 2))
                 self.signup_tab.ele("@type=submit").click()
@@ -147,21 +149,21 @@ class CursorRegistration:
             start_time = time.time()
             timeout = 60  # 60秒超时
 
-            print(f"{Fore.CYAN}{EMOJI['WAIT']} Start Getting Verification Code | 开始获取验证码，将在60秒内尝试...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['WAIT']} {self.translator.get('register.start_getting_verification_code')}...{Style.RESET_ALL}")
             
             for attempt in range(max_attempts):
                 # 检查是否超时
                 if time.time() - start_time > timeout:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} Get Verification Code Timeout | 获取验证码超时{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.get_verification_code_timeout')}...{Style.RESET_ALL}")
                     break
                     
                 verification_code = self.controller.get_verification_code()
                 if verification_code:
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Get Verification Code Success | 成功获取验证码: {verification_code}{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.get_verification_code_success')}: {verification_code}{Style.RESET_ALL}")
                     break
                     
                 remaining_time = int(timeout - (time.time() - start_time))
-                print(f"{Fore.YELLOW}{EMOJI['WAIT']} Try | 第 {attempt + 1} Get Verification Code | 次尝试未获取到验证码，Time Remaining | 剩余时间: {remaining_time}秒{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['WAIT']} {self.translator.get('register.try_get_verification_code', attempt=attempt + 1, remaining_time=remaining_time)}...{Style.RESET_ALL}")
                 
                 # 刷新邮箱
                 self.browser.refresh()
@@ -173,7 +175,7 @@ class CursorRegistration:
                     self.signup_tab.ele(f"@data-index={i}").input(digit)
                     time.sleep(random.uniform(0.1, 0.3))
                 
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Verification Code Filled | 验证码填写完成{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.verification_code_filled')}...{Style.RESET_ALL}")
                 time.sleep(3)
 
                 self._handle_turnstile()
@@ -181,7 +183,7 @@ class CursorRegistration:
                 # 检查当前URL
                 current_url = self.signup_tab.url
                 if "authenticator.cursor.sh" in current_url:
-                    print(f"{Fore.CYAN}{EMOJI['VERIFY']} Detect Login Page | 检测到登录页面，开始登录...{Style.RESET_ALL}")
+                    print(f"{Fore.CYAN}{EMOJI['VERIFY']} {self.translator.get('register.detect_login_page')}...{Style.RESET_ALL}")
                     
                     # 填写邮箱
                     email_input = self.signup_tab.ele('@name=email')
@@ -218,7 +220,7 @@ class CursorRegistration:
                                     start_time = time.time()
                                     while time.time() - start_time < max_wait:
                                         if "cursor.com/settings" in self.signup_tab.url:
-                                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Login Success and Jump to Settings Page | 成功登录并跳转到设置页面{Style.RESET_ALL}")
+                                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.login_success_and_jump_to_settings_page')}...{Style.RESET_ALL}")
                                             break
                                         time.sleep(1)
                 
@@ -231,11 +233,11 @@ class CursorRegistration:
                     
                 return result
             else:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Get Verification Code Timeout | 未能在60秒内获取到验证码{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.get_verification_code_timeout')}...{Style.RESET_ALL}")
                 return False
 
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} Register Process Error | 注册过程出错: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.register_process_error', error=str(e))}{Style.RESET_ALL}")
             return False
         finally:
             # 确保在任何情况下都关闭注册窗口
@@ -244,7 +246,7 @@ class CursorRegistration:
 
     def _handle_turnstile(self):
         """处理 Turnstile 验证"""
-        print(f"{Fore.YELLOW}{EMOJI['VERIFY']} Handle Turnstile | 处理 Turnstile 验证...{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}{EMOJI['VERIFY']} {self.translator.get('register.handle_turnstile')}...{Style.RESET_ALL}")
         
         # 设置最大等待时间（秒）
         max_wait_time = 10  # 增加等待时间
@@ -254,11 +256,10 @@ class CursorRegistration:
             try:
                 # 检查是否超时
                 if time.time() - start_time > max_wait_time:
-                    print(f"{Fore.YELLOW}{EMOJI['WAIT']} Not Detect Turnstile | 未检测到 Turnstile 验证，继续下一步...{Style.RESET_ALL}")
-                    time.sleep(2)  # 添加短暂延迟
+                    print(f"{Fore.YELLOW}{EMOJI['WAIT']} {self.translator.get('register.no_turnstile')}...{Style.RESET_ALL}")
+                    time.sleep(2)
                     break
                     
-                # 检查是否存在验证框
                 try:
                     challengeCheck = (
                         self.signup_tab.ele("@id=cf-turnstile", timeout=1)
@@ -270,43 +271,38 @@ class CursorRegistration:
 
                     if challengeCheck:
                         challengeCheck.click()
-                        time.sleep(3)  # 增加点击后的等待时间
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Turnstile Passed | 验证通过{Style.RESET_ALL}")
-                        time.sleep(2)  # 确保验证完全完成
+                        time.sleep(3)
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
+                        time.sleep(2)
                         break
                 except:
                     pass
                     
-                # 检查是否已经通过验证（检查下一步的元素是否存在）
                 try:
                     if (self.signup_tab.ele("@name=password", timeout=0.5) or 
                         self.signup_tab.ele("@name=email", timeout=0.5) or
                         self.signup_tab.ele("@data-index=0", timeout=0.5)):
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Verification Passed | 验证已通过{Style.RESET_ALL}")
-                        time.sleep(2)  # 添加短暂延迟
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
+                        time.sleep(2)
                         break
                 except:
                     pass
                     
-                # 等待短暂时间后继续检查
                 time.sleep(1)
                 
             except Exception as e:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Turnstile Error | Turnstile 处理出错: {str(e)}{Style.RESET_ALL}")
-                time.sleep(2)  # 出错时等待更长时间
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.error', error=str(e))}{Style.RESET_ALL}")
+                time.sleep(2)
                 break
 
-        # 最后再等待一下，确保页面加载完成
         time.sleep(2)
 
     def _get_account_info(self):
         """获取账户信息和 Token"""
         try:
-            # 访问设置页面
             self.signup_tab.get(self.settings_url)
             time.sleep(2)
             
-            # 获取账户额度信息
             usage_selector = (
                 "css:div.col-span-2 > div > div > div > div > "
                 "div:nth-child(1) > div.flex.items-center.justify-between.gap-2 > "
@@ -317,8 +313,7 @@ class CursorRegistration:
             if usage_ele:
                 total_usage = usage_ele.text.split("/")[-1].strip()
 
-            # 获取 Token
-            print(f"{Fore.CYAN}{EMOJI['WAIT']} Get Cursor Session Token | 开始获取 Cursor Session Token...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['WAIT']} {self.translator.get('register.get_token')}...{Style.RESET_ALL}")
             max_attempts = 30
             retry_interval = 2
             attempts = 0
@@ -329,46 +324,45 @@ class CursorRegistration:
                     for cookie in cookies:
                         if cookie.get("name") == "WorkosCursorSessionToken":
                             token = cookie["value"].split("%3A%3A")[1]
-                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Get Token Success | Token 获取成功{Style.RESET_ALL}")
-                            # 保存账户信息
+                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.token_success')}{Style.RESET_ALL}")
                             self._save_account_info(token, total_usage)
                             return True
 
                     attempts += 1
                     if attempts < max_attempts:
-                        print(
-                            f"{Fore.YELLOW}{EMOJI['WAIT']} Try | 第 {attempts} times to get Token | 次尝试未获取到 Token，{retry_interval}秒后重试...{Style.RESET_ALL}"
-                        )
+                        print(f"{Fore.YELLOW}{EMOJI['WAIT']} {self.translator.get('register.token_attempt', attempt=attempts, time=retry_interval)}{Style.RESET_ALL}")
                         time.sleep(retry_interval)
                     else:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} Reach Max Attempts ({max_attempts}) | 已达到最大尝试次数({max_attempts})，获取 Token 失败{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.token_max_attempts', max=max_attempts)}{Style.RESET_ALL}")
 
                 except Exception as e:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} Get Token Failed | 获取 Token 失败: {str(e)}{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.token_failed', error=str(e))}{Style.RESET_ALL}")
                     attempts += 1
                     if attempts < max_attempts:
-                        print(f"{Fore.YELLOW}{EMOJI['WAIT']} Will Retry in {retry_interval} seconds | 将在 {retry_interval} 秒后重试...{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['WAIT']} {self.translator.get('register.token_attempt', attempt=attempts, time=retry_interval)}{Style.RESET_ALL}")
                         time.sleep(retry_interval)
 
             return False
 
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} Get Account Info Failed | 获取账户信息失败: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.account_error', error=str(e))}{Style.RESET_ALL}")
             return False
 
     def _save_account_info(self, token, total_usage):
         """保存账户信息到文件"""
         try:
             # 先更新认证信息
-            print(f"{Fore.CYAN}{EMOJI['KEY']} 正在更新 Cursor 认证信息...{Style.RESET_ALL}")
-            if update_cursor_auth(email=self.email_address, access_token=token, refresh_token=token):
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Cursor Auth Info Updated | 认证信息更新成功{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['KEY']} {self.translator.get('register.update_cursor_auth_info')}...{Style.RESET_ALL}")
+            if self.update_cursor_auth(email=self.email_address, access_token=token, refresh_token=token):
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.cursor_auth_info_updated')}...{Style.RESET_ALL}")
             else:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Cursor Auth Info Update Failed | 认证信息更新失败{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.cursor_auth_info_update_failed')}...{Style.RESET_ALL}")
 
             # 重置机器ID
-            print(f"{Fore.CYAN}{EMOJI['UPDATE']} Reset Machine ID | 正在重置机器ID...{Style.RESET_ALL}")
-            MachineIDResetter().reset_machine_ids()
+            print(f"{Fore.CYAN}{EMOJI['UPDATE']} {self.translator.get('register.reset_machine_id')}...{Style.RESET_ALL}")
+            resetter = MachineIDResetter(self.translator)  # 创建实例时传入translator
+            if not resetter.reset_machine_ids():  # 直接调用reset_machine_ids方法
+                raise Exception("Failed to reset machine ID")
             
             # 保存账户信息到文件
             with open('cursor_accounts.txt', 'a', encoding='utf-8') as f:
@@ -379,11 +373,11 @@ class CursorRegistration:
                 f.write(f"Usage Limit: {total_usage}\n")
                 f.write(f"{'='*50}\n")
                 
-            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Account Info Saved to cursor_accounts.txt | 账户信息已保存到 cursor_accounts.txt{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.account_info_saved')}...{Style.RESET_ALL}")
             return True
             
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} Save Account Info Failed | 保存账户信息失败: {str(e)}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.save_account_info_failed', error=str(e))}{Style.RESET_ALL}")
             return False
 
     def start(self):
@@ -391,25 +385,30 @@ class CursorRegistration:
         try:
             if self.setup_email():
                 if self.register_cursor():
-                    print(f"\n{Fore.GREEN}{EMOJI['DONE']} Cursor Registration Completed | 注册完成！{Style.RESET_ALL}")
+                    print(f"\n{Fore.GREEN}{EMOJI['DONE']} {self.translator.get('register.cursor_registration_completed')}...{Style.RESET_ALL}")
                     return True
             return False
         finally:
             if self.browser_manager:
                 self.browser_manager.quit()
 
+    def update_cursor_auth(self, email=None, access_token=None, refresh_token=None):
+        """更新Cursor的认证信息的便捷函数"""
+        auth_manager = CursorAuth(translator=self.translator)
+        return auth_manager.update_auth(email, access_token, refresh_token)
 
+def main(translator=None):
+    """Main function to be called from main.py"""
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['START']} {translator.get('register.title')}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
 
-def update_cursor_auth(email=None, access_token=None, refresh_token=None):
-    """
-    更新Cursor的认证信息的便捷函数
-    """
-    auth_manager = CursorAuth()
-    return auth_manager.update_auth(email, access_token, refresh_token)
-
-def main():
-    registration = CursorRegistration()
+    registration = CursorRegistration(translator)
     registration.start()
 
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    input(f"{EMOJI['INFO']} {translator.get('register.press_enter')}...")
+
 if __name__ == "__main__":
-    main() 
+    from main import translator as main_translator
+    main(main_translator) 
