@@ -45,6 +45,8 @@ This is a tool to automatically register (except for Google verification code), 
 </p>
 </details>
 <details>
+<summary>Other Version Change Log</summary>
+<details>
 <summary>v1.0.6</summary>
 
 1. Add Quit Cursor Option | 增加退出Cursor選項
@@ -129,6 +131,7 @@ This is a tool to automatically register (except for Google verification code), 
 <p align="center">
   <img src="./images/pro_2025-01-11_16-24-03.png" alt="Cursor Pro Logo" width="400"/><br>
 </p>
+</details>
 </details>
 
 ## ✨ Features | 功能特點
