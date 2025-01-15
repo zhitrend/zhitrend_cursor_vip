@@ -42,6 +42,7 @@ This is a tool to automatically register (except for Google verification code), 
 1. Add Quit Cursor Option | 增加退出Cursor選項
 2. Add Recaptcha Path Patch | 增加Recaptcha路徑修復
 3. Fix Admin Permission | 修復管理員權限問題
+4. Remove all need admin permission | 移除所有需要管理員權限
 </details>
 <details>
 <summary>v1.0.5 - HotFix</summary>
