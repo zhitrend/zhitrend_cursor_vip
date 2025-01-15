@@ -5,7 +5,6 @@ import uuid
 import hashlib
 import shutil
 import sqlite3
-from logo import print_logo
 from colorama import Fore, Style, init
 
 # 初始化colorama
