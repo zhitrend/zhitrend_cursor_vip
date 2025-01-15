@@ -31,7 +31,8 @@ a = Analysis(
         ('reset_machine_manual.py', '.'),
         ('cursor_register.py', '.'),
         ('browser.py', '.'),
-        ('control.py', '.')
+        ('control.py', '.'),
+        ('.env', '.')
     ],
     hiddenimports=[
         'cursor_auth',
