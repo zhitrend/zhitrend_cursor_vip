@@ -136,6 +136,8 @@
         "get_cursor_session_token": "Get Cursor Session Token",
         "get_cursor_session_token_success": "Get Cursor Session Token Success",
         "get_cursor_session_token_failed": "Get Cursor Session Token Failed",
-        "save_token_failed": "Save Token Failed"
+        "save_token_failed": "Save Token Failed",
+        "database_updated_successfully": "Database Updated Successfully",
+        "database_connection_closed": "Database Connection Closed"
     }
 }

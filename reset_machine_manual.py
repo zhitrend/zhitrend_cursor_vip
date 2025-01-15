@@ -160,18 +160,17 @@ class MachineIDResetter:
             return False
 
 def run(translator=None):
-    """Main function to be called from main.py"""
+    """便捷函数，用于直接调用重置功能"""
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{EMOJI['RESET']} {translator.get('reset.title')}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
 
-    resetter = MachineIDResetter(translator)
+    resetter = MachineIDResetter(translator)  # 正確傳遞 translator
     resetter.reset_machine_ids()
 
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
     input(f"{EMOJI['INFO']} {translator.get('reset.press_enter')}...")
 
 if __name__ == "__main__":
-    # 如果直接运行，使用默认翻译器
     from main import translator as main_translator
     run(main_translator)

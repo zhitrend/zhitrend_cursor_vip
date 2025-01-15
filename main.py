@@ -42,11 +42,17 @@ class Translator:
     
     def get(self, key, **kwargs):
         """获取翻译文本"""
-        keys = key.split('.')
-        value = self.translations.get(self.current_language, {})
-        for k in keys:
-            value = value.get(k, key)
-        return value.format(**kwargs) if kwargs else value
+        try:
+            keys = key.split('.')
+            value = self.translations.get(self.current_language, {})
+            for k in keys:
+                if isinstance(value, dict):
+                    value = value.get(k, key)
+                else:
+                    return key  # 如果中間值不是字典，返回原始key
+            return value.format(**kwargs) if kwargs else value
+        except Exception:
+            return key  # 出現任何錯誤時返回原始key
     
     def set_language(self, lang_code):
         """设置当前语言"""

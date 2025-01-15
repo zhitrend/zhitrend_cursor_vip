@@ -26,6 +26,27 @@
         "timeout": "以下进程未能在规定时间内关闭: {pids}",
         "error": "关闭 Cursor 进程时发生错误: {error}"
     },
+    "reset": {
+        "title": "Cursor 机器标识重置工具",
+        "checking": "检查配置文件",
+        "not_found": "配置文件未找到",
+        "no_permission": "无法读取或写入配置文件，请检查文件权限",
+        "reading": "读取当前配置",
+        "creating_backup": "创建配置备份",
+        "backup_exists": "备份文件已存在，跳过备份步骤",
+        "generating": "生成新机器标识",
+        "saving_json": "保存新配置到JSON",
+        "success": "机器标识重置成功",
+        "new_id": "新机器标识",
+        "permission_error": "权限错误: {error}",
+        "run_as_admin": "请尝试以管理员身份运行此程序",
+        "process_error": "重置进程错误: {error}",
+        "updating_sqlite": "更新SQLite数据库",
+        "updating_pair": "更新键值对",
+        "sqlite_success": "SQLite数据库更新成功",
+        "sqlite_error": "SQLite数据库更新失败: {error}",
+        "press_enter": "按回车键退出"
+    },
     "register": {
         "title": "Cursor 注册工具",
         "start": "开始注册流程",
