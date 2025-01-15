@@ -37,6 +37,14 @@ This is a tool to automatically register (except for Google verification code), 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.7</summary>
+
+1. Add Locale Language Support | 增加多語言支持
+<p align="center">
+  <img src="./images/locale_2025-01-15_13-40-08.png" alt="locale" width="400"/><br>
+</p>
+</details>
+<details>
 <summary>v1.0.6</summary>
 
 1. Add Quit Cursor Option | 增加退出Cursor選項
