@@ -37,6 +37,13 @@ This is a tool to automatically register (except for Google verification code), 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.6</summary>
+
+1. Add Quit Cursor Option | 增加退出Cursor選項
+2. Add Recaptcha Path Patch | 增加Recaptcha路徑修復
+3. Fix Admin Permission | 修復管理員權限問題
+</details>
+<details>
 <summary>v1.0.5 - HotFix</summary>
 
 1. Fix: Mac Browser Control | 修復Mac瀏覽器控制問題
