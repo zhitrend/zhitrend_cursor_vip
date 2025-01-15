@@ -17,7 +17,7 @@ This is a tool to automatically register (except for Google verification code), 
 這是一個自動化工具，自動註冊（除了Google驗證碼)，支持 Windows 和 macOS 系統，完成Auth驗證，重置Cursor的配置。
 
 <p align="center">
-  <img src="./images/pro_2025-01-14_14-40-37.png" alt="new" width="400"/><br>
+  <img src="./images/new107_2025-01-15_13-45-57.png" alt="new" width="400"/><br>
 </p>
 
 <br>
