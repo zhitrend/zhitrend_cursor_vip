@@ -24,7 +24,8 @@ def print_menu():
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
     print(f"{Fore.GREEN}0{Style.RESET_ALL}. {EMOJI['ERROR']} Exit Program | 退出程序")
     print(f"{Fore.GREEN}1{Style.RESET_ALL}. {EMOJI['RESET']} Reset Machine Manual | 重置机器标识")
-    print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['RESET']} Register Cursor | 注册 Cursor")
+    print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['SUCCESS']} Register Cursor | 注册 Cursor")
+    print(f"{Fore.GREEN}3{Style.RESET_ALL}. {EMOJI['ERROR']} Quit Cursor | 退出 Cursor")
     # 在这里添加更多选项
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
 
@@ -34,7 +35,7 @@ def main():
     
     while True:
         try:
-            choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}Enter your choice (0-2) | 输入选择 (0-2): {Style.RESET_ALL}")
+            choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}Enter your choice (0-3) | 输入选择 (0-3): {Style.RESET_ALL}")
 
             if choice == "0":
                 print(f"\n{Fore.YELLOW}{EMOJI['INFO']} Exiting program... | 正在退出程序...{Style.RESET_ALL}")
@@ -47,6 +48,10 @@ def main():
             elif choice == "2":
                 import cursor_register
                 cursor_register.main()
+                break
+            elif choice == "3":
+                import quit_cursor
+                quit_cursor.quit_cursor()
                 break
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} Invalid choice. Please try again | 无效选择，请重试{Style.RESET_ALL}")
