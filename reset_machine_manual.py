@@ -98,7 +98,7 @@ class MachineIDResetter:
                     INSERT OR REPLACE INTO ItemTable (key, value) 
                     VALUES (?, ?)
                 """, (key, value))
-                print(f"{EMOJI['INFO']} {Fore.CYAN}{self.translator.get('reset.updating_pair')}: {key}{Style.RESET_ALL}")
+                print(f"{EMOJI['INFO']} {Fore.CYAN} {self.translator.get('reset.updating_pair')}: {key}{Style.RESET_ALL}")
 
             conn.commit()
             conn.close()

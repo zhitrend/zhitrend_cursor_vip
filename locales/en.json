@@ -107,7 +107,8 @@
         "reset_machine_id": "Reset Machine ID",
         "database_connection_closed": "Database Connection Closed",
         "database_updated_successfully": "Database Updated Successfully",
-        "connected_to_database": "Connected to Database"
+        "connected_to_database": "Connected to Database",
+        "updating_pair": "Updating Key-Value Pair"
     },
     "control": {
         "generate_email": "Generating New Email",

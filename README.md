@@ -37,6 +37,14 @@ This is a tool to automatically register (except for Google verification code), 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.7 - HotFix</summary>
+
+1. Fix Reset Machine | 修復重置機器
+2. Fix Locale Language | 修復多語言
+</details>
+<details>
+<summary>Other Version Change Log</summary>
+<details>
 <summary>v1.0.7</summary>
 
 1. Add Locale Language Support | 增加多語言支持
@@ -44,8 +52,6 @@ This is a tool to automatically register (except for Google verification code), 
   <img src="./images/locale_2025-01-15_13-40-08.png" alt="locale" width="400"/><br>
 </p>
 </details>
-<details>
-<summary>Other Version Change Log</summary>
 <details>
 <summary>v1.0.6</summary>
 

@@ -89,7 +89,8 @@
         "account_info_saved": "账户信息已保存",
         "save_account_info_failed": "保存账户信息失败",
         "get_email_address": "获取邮箱地址",
-        "register_process_error": "注册流程错误: {error}"
+        "register_process_error": "注册流程错误: {error}",
+        "update_cursor_auth_info": "更新Cursor认证信息"
     },
     "auth": {
         "title": "Cursor 认证管理器",
@@ -102,7 +103,11 @@
         "auth_update_failed": "认证信息更新失败: {error}",
         "auth_file_created": "认证文件已创建",
         "auth_file_create_failed": "认证文件创建失败: {error}",
-        "press_enter": "按回车键退出"
+        "press_enter": "按回车键退出",
+        "connected_to_database": "已连接到数据库",
+        "database_updated_successfully": "数据库更新成功",
+        "database_connection_closed": "数据库连接已关闭",
+        "updating_pair": "更新键值对"
     },
     "control": {
         "generate_email": "生成新邮箱",
