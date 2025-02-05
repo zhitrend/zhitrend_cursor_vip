@@ -45,7 +45,10 @@
         "updating_pair": "Updating Key-Value Pair",
         "sqlite_success": "SQLite Database Updated Successfully",
         "sqlite_error": "SQLite Database Update Failed: {error}",
-        "press_enter": "Press Enter to Exit"
+        "press_enter": "Press Enter to Exit",
+        "updating_system_ids": "Updating System IDs",
+        "system_ids_updated": "System IDs Updated Successfully",
+        "system_ids_update_failed": "System IDs Update Failed: {error}"
     },
     "register": {
         "title": "Cursor Registration Tool",

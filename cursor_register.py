@@ -102,7 +102,7 @@ class CursorRegistration:
             
             # 创建新的浏览器实例用于注册
             from browser import BrowserManager
-            signup_browser_manager = BrowserManager(noheader=True)
+            signup_browser_manager = BrowserManager(noheader=False)
             self.signup_tab = signup_browser_manager.init_browser()
             
             # 访问注册页面
@@ -144,10 +144,10 @@ class CursorRegistration:
             
             # 获取验证码，设置60秒超时
             verification_code = None
-            max_attempts = 10  # 增加到10次尝试
-            retry_interval = 5  # 每5秒重试一次
+            max_attempts = 20  # 增加到10次尝试
+            retry_interval = 10  # 每5秒重试一次
             start_time = time.time()
-            timeout = 60  # 60秒超时
+            timeout = 160  # 60秒超时
 
             print(f"{Fore.CYAN}{EMOJI['WAIT']} {self.translator.get('register.start_getting_verification_code')}...{Style.RESET_ALL}")
             

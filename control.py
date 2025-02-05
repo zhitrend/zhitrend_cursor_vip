@@ -77,7 +77,7 @@ class BrowserControl:
             return False
 
     def select_email_domain(self, domain_index=None):
-        """选择邮箱域名，如果不指定index则随机选择"""
+        """选择邮箱域名，如果不指定index则随机选择。避免选择fr.nf域名"""
         try:
             print(f"{Fore.CYAN}{EMOJI['MAIL']} {self.translator.get('control.select_email_domain')}...{Style.RESET_ALL}")
             # 找到下拉框
@@ -95,21 +95,38 @@ class BrowserControl:
                 all_options.extend(other_options)
                 
                 if all_options:
-                    # 如果没有指定索引，随机选择一个
-                    if domain_index is None:
-                        domain_index = random.randint(0, len(all_options) - 1)
+                    max_attempts = 5  # 最大尝试次数
+                    attempt = 0
                     
-                    if domain_index < len(all_options):
-                        # 获取选中选项的文本
-                        selected_domain = all_options[domain_index].text
-                        print(f"{Fore.CYAN}{EMOJI['MAIL']} {self.translator.get('control.select_email_domain')}: {selected_domain}{Style.RESET_ALL}")
+                    while attempt < max_attempts:
+                        # 如果没有指定索引，随机选择一个
+                        if domain_index is None:
+                            domain_index = random.randint(0, len(all_options) - 1)
                         
-                        # 点击选择
-                        all_options[domain_index].click()
-                        time.sleep(1)
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('control.select_email_domain_success')}{Style.RESET_ALL}")
-                        return True
+                        if domain_index < len(all_options):
+                            # 获取选中选项的文本
+                            selected_domain = all_options[domain_index].text
+                            
+                            # 检查是否为fr.nf域名
+                            if "fr.nf" in selected_domain.lower():
+                                print(f"{Fore.YELLOW}{EMOJI['INFO']} 检测到fr.nf域名，重新选择...{Style.RESET_ALL}")
+                                domain_index = None  # 重置索引以便重新随机选择
+                                attempt += 1
+                                continue
+                            
+                            print(f"{Fore.CYAN}{EMOJI['MAIL']} {self.translator.get('control.select_email_domain')}: {selected_domain}{Style.RESET_ALL}")
+                            
+                            # 点击选择
+                            all_options[domain_index].click()
+                            time.sleep(1)
+                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('control.select_email_domain_success')}{Style.RESET_ALL}")
+                            return True
+                        
+                        attempt += 1
                     
+                    print(f"{Fore.RED}{EMOJI['ERROR']} 无法找到合适的非fr.nf域名{Style.RESET_ALL}")
+                    return False
+                
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('control.no_available_domain_options', count=len(all_options))}{Style.RESET_ALL}")
                 return False
             else:

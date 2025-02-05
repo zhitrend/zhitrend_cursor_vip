@@ -45,7 +45,10 @@
         "updating_pair": "更新鍵值對",
         "sqlite_success": "SQLite數據庫更新成功",
         "sqlite_error": "SQLite數據庫更新失敗: {error}",
-        "press_enter": "按回車鍵退出"
+        "press_enter": "按回車鍵退出",
+        "updating_system_ids": "更新系統ID",
+        "system_ids_updated": "系統ID更新成功",
+        "system_ids_update_failed": "系統ID更新失敗: {error}"
     },
     "register": {
         "title": "Cursor 註冊工具",
