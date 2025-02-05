@@ -11,6 +11,7 @@
 [![Stars](https://img.shields.io/github/stars/yeongpin/cursor-free-vip?style=flat-square&logo=github)](https://github.com/yeongpin/cursor-free-vip/stargazers)
 
 </p>
+<h4>Support Latest 0.45 Version | 支持最新0.45版本</h4>
 
 This is a tool to automatically register (except for Google verification code), support Windows and macOS systems, complete Auth verification, and reset Cursor's configuration.
 
@@ -37,13 +38,20 @@ This is a tool to automatically register (except for Google verification code), 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.8</summary>
+
+1. Fix New 0.45 Version Reset Machine | 修復新0.45版本重置機器
+2. Fix Locale Language | 修復多語言
+3. Add Support Crypto Machine Regedit | 增加支持加密機器註冊
+</details>
+<details>
+<summary>Other Version Change Log</summary>
+<details>
 <summary>v1.0.7 - HotFix</summary>
 
 1. Fix Reset Machine | 修復重置機器
 2. Fix Locale Language | 修復多語言
 </details>
-<details>
-<summary>Other Version Change Log</summary>
 <details>
 <summary>v1.0.7</summary>
 
