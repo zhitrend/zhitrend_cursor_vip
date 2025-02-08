@@ -175,6 +175,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: v${{ env.VERSION }}
           files: |
             artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP.exe
             artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP
