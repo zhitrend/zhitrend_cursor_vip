@@ -1,110 +1,125 @@
-name: Build Release
+name: Build Executables
 
 on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number (without v prefix)'
-        required: true
-        default: '1.0.0'
-
-permissions:
-  contents: write
-  actions: write
-  packages: write
 
 jobs:
-  build-linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-      - name: Build
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          chmod +x build.sh
-          ./build.sh
-      - name: Rename artifact
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            VERSION=${{ github.event.inputs.version }}
-          fi
-          mv dist/* "dist/CursorFreeVIP_${VERSION}_linux"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cursor-linux
-          path: dist/CursorFreeVIP*
-
   build-windows:
-    name: Build Windows
     runs-on: windows-latest
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-      - name: Build
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          cmd /c build.bat
-      - name: Rename artifact
-        shell: bash
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            VERSION=${{ github.event.inputs.version }}
-          fi
-          mv dist/*.exe "dist/CursorFreeVIP_${VERSION}_windows.exe"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cursor-windows
-          path: dist/CursorFreeVIP*
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install -r requirements.txt
+        
+    - name: Build EXE
+      run: |
+        pyinstaller build.spec
+        
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CursorFreeVIP-Windows
+        path: dist/CursorFreeVIP.exe
 
-  build-macos:
-    name: Build MacOS
+  build-macos-arm64:
     runs-on: macos-latest
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10'
-      - name: Build
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          chmod +x build.mac.command
-          ./build.mac.command
-      - name: Rename artifact
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            VERSION=${{ github.event.inputs.version }}
-          fi
-          mv dist/* "dist/CursorFreeVIP_${VERSION}_mac"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cursor-macos
-          path: dist/CursorFreeVIP*
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install -r requirements.txt
+        
+    - name: Build MacOS ARM executable
+      run: |
+        pyinstaller build.spec
+
+    - name: Upload MacOS ARM artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CursorFreeVIP-MacOS-ARM64
+        path: dist/CursorFreeVIP
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+        pip install -r requirements.txt
+        
+    - name: Build Linux executable
+      run: |
+        pyinstaller build.spec
+        
+    - name: Upload Linux artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CursorFreeVIP-Linux
+        path: dist/CursorFreeVIP
+
+  build-macos-intel:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        arch -x86_64 pip3 install --upgrade pip
+        arch -x86_64 pip3 install pyinstaller
+        arch -x86_64 pip3 install -r requirements.txt
+
+    - name: Build MacOS Intel executable
+      env:
+        TARGET_ARCH: 'x86_64'
+      run: |
+        arch -x86_64 python3 -m PyInstaller build.spec
+        
+    - name: Upload MacOS Intel artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CursorFreeVIP-MacOS-Intel
+        path: dist/CursorFreeVIP
 
   create-release:
-    needs: [build-linux, build-windows, build-macos]
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    needs: [build-windows, build-macos-arm64, build-linux, build-macos-intel]
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/')
     
     steps:
       - name: Download all artifacts
@@ -115,18 +130,20 @@ jobs:
       - name: Create release archives
         run: |
           cd artifacts
-          zip -r cursor-linux.zip cursor-linux/
-          zip -r cursor-windows.zip cursor-windows/
-          zip -r cursor-macos.zip cursor-macos/
+          zip -r CursorFreeVIP-Windows.zip CursorFreeVIP-Windows/
+          zip -r CursorFreeVIP-MacOS-ARM64.zip CursorFreeVIP-MacOS-ARM64/
+          zip -r CursorFreeVIP-Linux.zip CursorFreeVIP-Linux/
+          zip -r CursorFreeVIP-MacOS-Intel.zip CursorFreeVIP-MacOS-Intel/
+
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/cursor-linux.zip
-            artifacts/cursor-windows.zip
-            artifacts/cursor-macos.zip
-          draft: false
-          prerelease: false
+            artifacts/CursorFreeVIP-Windows.zip
+            artifacts/CursorFreeVIP-MacOS-ARM64.zip
+            artifacts/CursorFreeVIP-Linux.zip
+            artifacts/CursorFreeVIP-MacOS-Intel.zip
+
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
