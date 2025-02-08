@@ -1,23 +1,30 @@
 name: Build Executables
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number (without v prefix)'
+        description: 'Version number (e.g. 1.0.9)'
         required: true
-        default: '1.0.0'
+        default: '1.0.9'
 
 permissions:
-      contents: write
-      actions: write
-      packages: write
+  contents: write
+  actions: write
+  packages: write
 
 jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Tag
+        run: |
+          git tag v${{ github.event.inputs.version }}
+          git push origin v${{ github.event.inputs.version }}
+
   build-windows:
+    needs: create-tag
     runs-on: windows-latest
     
     steps:
@@ -28,14 +35,9 @@ jobs:
       with:
         python-version: '3.x'
     
-    - name: Get version
+    - name: Set version
       shell: bash
-      run: |
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-        else
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-        fi
+      run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
     
     - name: Install dependencies
       run: |
@@ -50,10 +52,11 @@ jobs:
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
-        name: CursorFreeVIP-Windows
-        path: dist/CursorFreeVIP_${VERSION}_windows.exe
+        name: CursorFreeVIP_${{ env.VERSION }}_windows.exe
+        path: dist/*
 
   build-macos-arm64:
+    needs: create-tag
     runs-on: macos-latest
     
     steps:
@@ -63,6 +66,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+    
+    - name: Set version
+      shell: bash
+      run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
     
     - name: Install dependencies
       run: |
@@ -77,10 +84,11 @@ jobs:
     - name: Upload MacOS ARM artifact
       uses: actions/upload-artifact@v4
       with:
-        name: CursorFreeVIP-MacOS-ARM64
-        path: dist/CursorFreeVIP_${VERSION}_mac_arm64
+        name: CursorFreeVIP_${{ env.VERSION }}_mac_arm64
+        path: dist/*
 
   build-linux:
+    needs: create-tag
     runs-on: ubuntu-22.04
     
     steps:
@@ -90,6 +98,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+    
+    - name: Set version
+      shell: bash
+      run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
     
     - name: Install dependencies
       run: |
@@ -104,11 +116,12 @@ jobs:
     - name: Upload Linux artifact
       uses: actions/upload-artifact@v4
       with:
-        name: CursorFreeVIP-Linux
-        path: dist/CursorFreeVIP_${VERSION}_linux
+        name: CursorFreeVIP_${{ env.VERSION }}_linux
+        path: dist/*
 
 
   build-macos-intel:
+    needs: create-tag
     runs-on: macos-latest
 
     steps:
@@ -118,6 +131,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+
+    - name: Set version
+      shell: bash
+      run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: |
@@ -134,8 +151,8 @@ jobs:
     - name: Upload MacOS Intel artifact
       uses: actions/upload-artifact@v4
       with:
-        name: CursorFreeVIP-MacOS-Intel
-        path: dist/CursorFreeVIP_${VERSION}_mac_intel
+        name: CursorFreeVIP_${{ env.VERSION }}_mac_intel
+        path: dist/*
 
 
   create-release:
@@ -160,21 +177,21 @@ jobs:
       - name: Prepare release files
         run: |
           cd artifacts
-          mv CursorFreeVIP_*_Windows/* .
-          mv CursorFreeVIP_*_MacOS_ARM64/* .
-          mv CursorFreeVIP_*_Linux/* .
-          mv CursorFreeVIP_*_MacOS_Intel/* .
-          rm -rf CursorFreeVIP_*_*/
+          mv CursorFreeVIP_${{ env.VERSION }}_windows.exe/* .
+          mv CursorFreeVIP_${{ env.VERSION }}_mac_arm64/* .
+          mv CursorFreeVIP_${{ env.VERSION }}_linux/* .
+          mv CursorFreeVIP_${{ env.VERSION }}_mac_intel/* .
+          rm -rf CursorFreeVIP_${{ env.VERSION }}_*/*
 
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/CursorFreeVIP_${VERSION}_windows.exe
-            artifacts/CursorFreeVIP_${VERSION}_mac_arm64
-            artifacts/CursorFreeVIP_${VERSION}_linux
-            artifacts/CursorFreeVIP_${VERSION}_mac_intel
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel
           draft: false
           prerelease: false
         env:
