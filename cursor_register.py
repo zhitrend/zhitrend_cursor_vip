@@ -246,56 +246,87 @@ class CursorRegistration:
 
     def _handle_turnstile(self):
         """处理 Turnstile 验证"""
-        print(f"{Fore.YELLOW}{EMOJI['VERIFY']} {self.translator.get('register.handle_turnstile')}...{Style.RESET_ALL}")
-        
-        # 设置最大等待时间（秒）
-        max_wait_time = 10  # 增加等待时间
-        start_time = time.time()
-        
-        while True:
-            try:
-                # 检查是否超时
-                if time.time() - start_time > max_wait_time:
-                    print(f"{Fore.YELLOW}{EMOJI['WAIT']} {self.translator.get('register.no_turnstile')}...{Style.RESET_ALL}")
-                    time.sleep(2)
-                    break
-                    
+        try:
+            print(f"{Fore.YELLOW}{EMOJI['VERIFY']} {self.translator.get('register.handle_turnstile')}...{Style.RESET_ALL}")
+            
+            max_retries = 2
+            retry_interval = (1, 2)
+            retry_count = 0
+
+            while retry_count < max_retries:
+                retry_count += 1
+                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('register.turnstile_attempt', attempt=retry_count)}...{Style.RESET_ALL}")
+
                 try:
-                    challengeCheck = (
-                        self.signup_tab.ele("@id=cf-turnstile", timeout=1)
+                    # 尝试重置 turnstile
+                    self.signup_tab.run_js("try { turnstile.reset() } catch(e) { }")
+                    time.sleep(2)
+
+                    # 定位验证框元素
+                    challenge_check = (
+                        self.signup_tab.ele("@id=cf-turnstile", timeout=2)
                         .child()
                         .shadow_root.ele("tag:iframe")
                         .ele("tag:body")
                         .sr("tag:input")
                     )
 
-                    if challengeCheck:
-                        challengeCheck.click()
-                        time.sleep(3)
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
+                    if challenge_check:
+                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('register.turnstile_detected')}...{Style.RESET_ALL}")
+                        
+                        # 随机延时后点击验证
+                        time.sleep(random.uniform(1, 3))
+                        challenge_check.click()
                         time.sleep(2)
-                        break
-                except:
-                    pass
-                    
-                try:
-                    if (self.signup_tab.ele("@name=password", timeout=0.5) or 
-                        self.signup_tab.ele("@name=email", timeout=0.5) or
-                        self.signup_tab.ele("@data-index=0", timeout=0.5)):
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
-                        time.sleep(2)
-                        break
-                except:
-                    pass
-                    
-                time.sleep(1)
-                
-            except Exception as e:
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.error', error=str(e))}{Style.RESET_ALL}")
-                time.sleep(2)
-                break
 
-        time.sleep(2)
+                        # 检查验证结果
+                        if self._check_verification_success():
+                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
+                            return True
+
+                except Exception as e:
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('register.turnstile_attempt_failed', error=str(e))}{Style.RESET_ALL}")
+
+                # 检查是否已经验证成功
+                if self._check_verification_success():
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
+                    return True
+
+                # 随机延时后继续下一次尝试
+                time.sleep(random.uniform(*retry_interval))
+
+            # 超出最大重试次数
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.turnstile_max_retries', max=max_retries)}{Style.RESET_ALL}")
+            return False
+
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.turnstile_error', error=str(e))}{Style.RESET_ALL}")
+            return False
+
+    def _check_verification_success(self):
+        """检查验证是否成功"""
+        try:
+            # 检查是否存在后续表单元素，这表示验证已通过
+            if (self.signup_tab.ele("@name=password", timeout=0.5) or 
+                self.signup_tab.ele("@name=email", timeout=0.5) or
+                self.signup_tab.ele("@data-index=0", timeout=0.5) or
+                self.signup_tab.ele("Account Settings", timeout=0.5)):
+                return True
+            
+            # 检查是否出现错误消息
+            error_messages = [
+                'xpath://div[contains(text(), "Can\'t verify the user is human")]',
+                'xpath://div[contains(text(), "Error: 600010")]',
+                'xpath://div[contains(text(), "Please try again")]'
+            ]
+            
+            for error_xpath in error_messages:
+                if self.signup_tab.ele(error_xpath):
+                    return False
+                
+            return False
+        except:
+            return False
 
     def _get_account_info(self):
         """获取账户信息和 Token"""

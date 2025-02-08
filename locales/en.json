@@ -46,12 +46,28 @@
         "sqlite_success": "SQLite Database Updated Successfully",
         "sqlite_error": "SQLite Database Update Failed: {error}",
         "press_enter": "Press Enter to Exit",
+        "unsupported_os": "Unsupported OS: {os}",
+        "linux_path_not_found": "Linux Path Not Found",
         "updating_system_ids": "Updating System IDs",
         "system_ids_updated": "System IDs Updated Successfully",
-        "system_ids_update_failed": "System IDs Update Failed: {error}"
+        "system_ids_update_failed": "System IDs Update Failed: {error}",
+        "windows_guid_updated": "Windows GUID Updated Successfully",
+        "windows_permission_denied": "Windows Permission Denied",
+        "windows_guid_update_failed": "Windows GUID Update Failed",
+        "macos_uuid_updated": "macOS UUID Updated Successfully",
+        "plutil_command_failed": "plutil Command Failed",
+        "start_patching": "Starting Patching getMachineId",
+        "macos_uuid_update_failed": "macOS UUID Update Failed",
+        "current_version": "Current Cursor Version: {version}",
+        "patch_completed": "Patching getMachineId Completed",
+        "patch_failed": "Patching getMachineId Failed: {error}",
+        "version_check_passed": "Cursor Version Check Passed",
+        "file_modified": "File Modified"
     },
     "register": {
         "title": "Cursor Registration Tool",
+
+
         "start": "Starting Registration Process",
         "mailbox": "Successfully Entered Mailbox",
         "register_start": "Start Register",

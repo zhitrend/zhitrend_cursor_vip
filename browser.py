@@ -2,6 +2,7 @@ from DrissionPage import ChromiumOptions, ChromiumPage
 import sys
 import os
 import logging
+import random
 
 
 class BrowserManager:
@@ -36,17 +37,58 @@ class BrowserManager:
         except FileNotFoundError as e:
             logging.warning(f"警告: {e}")
 
+        # 设置更真实的用户代理
         co.set_user_agent(
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.92 Safari/537.36"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
+
+        # 基本设置
         co.set_pref("credentials_enable_service", False)
+        co.set_pref("profile.password_manager_enabled", False)
+        
+        # 禁用自动化标志
+        co.set_pref("useAutomationExtension", False)
+        co.set_pref("excludeSwitches", ["enable-automation"])
+        
+        # WebGL 和 GPU 设置
+        co.set_pref("webgl.disabled", False)
+        co.set_pref("webgl.enable_webgl2", True)
+        
+        # 设置语言和地区
+        co.set_pref("intl.accept_languages", "en-US,en")
+        
+        # 基本命令行参数
+        co.set_argument("--disable-blink-features=AutomationControlled")
         co.set_argument("--hide-crash-restore-bubble")
+        co.set_argument("--no-first-run")
+        co.set_argument("--no-default-browser-check")
+        co.set_argument("--disable-popup-blocking")
+        
+        # 性能和稳定性参数
+        co.set_argument("--disable-dev-shm-usage")
+        co.set_argument("--disable-gpu")
+        co.set_argument("--no-sandbox")
+        co.set_argument("--ignore-certificate-errors")
+        
+        # WebGL 相关参数
+        co.set_argument("--use-gl=swiftshader")
+        co.set_argument("--enable-webgl")
+        
+        # 随机端口
         co.auto_port()
 
-        # Mac 系统特殊处理
-        if sys.platform == "darwin":
-            co.set_argument("--no-sandbox")
+        # 系统特定设置
+        if sys.platform == "darwin":  # macOS
             co.set_argument("--disable-gpu")
+            co.set_argument("--no-sandbox")
+        elif sys.platform == "win32":  # Windows
+            co.set_argument("--disable-software-rasterizer")
+
+
+        # 设置窗口大小
+        window_width = random.randint(1024, 1920)
+        window_height = random.randint(768, 1080)
+        co.set_argument(f"--window-size={window_width},{window_height}")
 
         return co
 

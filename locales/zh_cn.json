@@ -48,7 +48,21 @@
         "press_enter": "按回车键退出",
         "updating_system_ids": "更新系统ID",
         "system_ids_updated": "系统ID更新成功",
-        "system_ids_update_failed": "系统ID更新失败: {error}"
+        "system_ids_update_failed": "系统ID更新失败: {error}",
+        "unsupported_os": "不支持的操作系统: {os}",
+        "linux_path_not_found": "Linux路径未找到",
+        "windows_guid_updated": "Windows GUID更新成功",
+        "windows_permission_denied": "Windows权限拒绝",
+        "windows_guid_update_failed": "Windows GUID更新失败",
+        "macos_uuid_updated": "macOS UUID更新成功",
+        "plutil_command_failed": "plutil命令失败",
+        "macos_uuid_update_failed": "macOS UUID更新失败",
+        "start_patching": "开始修补getMachineId",
+        "current_version": "当前Cursor版本: {version}",
+        "patch_completed": "getMachineId修补完成",
+        "patch_failed": "getMachineId修补失败: {error}",
+        "version_check_passed": "Cursor版本检查通过",
+        "file_modified": "文件已修改"
     },
     "register": {
         "title": "Cursor 注册工具",

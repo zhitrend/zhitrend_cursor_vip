@@ -48,8 +48,26 @@
         "press_enter": "按回車鍵退出",
         "updating_system_ids": "更新系統ID",
         "system_ids_updated": "系統ID更新成功",
-        "system_ids_update_failed": "系統ID更新失敗: {error}"
+        "system_ids_update_failed": "系統ID更新失敗: {error}",
+        "unsupported_os": "不支持的操作系統: {os}",
+        "linux_path_not_found": "Linux路徑未找到",
+        "windows_guid_updated": "Windows GUID更新成功",
+        "windows_permission_denied": "Windows權限拒絕",
+        "windows_guid_update_failed": "Windows GUID更新失敗",
+        "macos_uuid_updated": "macOS UUID更新成功",
+        "plutil_command_failed": "plutil命令失敗",
+        "macos_uuid_update_failed": "macOS UUID更新失敗",
+        "start_patching": "開始修補getMachineId",
+        "current_version": "當前Cursor版本: {version}",
+        "patch_completed": "getMachineId修補完成",
+        "patch_failed": "getMachineId修補失敗: {error}",
+        "version_check_passed": "Cursor版本檢查通過",
+        "file_modified": "文件已修改"
     },
+
+
+
+
     "register": {
         "title": "Cursor 註冊工具",
         "start": "開始註冊流程",
