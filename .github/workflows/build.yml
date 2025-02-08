@@ -169,25 +169,22 @@ jobs:
         with:
           path: artifacts
 
-      - name: Prepare release files
+      - name: List and prepare files
         run: |
           cd artifacts
-          for dir in */; do
-            base_name=$(basename "$dir")
-            mv "$dir"* "$base_name"
-            rmdir "$dir"
-          done
           ls -la
+          echo "Current files in artifacts:"
+          find . -type f
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
           files: |
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP.exe
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux/CursorFreeVIP
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel/CursorFreeVIP
           draft: false
           prerelease: false
         env:
