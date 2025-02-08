@@ -1,102 +1,131 @@
 name: Build Release
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       version:
         description: 'Version number (without v prefix)'
         required: true
         default: '1.0.0'
-  push:
-    tags:
-      - 'v*'
+
+permissions:
+  contents: write
+  actions: write
+  packages: write
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            build_script: build.sh
-            artifact_name: CursorFreeVIP_linux
-          - os: macos-latest
-            build_script: build.mac.command
-            artifact_name: CursorFreeVIP_mac
-          - os: windows-latest
-            build_script: build.bat
-            artifact_name: CursorFreeVIP_windows.exe
-    
-    runs-on: ${{ matrix.os }}
-    
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
         with:
           python-version: '3.10'
-          
-      - name: Get version
-        id: get_version
-        shell: bash
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-          else
-            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-          fi
-
-      - name: Make scripts executable (Unix)
-        if: runner.os != 'Windows'
-        run: |
-          chmod +x ${{ matrix.build_script }}
-          
-      - name: Install dependencies
+      - name: Build
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Build
+          chmod +x build.sh
+          ./build.sh
+      - name: Rename artifact
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            cmd /c ${{ matrix.build_script }}
-          else
-            ./${{ matrix.build_script }}
+          VERSION=${GITHUB_REF#refs/tags/v}
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION=${{ github.event.inputs.version }}
           fi
-        shell: bash
-
-      - name: Rename artifacts
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            mv dist/*.exe "dist/CursorFreeVIP_${VERSION}_windows.exe"
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            mv dist/* "dist/CursorFreeVIP_${VERSION}_mac"
-          else
-            mv dist/* "dist/CursorFreeVIP_${VERSION}_linux"
-          fi
-
-      - name: Upload artifacts
+          mv dist/* "dist/CursorFreeVIP_${VERSION}_linux"
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: dist/*
+          name: cursor-linux
+          path: dist/CursorFreeVIP*
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - name: Build
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          cmd /c build.bat
+      - name: Rename artifact
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION=${{ github.event.inputs.version }}
+          fi
+          mv dist/*.exe "dist/CursorFreeVIP_${VERSION}_windows.exe"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cursor-windows
+          path: dist/CursorFreeVIP*
+
+  build-macos:
+    name: Build MacOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+      - name: Build
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          chmod +x build.mac.command
+          ./build.mac.command
+      - name: Rename artifact
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION=${{ github.event.inputs.version }}
+          fi
+          mv dist/* "dist/CursorFreeVIP_${VERSION}_mac"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cursor-macos
+          path: dist/CursorFreeVIP*
 
   create-release:
-    needs: build
+    needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
-        
+        with:
+          path: artifacts
+          
+      - name: Create release archives
+        run: |
+          cd artifacts
+          zip -r cursor-linux.zip cursor-linux/
+          zip -r cursor-windows.zip cursor-windows/
+          zip -r cursor-macos.zip cursor-macos/
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            CursorFreeVIP_linux/*
-            CursorFreeVIP_mac/*
-            CursorFreeVIP_windows.exe/*
+            artifacts/cursor-linux.zip
+            artifacts/cursor-windows.zip
+            artifacts/cursor-macos.zip
           draft: false
           prerelease: false
         env:
