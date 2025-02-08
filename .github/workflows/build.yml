@@ -18,10 +18,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # 获取所有标签
+          
+      - name: Delete existing tag if exists
+        run: |
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ github.event.inputs.version }}"; then
+            git push origin --delete "v${{ github.event.inputs.version }}" || true
+            git tag -d "v${{ github.event.inputs.version }}" || true
+          fi
+          
       - name: Create Tag
         run: |
-          git tag v${{ github.event.inputs.version }}
-          git push origin v${{ github.event.inputs.version }}
+          git tag "v${{ github.event.inputs.version }}"
+          git push origin "v${{ github.event.inputs.version }}"
 
   build-windows:
     needs: create-tag
