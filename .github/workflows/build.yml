@@ -4,6 +4,17 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (without v prefix)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+      contents: write
+      actions: write
+      packages: write
 
 jobs:
   build-windows:
