@@ -28,6 +28,15 @@ jobs:
       with:
         python-version: '3.x'
     
+    - name: Get version
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        else
+          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        fi
+    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -38,11 +47,16 @@ jobs:
       run: |
         pyinstaller build.spec
         
+    - name: Rename artifact
+      shell: bash
+      run: |
+        mv dist/*.exe "dist/CursorFreeVIP_${VERSION}_windows.exe"
+        
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP-Windows
-        path: dist/*.exe
+        path: dist/CursorFreeVIP_*_windows.exe
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -130,31 +144,40 @@ jobs:
   create-release:
     needs: [build-windows, build-macos-arm64, build-linux, build-macos-intel]
     runs-on: ubuntu-22.04
-    if: startsWith(github.ref, 'refs/tags/')
     
     steps:
+      - name: Get version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          fi
+          
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
           
-      - name: Create release archives
+      - name: Prepare release files
         run: |
           cd artifacts
-          zip -r CursorFreeVIP-Windows.zip CursorFreeVIP-Windows/
-          zip -r CursorFreeVIP-MacOS-ARM64.zip CursorFreeVIP-MacOS-ARM64/
-          zip -r CursorFreeVIP-Linux.zip CursorFreeVIP-Linux/
-          zip -r CursorFreeVIP-MacOS-Intel.zip CursorFreeVIP-MacOS-Intel/
-
+          mv CursorFreeVIP-Windows/* .
+          mv CursorFreeVIP-MacOS-ARM64/* .
+          mv CursorFreeVIP-Linux/* .
+          mv CursorFreeVIP-MacOS-Intel/* .
+          rm -rf CursorFreeVIP-*/
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/CursorFreeVIP-Windows.zip
-            artifacts/CursorFreeVIP-MacOS-ARM64.zip
-            artifacts/CursorFreeVIP-Linux.zip
-            artifacts/CursorFreeVIP-MacOS-Intel.zip
-
+            artifacts/CursorFreeVIP_${VERSION}_windows.exe
+            artifacts/CursorFreeVIP_${VERSION}_mac_arm64
+            artifacts/CursorFreeVIP_${VERSION}_linux
+            artifacts/CursorFreeVIP_${VERSION}_mac_intel
+          draft: false
+          prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
