@@ -46,17 +46,12 @@ jobs:
     - name: Build EXE
       run: |
         pyinstaller build.spec
-        
-    - name: Rename artifact
-      shell: bash
-      run: |
-        mv dist/*.exe "dist/CursorFreeVIP_${VERSION}_windows.exe"
-        
+         
     - name: Upload Windows artifact
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP-Windows
-        path: dist/CursorFreeVIP_*_windows.exe
+        path: dist/CursorFreeVIP_${VERSION}_windows.exe
 
   build-macos-arm64:
     runs-on: macos-latest
@@ -83,7 +78,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP-MacOS-ARM64
-        path: dist/*
+        path: dist/CursorFreeVIP_${VERSION}_mac_arm64
 
   build-linux:
     runs-on: ubuntu-22.04
@@ -110,7 +105,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP-Linux
-        path: dist/*
+        path: dist/CursorFreeVIP_${VERSION}_linux
+
 
   build-macos-intel:
     runs-on: macos-latest
@@ -139,7 +135,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP-MacOS-Intel
-        path: dist/*
+        path: dist/CursorFreeVIP_${VERSION}_mac_intel
+
 
   create-release:
     needs: [build-windows, build-macos-arm64, build-linux, build-macos-intel]
@@ -163,11 +160,12 @@ jobs:
       - name: Prepare release files
         run: |
           cd artifacts
-          mv CursorFreeVIP-Windows/* .
-          mv CursorFreeVIP-MacOS-ARM64/* .
-          mv CursorFreeVIP-Linux/* .
-          mv CursorFreeVIP-MacOS-Intel/* .
-          rm -rf CursorFreeVIP-*/
+          mv CursorFreeVIP_*_Windows/* .
+          mv CursorFreeVIP_*_MacOS_ARM64/* .
+          mv CursorFreeVIP_*_Linux/* .
+          mv CursorFreeVIP_*_MacOS_Intel/* .
+          rm -rf CursorFreeVIP_*_*/
+
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
