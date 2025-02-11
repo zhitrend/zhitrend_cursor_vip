@@ -179,22 +179,27 @@ jobs:
         with:
           path: artifacts
 
-      - name: List and prepare files
+      - name: Prepare release files
         run: |
           cd artifacts
+          # 重命名文件为最终的可执行文件名
+          mv CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP.exe CursorFreeVIP_${{ env.VERSION }}_windows.exe
+          mv CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP CursorFreeVIP_${{ env.VERSION }}_mac_arm64
+          mv CursorFreeVIP_${{ env.VERSION }}_linux/CursorFreeVIP CursorFreeVIP_${{ env.VERSION }}_linux
+          mv CursorFreeVIP_${{ env.VERSION }}_mac_intel/CursorFreeVIP CursorFreeVIP_${{ env.VERSION }}_mac_intel
+          # 删除空目录
+          rm -rf */
           ls -la
-          echo "Current files in artifacts:"
-          find . -type f
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
           files: |
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP.exe
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux/CursorFreeVIP
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel/CursorFreeVIP
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel
           draft: false
           prerelease: false
         env:
