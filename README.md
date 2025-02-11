@@ -38,6 +38,15 @@ This is a tool to automatically register (except for Google verification code), 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.0.10</summary>
+
+1. Hot Fix Mac Chrome Problem | 修復Mac Chrome問題
+2. Fix Linux Start Donet Problem | 修復Linux啟動開發者問題
+</details>
+<details>
+
+<summary>Other Version Change Log</summary>
+<details>
 <summary>v1.0.9</summary>
 
 <p align="center">
@@ -49,9 +58,6 @@ This is a tool to automatically register (except for Google verification code), 
 3. Add Support Crypto Machine Regedit | 增加支持加密機器註冊
 4. Add Remake main.js | 重做main.js
 </details>
-<details>
-
-<summary>Other Version Change Log</summary>
 <details>
 <summary>v1.0.8</summary>
 
