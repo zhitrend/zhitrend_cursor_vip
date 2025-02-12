@@ -38,19 +38,30 @@ This is a tool to automatically register (except for Google verification code), 
 
 ## 🔄 更新日志
 <details open>
+<summary>v1.1.01</summary>
+
+<p align="center">
+  <img src="./images/cloudflare_2025-02-12_13-43-21.png" alt="free" width="400"/><br>
+</p>
+
+1. Hot Fix Cursor Cloudflare Problem | 修復Cursor Cloudflare問題
+2. Fix Cursor Cloudflare Human Verification Problem | 修復Cursor Cloudflare人機驗證問題
+3. Remake signup logic | 重做註冊邏輯
+</details>
+<details>
+
+<summary>Other Version Change Log</summary>
+<details>
 <summary>v1.0.10</summary>
 
 1. Hot Fix Mac Chrome Problem | 修復Mac Chrome問題
 2. Fix Linux Start Donet Problem | 修復Linux啟動開發者問題
 </details>
 <details>
-
-<summary>Other Version Change Log</summary>
-<details>
 <summary>v1.0.9</summary>
 
 <p align="center">
-  <img src="./images/pass_2025-02-08_21-48-36.png" alt="free" width="400"/><br>
+  <img src="./images/cloudflare_2025-02-12_13-43-21.png.png" alt="free" width="400"/><br>
 </p>
 
 1. Fixed New 0.45.x Version Reset Machine | 修復新0.45版本重置機器
