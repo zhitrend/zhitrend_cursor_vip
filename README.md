@@ -26,11 +26,11 @@ This is a tool to automatically register (except for Google verification code), 
   <img src="./images/free_2025-01-14_14-59-15.png" alt="free" width="400"/><br>
 </p>
 
-## ⚠️ Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify ⚠️
-### If you dont have google chrome , you can download it from [here](https://www.google.com/intl/en_pk/chrome/)
+##### ⚠️ Google Recaptcha need to be manually verified, don't be lazy, move your fingers, verify it, otherwise it will keep prompting you to verify ⚠️
+##### If you dont have google chrome , you can download it from [here](https://www.google.com/intl/en_pk/chrome/)
 
-## ⚠️ 郵箱驗證 需要手動驗證，不要那麼懶，動一動手指，驗證一下，不然會一直提示你驗證 ⚠️
-### 如果沒有Google Chrome，可以從[這裡](https://www.google.com/intl/en_pk/chrome/)下載
+##### ⚠️ 郵箱驗證 需要手動驗證，不要那麼懶，動一動手指，驗證一下，不然會一直提示你驗證 ⚠️
+##### 如果沒有Google Chrome，可以從[這裡](https://www.google.com/intl/en_pk/chrome/)下載
 
 </p>
 </div>
@@ -200,9 +200,7 @@ This is a tool to automatically register (except for Google verification code), 
 |Linux|ARM64|✅|Linux|ARM64|✅|
 
 ## 👀 How to use | 如何使用
-|⚠️Must logout your account before running the script⚠️|⚠️必須先登出你的帳戶再運行腳本⚠️ |
-|:---:|:---:|
-<br>
+
 <details open>
 <summary><b>⭐ Auto Run Script | 腳本自動化運行</b></summary>
 
@@ -236,8 +234,6 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 ## ❗ Note | 注意事項
 
 * Confirm that Cursor is closed before running the script <br>請確保在運行腳本前已經關閉 Cursor<br>
-
-* Do not close this script when using Cursor <br>使用Cursor時請勿關閉此腳本<br>
 
 * This tool is only for learning and research purposes <br>此工具僅供學習和研究使用<br>
 
