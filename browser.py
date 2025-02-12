@@ -27,12 +27,15 @@ class BrowserManager:
         try:
             extension_path = self._get_extension_path()
             co.add_extension(extension_path)
+            co.set_argument("--allow-extensions-in-incognito")
 
             extension_block_path = self.get_extension_block()
             co.add_extension(extension_block_path)
+            co.set_argument("--allow-extensions-in-incognito")
 
             extension_recaptcha_path = self.get_extension_recaptcha()
             co.add_extension(extension_recaptcha_path)
+            co.set_argument("--allow-extensions-in-incognito")
 
         except FileNotFoundError as e:
             logging.warning(f"警告: {e}")

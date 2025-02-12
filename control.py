@@ -77,41 +77,53 @@ class BrowserControl:
             return False
 
     def select_email_domain(self, domain_index=None):
-        """选择邮箱域名，如果不指定index则随机选择。避免选择fr.nf域名"""
+        """选择邮箱域名，如果不指定index则随机选择"""
         try:
             print(f"{Fore.CYAN}{EMOJI['MAIL']} {self.translator.get('control.select_email_domain')}...{Style.RESET_ALL}")
+            
+            # 读取黑名单域名
+            blacklist = []
+            try:
+                with open('blacklist.txt', 'r', encoding='utf-8') as f:
+                    blacklist = [line.strip().lower() for line in f if line.strip()]
+            except FileNotFoundError:
+                # 如果文件不存在，创建一个包含已知黑名单域名的文件
+                with open('blacklist.txt', 'w', encoding='utf-8') as f:
+                    f.write("fr.nf\nyopmail.com\n1s.fr\nfr.cr")
+                blacklist = ["fr.nf", "yopmail.com", "1s.fr", "fr.cr"]
+            
             # 找到下拉框
             select_element = self.browser.ele('xpath://select[@id="seldom"]')
             if select_element:
-                # 获取所有选项，包括两个 optgroup 下的所有 option
+                # 获取所有选项
                 all_options = []
-                
-                # 获取 "新的" 组下的选项
                 new_options = self.browser.eles('xpath://select[@id="seldom"]/optgroup[@label="-- 新的 --"]/option')
-                all_options.extend(new_options)
-                
-                # 获取 "其他" 组下的选项
                 other_options = self.browser.eles('xpath://select[@id="seldom"]/optgroup[@label="-- 其他 --"]/option')
+                all_options.extend(new_options)
                 all_options.extend(other_options)
                 
                 if all_options:
-                    max_attempts = 5  # 最大尝试次数
+                    max_attempts = 5
                     attempt = 0
                     
                     while attempt < max_attempts:
-                        # 如果没有指定索引，随机选择一个
                         if domain_index is None:
                             domain_index = random.randint(0, len(all_options) - 1)
                         
                         if domain_index < len(all_options):
-                            # 获取选中选项的文本
-                            selected_domain = all_options[domain_index].text
+                            selected_domain = all_options[domain_index].text.lower()
                             
-                            # 检查是否为fr.nf域名
-                            if "fr.nf" in selected_domain.lower():
-                                print(f"{Fore.YELLOW}{EMOJI['INFO']} 检测到fr.nf域名，重新选择...{Style.RESET_ALL}")
-                                domain_index = None  # 重置索引以便重新随机选择
-                                attempt += 1
+                            # 检查域名是否在黑名单中
+                            is_blacklisted = False
+                            for blocked_domain in blacklist:
+                                if blocked_domain in selected_domain:
+                                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('control.blocked_domain', domain=blocked_domain)}{Style.RESET_ALL}")
+                                    domain_index = None
+                                    attempt += 1
+                                    is_blacklisted = True
+                                    break
+                            
+                            if is_blacklisted:
                                 continue
                             
                             print(f"{Fore.CYAN}{EMOJI['MAIL']} {self.translator.get('control.select_email_domain')}: {selected_domain}{Style.RESET_ALL}")
@@ -124,7 +136,7 @@ class BrowserControl:
                         
                         attempt += 1
                     
-                    print(f"{Fore.RED}{EMOJI['ERROR']} 无法找到合适的非fr.nf域名{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{EMOJI['ERROR']} 无法找到可用的域名{Style.RESET_ALL}")
                     return False
                 
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('control.no_available_domain_options', count=len(all_options))}{Style.RESET_ALL}")
@@ -132,6 +144,7 @@ class BrowserControl:
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('control.no_domain_select_box')}{Style.RESET_ALL}")
                 return False
+            
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('control.select_email_domain_failed', error=str(e))}{Style.RESET_ALL}")
             return False

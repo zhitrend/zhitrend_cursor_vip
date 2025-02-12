@@ -66,12 +66,25 @@
     },
     "register": {
         "title": "Cursor Registration Tool",
-
-
         "start": "Starting Registration Process",
+        "handling_turnstile": "Handling Turnstile",
+        "retry_verification": "Retry Verification",
+        "detect_turnstile": "Detect Turnstile",
+        "verification_success": "Verification Success",
+        "starting_browser": "Starting Browser",
+        "form_success": "Form Success",
+        "browser_started": "Browser Started",
+        "waiting_for_second_verification": "Waiting for Second Verification",
+        "waiting_for_verification_code": "Waiting for Verification Code",
+        "password_success": "Password Set Successfully",
+        "password_error": "Password Set Failed: {error}",
+        "waiting_for_page_load": "Waiting for Page Load",
+        "first_verification_passed": "First Verification Passed",
         "mailbox": "Successfully Entered Mailbox",
         "register_start": "Start Register",
+        "form_submitted": "Form Submitted, Start Verification...",
         "filling_form": "Fill Form",
+        "visiting_url": "Visiting URL",
         "basic_info": "Basic Info Submitted",
         "handle_turnstile": "Handle Turnstile",
         "no_turnstile": "Not Detect Turnstile",
@@ -131,6 +144,7 @@
     },
     "control": {
         "generate_email": "Generating New Email",
+        "blocked_domain": "Blocked Domain",
         "select_domain": "Selecting Random Domain",
         "copy_email": "Copying Email Address",
         "enter_mailbox": "Entering Mailbox",
@@ -158,6 +172,7 @@
         "get_cursor_session_token_failed": "Get Cursor Session Token Failed",
         "save_token_failed": "Save Token Failed",
         "database_updated_successfully": "Database Updated Successfully",
-        "database_connection_closed": "Database Connection Closed"
+        "database_connection_closed": "Database Connection Closed",
+        "no_valid_verification_code": "No Valid Verification Code"
     }
 }

@@ -64,21 +64,32 @@
         "version_check_passed": "Cursor版本檢查通過",
         "file_modified": "文件已修改"
     },
-
-
-
-
     "register": {
         "title": "Cursor 註冊工具",
         "start": "開始註冊流程",
         "mailbox": "成功進入郵箱",
+        "browser_started": "瀏覽器已啟動",
+        "waiting_for_page_load": "等待頁面加載",
+        "password_success": "密碼設置完成",
+        "password_error": "密碼設置失敗: {error}",
+        "visiting_url": "訪問URL",
+        "first_verification_passed": "第一階段驗證通過",
         "register_start": "開始註冊流程",
+        "form_submitted": "表單已提交，開始驗證...",
+        "waiting_for_second_verification": "等待第二階段驗證",
         "filling_form": "填寫註冊信息",
         "basic_info": "基本信息提交完成",
         "handle_turnstile": "處理 Turnstile 驗證",
         "no_turnstile": "未檢測到 Turnstile 驗證",
         "turnstile_passed": "驗證通過",
         "verification_start": "開始獲取驗證碼",
+        "waiting_for_verification_code": "等待驗證碼",
+        "handling_turnstile": "處理 Turnstile 驗證",
+        "retry_verification": "重試驗證",
+        "detect_turnstile": "檢測 Turnstile 驗證",
+        "verification_success": "驗證成功",
+        "starting_browser": "啟動瀏覽器",
+        "form_success": "表單提交成功",
         "verification_timeout": "獲取驗證碼超時",
         "verification_not_found": "未找到驗證碼",
         "try_get_code": "第 {attempt} 次嘗試獲取驗證碼 | 剩餘時間: {time}秒",
@@ -157,6 +168,8 @@
         "get_cursor_session_token": "獲取Cursor Session Token",
         "get_cursor_session_token_success": "獲取Cursor Session Token成功",
         "get_cursor_session_token_failed": "獲取Cursor Session Token失敗",
-        "save_token_failed": "保存Token失敗"
+        "save_token_failed": "保存Token失敗",
+        "blocked_domain": "被屏蔽的域名",
+        "no_valid_verification_code": "沒有有效的驗證碼"
     }
 } 

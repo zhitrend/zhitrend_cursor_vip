@@ -96,238 +96,51 @@ class CursorRegistration:
 
     def register_cursor(self):
         """注册 Cursor"""
-        signup_browser_manager = None
+        browser_tab = None
         try:
             print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.register_start')}...{Style.RESET_ALL}")
             
-            # 创建新的浏览器实例用于注册
-            from browser import BrowserManager
-            signup_browser_manager = BrowserManager(noheader=False)
-            self.signup_tab = signup_browser_manager.init_browser()
+            # 直接使用 new_signup.py 进行注册
+            from new_signup import main as new_signup_main
             
-            # 访问注册页面
-            self.signup_tab.get(self.sign_up_url)
-            time.sleep(2)
-
-            # 填写注册表单
-            if self.signup_tab.ele("@name=first_name"):
-                print(f"{Fore.CYAN}{EMOJI['FORM']} {self.translator.get('register.filling_form')}...{Style.RESET_ALL}")
-                
-                self.signup_tab.ele("@name=first_name").input(self.first_name)
-                time.sleep(random.uniform(1, 2))
-                
-                self.signup_tab.ele("@name=last_name").input(self.last_name)
-                time.sleep(random.uniform(1, 2))
-                
-                self.signup_tab.ele("@name=email").input(self.email_address)
-                time.sleep(random.uniform(1, 2))
-                
-                self.signup_tab.ele("@type=submit").click()
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.basic_info_submitted')}...{Style.RESET_ALL}")
-
-            # 处理 Turnstile 验证
-            self._handle_turnstile()
-
-            # 设置密码
-            if self.signup_tab.ele("@name=password"):
-                print(f"{Fore.CYAN}{EMOJI['PASSWORD']} {self.translator.get('register.set_password')}...{Style.RESET_ALL}")
-                self.signup_tab.ele("@name=password").input(self.password)
-                time.sleep(random.uniform(1, 2))
-                self.signup_tab.ele("@type=submit").click()
+            # 执行新的注册流程，传入 translator
+            result, browser_tab = new_signup_main(
+                email=self.email_address,
+                password=self.password,
+                first_name=self.first_name,
+                last_name=self.last_name,
+                email_tab=self.email_tab,
+                controller=self.controller,
+                translator=self.translator
+            )
             
-            self._handle_turnstile()
-
-            # 等待并获取验证码
-            time.sleep(5)  # 等待验证码邮件
-
-            self.browser.refresh()
+            if result:
+                # 使用返回的浏览器实例获取账户信息
+                self.signup_tab = browser_tab  # 保存浏览器实例
+                success = self._get_account_info()
+                
+                # 获取信息后关闭浏览器
+                if browser_tab:
+                    try:
+                        browser_tab.quit()
+                    except:
+                        pass
+                
+                return success
             
-            # 获取验证码，设置60秒超时
-            verification_code = None
-            max_attempts = 20  # 增加到10次尝试
-            retry_interval = 10  # 每5秒重试一次
-            start_time = time.time()
-            timeout = 160  # 60秒超时
-
-            print(f"{Fore.CYAN}{EMOJI['WAIT']} {self.translator.get('register.start_getting_verification_code')}...{Style.RESET_ALL}")
+            return False
             
-            for attempt in range(max_attempts):
-                # 检查是否超时
-                if time.time() - start_time > timeout:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.get_verification_code_timeout')}...{Style.RESET_ALL}")
-                    break
-                    
-                verification_code = self.controller.get_verification_code()
-                if verification_code:
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.get_verification_code_success')}: {verification_code}{Style.RESET_ALL}")
-                    break
-                    
-                remaining_time = int(timeout - (time.time() - start_time))
-                print(f"{Fore.YELLOW}{EMOJI['WAIT']} {self.translator.get('register.try_get_verification_code', attempt=attempt + 1, remaining_time=remaining_time)}...{Style.RESET_ALL}")
-                
-                # 刷新邮箱
-                self.browser.refresh()
-                time.sleep(retry_interval)
-            
-            if verification_code:
-                # 在注册页面填写验证码
-                for i, digit in enumerate(verification_code):
-                    self.signup_tab.ele(f"@data-index={i}").input(digit)
-                    time.sleep(random.uniform(0.1, 0.3))
-                
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.verification_code_filled')}...{Style.RESET_ALL}")
-                time.sleep(3)
-
-                self._handle_turnstile()
-                
-                # 检查当前URL
-                current_url = self.signup_tab.url
-                if "authenticator.cursor.sh" in current_url:
-                    print(f"{Fore.CYAN}{EMOJI['VERIFY']} {self.translator.get('register.detect_login_page')}...{Style.RESET_ALL}")
-                    
-                    # 填写邮箱
-                    email_input = self.signup_tab.ele('@name=email')
-                    if email_input:
-                        email_input.input(self.email_address)
-                        time.sleep(random.uniform(1, 2))
-                        
-                        # 点击提交
-                        submit_button = self.signup_tab.ele('@type=submit')
-                        if submit_button:
-                            submit_button.click()
-                            time.sleep(2)
-                            
-                            # 处理 Turnstile 验证
-                            self._handle_turnstile()
-                            
-                            # 填写密码
-                            password_input = self.signup_tab.ele('@name=password')
-                            if password_input:
-                                password_input.input(self.password)
-                                time.sleep(random.uniform(1, 2))
-                                
-                                # 点击提交
-                                submit_button = self.signup_tab.ele('@type=submit')
-                                if submit_button:
-                                    submit_button.click()
-                                    time.sleep(2)
-                                    
-                                    # 处理 Turnstile 验证
-                                    self._handle_turnstile()
-                                    
-                                    # 等待跳转到设置页面
-                                    max_wait = 30
-                                    start_time = time.time()
-                                    while time.time() - start_time < max_wait:
-                                        if "cursor.com/settings" in self.signup_tab.url:
-                                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.login_success_and_jump_to_settings_page')}...{Style.RESET_ALL}")
-                                            break
-                                        time.sleep(1)
-                
-                # 获取账户信息
-                result = self._get_account_info()
-                
-                # 关闭注册窗口
-                if signup_browser_manager:
-                    signup_browser_manager.quit()
-                    
-                return result
-            else:
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.get_verification_code_timeout')}...{Style.RESET_ALL}")
-                return False
-
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.register_process_error', error=str(e))}{Style.RESET_ALL}")
             return False
         finally:
-            # 确保在任何情况下都关闭注册窗口
-            if signup_browser_manager:
-                signup_browser_manager.quit()
-
-    def _handle_turnstile(self):
-        """处理 Turnstile 验证"""
-        try:
-            print(f"{Fore.YELLOW}{EMOJI['VERIFY']} {self.translator.get('register.handle_turnstile')}...{Style.RESET_ALL}")
-            
-            max_retries = 2
-            retry_interval = (1, 2)
-            retry_count = 0
-
-            while retry_count < max_retries:
-                retry_count += 1
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('register.turnstile_attempt', attempt=retry_count)}...{Style.RESET_ALL}")
-
+            # 确保在任何情况下都关闭浏览器
+            if browser_tab:
                 try:
-                    # 尝试重置 turnstile
-                    self.signup_tab.run_js("try { turnstile.reset() } catch(e) { }")
-                    time.sleep(2)
-
-                    # 定位验证框元素
-                    challenge_check = (
-                        self.signup_tab.ele("@id=cf-turnstile", timeout=2)
-                        .child()
-                        .shadow_root.ele("tag:iframe")
-                        .ele("tag:body")
-                        .sr("tag:input")
-                    )
-
-                    if challenge_check:
-                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('register.turnstile_detected')}...{Style.RESET_ALL}")
-                        
-                        # 随机延时后点击验证
-                        time.sleep(random.uniform(1, 3))
-                        challenge_check.click()
-                        time.sleep(2)
-
-                        # 检查验证结果
-                        if self._check_verification_success():
-                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
-                            return True
-
-                except Exception as e:
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('register.turnstile_attempt_failed', error=str(e))}{Style.RESET_ALL}")
-
-                # 检查是否已经验证成功
-                if self._check_verification_success():
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.turnstile_passed')}{Style.RESET_ALL}")
-                    return True
-
-                # 随机延时后继续下一次尝试
-                time.sleep(random.uniform(*retry_interval))
-
-            # 超出最大重试次数
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.turnstile_max_retries', max=max_retries)}{Style.RESET_ALL}")
-            return False
-
-        except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.turnstile_error', error=str(e))}{Style.RESET_ALL}")
-            return False
-
-    def _check_verification_success(self):
-        """检查验证是否成功"""
-        try:
-            # 检查是否存在后续表单元素，这表示验证已通过
-            if (self.signup_tab.ele("@name=password", timeout=0.5) or 
-                self.signup_tab.ele("@name=email", timeout=0.5) or
-                self.signup_tab.ele("@data-index=0", timeout=0.5) or
-                self.signup_tab.ele("Account Settings", timeout=0.5)):
-                return True
-            
-            # 检查是否出现错误消息
-            error_messages = [
-                'xpath://div[contains(text(), "Can\'t verify the user is human")]',
-                'xpath://div[contains(text(), "Error: 600010")]',
-                'xpath://div[contains(text(), "Please try again")]'
-            ]
-            
-            for error_xpath in error_messages:
-                if self.signup_tab.ele(error_xpath):
-                    return False
+                    browser_tab.quit()
+                except:
+                    pass
                 
-            return False
-        except:
-            return False
-
     def _get_account_info(self):
         """获取账户信息和 Token"""
         try:

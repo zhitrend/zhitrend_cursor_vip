@@ -32,7 +32,8 @@ a = Analysis(
         ('cursor_register.py', '.'),
         ('browser.py', '.'),
         ('control.py', '.'),
-        ('.env', '.')
+        ('.env', '.'),
+        ('blacklist.txt', '.')
     ],
     hiddenimports=[
         'cursor_auth',

@@ -67,10 +67,25 @@
     "register": {
         "title": "Cursor 注册工具",
         "start": "开始注册流程",
+        "browser_started": "浏览器已启动",
+        "password_success": "密码设置完成",
+        "password_error": "密码设置失败: {error}",
+        "waiting_for_page_load": "等待页面加载",
         "mailbox": "成功进入邮箱",
+        "waiting_for_second_verification": "等待第二阶段验证",
+        "waiting_for_verification_code": "等待验证码",
+        "first_verification_passed": "第一阶段验证通过",
         "register_start": "开始注册流程",
+        "form_submitted": "表单已提交，开始验证...",
         "filling_form": "填写注册信息",
+        "visiting_url": "访问URL",
         "basic_info": "基本信息提交完成",
+        "handling_turnstile": "处理 Turnstile 验证",
+        "retry_verification": "重试验证",
+        "detect_turnstile": "检测 Turnstile 验证",
+        "verification_success": "验证成功",
+        "starting_browser": "启动浏览器",
+        "form_success": "表单提交成功",
         "handle_turnstile": "处理 Turnstile 验证",
         "no_turnstile": "未检测到 Turnstile 验证",
         "turnstile_passed": "验证通过",
@@ -131,6 +146,7 @@
         "select_domain": "选择随机域名",
         "copy_email": "复制邮箱地址",
         "enter_mailbox": "进入邮箱",
+        "blocked_domain": "被屏蔽的域名",
         "refresh_mailbox": "刷新邮箱",
         "check_verification": "检查验证码",
         "verification_found": "找到验证码",
@@ -153,6 +169,7 @@
         "get_cursor_session_token": "获取Cursor Session Token",
         "get_cursor_session_token_success": "获取Cursor Session Token成功",
         "get_cursor_session_token_failed": "获取Cursor Session Token失败",
-        "save_token_failed": "保存Token失败"
+        "save_token_failed": "保存Token失败",
+        "no_valid_verification_code": "没有有效的验证码"
     }
 } 
