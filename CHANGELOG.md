@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.3.02
+
+1. Add Buy Me a Coffee | 增加請我喝杯咖啡
+2. Add PayPal | 增加PayPal
+3. Very Small Fix | 非常小的修復
+4. Fix main.py option number | 修復main.py選項數量
+
 ## v1.3.01
 
 1. Add Manual Email Input | 增加手動輸入郵箱地址
