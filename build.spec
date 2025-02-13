@@ -24,7 +24,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('turnstilePatch', 'turnstilePatch'),
-        ('uBlock0.chromium', 'uBlock0.chromium'),
+        ('PBlock', 'PBlock'),
         ('locales', 'locales'),
         ('cursor_auth.py', '.'),
         ('reset_machine_manual.py', '.'),
