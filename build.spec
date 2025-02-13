@@ -24,7 +24,6 @@ a = Analysis(
     binaries=[],
     datas=[
         ('turnstilePatch', 'turnstilePatch'),
-        ('recaptchaPatch', 'recaptchaPatch'),
         ('uBlock0.chromium', 'uBlock0.chromium'),
         ('locales', 'locales'),
         ('cursor_auth.py', '.'),
@@ -32,8 +31,7 @@ a = Analysis(
         ('cursor_register.py', '.'),
         ('browser.py', '.'),
         ('control.py', '.'),
-        ('.env', '.'),
-        ('blacklist.txt', '.')
+        ('.env', '.')
     ],
     hiddenimports=[
         'cursor_auth',

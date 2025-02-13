@@ -100,12 +100,11 @@ def setup_driver(translator=None):
     
     # 使用无痕模式
     co.set_argument("--incognito")
-    co.set_argument("--headless=new")
     
     # 设置随机端口
     co.auto_port()
     
-    # 使用有头模式
+    # 使用有头模式(一定要设置为False，模擬人類操作)
     co.headless(False)
     
     try:

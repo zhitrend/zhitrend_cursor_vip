@@ -32,11 +32,6 @@ class BrowserManager:
             extension_block_path = self.get_extension_block()
             co.add_extension(extension_block_path)
             co.set_argument("--allow-extensions-in-incognito")
-
-            extension_recaptcha_path = self.get_extension_recaptcha()
-            co.add_extension(extension_recaptcha_path)
-            co.set_argument("--allow-extensions-in-incognito")
-
         except FileNotFoundError as e:
             logging.warning(f"警告: {e}")
 
@@ -47,35 +42,6 @@ class BrowserManager:
 
         # 基本设置
         co.set_pref("credentials_enable_service", False)
-        co.set_pref("profile.password_manager_enabled", False)
-        
-        # 禁用自动化标志
-        co.set_pref("useAutomationExtension", False)
-        co.set_pref("excludeSwitches", ["enable-automation"])
-        
-        # WebGL 和 GPU 设置
-        co.set_pref("webgl.disabled", False)
-        co.set_pref("webgl.enable_webgl2", True)
-        
-        # 设置语言和地区
-        co.set_pref("intl.accept_languages", "en-US,en")
-        
-        # 基本命令行参数
-        co.set_argument("--disable-blink-features=AutomationControlled")
-        co.set_argument("--hide-crash-restore-bubble")
-        co.set_argument("--no-first-run")
-        co.set_argument("--no-default-browser-check")
-        co.set_argument("--disable-popup-blocking")
-        
-        # 性能和稳定性参数
-        co.set_argument("--disable-dev-shm-usage")
-        co.set_argument("--disable-gpu")
-        co.set_argument("--no-sandbox")
-        co.set_argument("--ignore-certificate-errors")
-        
-        # WebGL 相关参数
-        co.set_argument("--use-gl=swiftshader")
-        co.set_argument("--enable-webgl")
         
         # 随机端口
         co.auto_port()
@@ -86,7 +52,6 @@ class BrowserManager:
             co.set_argument("--no-sandbox")
         elif sys.platform == "win32":  # Windows
             co.set_argument("--disable-software-rasterizer")
-
 
         # 设置窗口大小
         window_width = random.randint(1024, 1920)
@@ -115,19 +80,6 @@ class BrowserManager:
         
         if hasattr(sys, "_MEIPASS"):
             extension_path = os.path.join(sys._MEIPASS, "uBlock0.chromium")
-
-        if not os.path.exists(extension_path):
-            raise FileNotFoundError(f"插件不存在: {extension_path}")
-
-        return extension_path
-
-    def get_extension_recaptcha(self):
-        """获取插件路径"""
-        root_dir = os.getcwd()
-        extension_path = os.path.join(root_dir, "recaptchaPatch")
-
-        if hasattr(sys, "_MEIPASS"):
-            extension_path = os.path.join(sys._MEIPASS, "recaptchaPatch")
 
         if not os.path.exists(extension_path):
             raise FileNotFoundError(f"插件不存在: {extension_path}")
