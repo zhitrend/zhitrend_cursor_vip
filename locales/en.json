@@ -4,6 +4,7 @@
         "exit": "Exit Program",
         "reset": "Reset Machine Manual",
         "register": "Register Cursor",
+        "register_manual": "Register Cursor With Manual Email",
         "quit": "Quit Cursor",
         "select_language": "Select Language",
         "input_choice": "Enter your choice ({choices})",
@@ -123,7 +124,9 @@
         "get_email_address": "Get Email Address",
         "update_cursor_auth_info": "Update Cursor Auth Info",
         "register_process_error": "Register Process Error: {error}",
-        "setting_password": "Setting Password"
+        "setting_password": "Setting Password",
+        "manual_code_input": "Manual Code Input",
+        "manual_email_input": "Manual Email Input"
     },
     "auth": {
         "title": "Cursor Auth Manager",

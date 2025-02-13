@@ -275,23 +275,126 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
         else:
             print("\n等待并获取验证码...")
             
-        # 添加调试信息
-        print(f"\n{Fore.CYAN}DEBUG: email_tab exists: {email_tab is not None}{Style.RESET_ALL}")
-            
-        time.sleep(5)  # 等待验证码邮件
-
-        # 使用已有的 email_tab 刷新邮箱
-        email_tab.refresh_inbox()
-        time.sleep(3)
-
-        # 检查邮箱是否有验证码邮件
-        if email_tab.check_for_cursor_email():
-            verification_code = email_tab.get_verification_code()
+        # 检查是否使用手动输入验证码
+        if hasattr(controller, 'get_verification_code') and email_tab is None:  # 手动模式
+            verification_code = controller.get_verification_code()
             if verification_code:
                 # 在注册页面填写验证码
                 for i, digit in enumerate(verification_code):
                     browser_tab.ele(f"@data-index={i}").input(digit)
                     time.sleep(random.uniform(0.1, 0.3))
+                
+                print("验证码填写完成")
+                time.sleep(3)
+                
+                # 处理最后一次 Turnstile 验证
+                if handle_turnstile(browser_tab, translator):
+                    if translator:
+                        print(f"{translator.get('register.verification_success')}")
+                    else:
+                        print("最后一次验证通过！")
+                    time.sleep(2)
+                    
+                    # 访问设置页面
+                    print("访问设置页面...")
+                    browser_tab.get("https://www.cursor.com/settings")
+                    time.sleep(3)  # 等待页面加载
+                    return True, browser_tab
+                    
+                return False, None
+                
+        # 自动获取验证码逻辑
+        elif email_tab:
+            print("等待验证码邮件...")
+            time.sleep(5)  # 等待验证码邮件
+
+            # 使用已有的 email_tab 刷新邮箱
+            email_tab.refresh_inbox()
+            time.sleep(3)
+
+            # 检查邮箱是否有验证码邮件
+            if email_tab.check_for_cursor_email():
+                verification_code = email_tab.get_verification_code()
+                if verification_code:
+                    # 在注册页面填写验证码
+                    for i, digit in enumerate(verification_code):
+                        browser_tab.ele(f"@data-index={i}").input(digit)
+                        time.sleep(random.uniform(0.1, 0.3))
+                    if translator:
+                        print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
+                    else:
+                        print("验证码填写完成")
+                    time.sleep(3)
+                    
+                    # 处理最后一次 Turnstile 验证
+                    if handle_turnstile(browser_tab, translator):
+                        if translator:
+                            print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
+                        else:
+                            print("最后一次验证通过！")
+                        time.sleep(2)
+                        
+                        # 访问设置页面
+                        if translator:
+                            print(f"{Fore.CYAN}🔑 {translator.get('register.visiting_url')}: https://www.cursor.com/settings{Style.RESET_ALL}")
+                        else:
+                            print("访问设置页面...")
+                        browser_tab.get("https://www.cursor.com/settings")
+                        time.sleep(3)  # 等待页面加载
+                        return True, browser_tab
+                        
+                    else:
+                        if translator:
+                            print(f"{Fore.RED}❌ {translator.get('register.verification_failed')}{Style.RESET_ALL}")
+                        else:
+                            print("最后一次验证失败")
+                        return False, None
+                        
+            # 获取验证码，设置超时
+            verification_code = None
+            max_attempts = 20
+            retry_interval = 10
+            start_time = time.time()
+            timeout = 160
+
+            if translator:
+                print(f"{Fore.CYAN}{translator.get('register.start_getting_verification_code')}{Style.RESET_ALL}")
+            else:
+                print("开始获取验证码...")
+            
+            for attempt in range(max_attempts):
+                # 检查是否超时
+                if time.time() - start_time > timeout:
+                    if translator:
+                        print(f"{Fore.RED}❌ {translator.get('register.verification_timeout')}{Style.RESET_ALL}")
+                    else:
+                        print("获取验证码超时...")
+                    break
+                    
+                verification_code = controller.get_verification_code()
+                if verification_code:
+                    if translator:
+                        print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
+                    else:
+                        print(f"成功获取验证码: {verification_code}")
+                    break
+                    
+                remaining_time = int(timeout - (time.time() - start_time))
+                if translator:
+                    print(f"{Fore.CYAN}{translator.get('register.try_get_code', attempt=attempt + 1, time=remaining_time)}{Style.RESET_ALL}")
+                else:
+                    print(f"第 {attempt + 1} 次尝试获取验证码，剩余时间: {remaining_time}秒...")
+                
+                # 刷新邮箱
+                email_tab.refresh_inbox()
+                time.sleep(retry_interval)
+            
+            if verification_code:
+                # 在注册页面填写验证码
+                for i, digit in enumerate(verification_code):
+                    browser_tab.ele(f"@data-index={i}").input(digit)
+                    time.sleep(random.uniform(0.1, 0.3))
+                
                 if translator:
                     print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
                 else:
@@ -306,105 +409,32 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
                         print("最后一次验证通过！")
                     time.sleep(2)
                     
-                    # 访问设置页面
+                    # 直接访问设置页面
                     if translator:
-                        print(f"{Fore.CYAN}🔑 {translator.get('register.visiting_url')}: https://www.cursor.com/settings{Style.RESET_ALL}")
+                        print(f"{Fore.CYAN}{translator.get('register.visiting_url')}: https://www.cursor.com/settings{Style.RESET_ALL}")
                     else:
                         print("访问设置页面...")
                     browser_tab.get("https://www.cursor.com/settings")
                     time.sleep(3)  # 等待页面加载
-                    return True
-                else:
-                    print("最后一次验证失败")
-                    return False
                     
-                return False
-        
-        # 获取验证码，设置超时
-        verification_code = None
-        max_attempts = 20
-        retry_interval = 10
-        start_time = time.time()
-        timeout = 160
-
-        if translator:
-            print(f"{Fore.CYAN}{translator.get('register.start_getting_verification_code')}{Style.RESET_ALL}")
-        else:
-            print("开始获取验证码...")
-        
-        for attempt in range(max_attempts):
-            # 检查是否超时
-            if time.time() - start_time > timeout:
-                if translator:
-                    print(f"{Fore.RED}❌ {translator.get('register.verification_timeout')}{Style.RESET_ALL}")
+                    # 直接返回成功，让 cursor_register.py 处理账户信息获取
+                    return True, browser_tab
+                    
                 else:
-                    print("获取验证码超时...")
-                break
+                    if translator:
+                        print(f"{Fore.RED}❌ {translator.get('register.verification_failed')}{Style.RESET_ALL}")
+                    else:
+                        print("最后一次验证失败")
+                    return False, None
                 
-            verification_code = controller.get_verification_code()
-            if verification_code:
-                if translator:
-                    print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
-                else:
-                    print(f"成功获取验证码: {verification_code}")
-                break
-                
-            remaining_time = int(timeout - (time.time() - start_time))
-            if translator:
-                print(f"{Fore.CYAN}{translator.get('register.try_get_code', attempt=attempt + 1, time=remaining_time)}{Style.RESET_ALL}")
-            else:
-                print(f"第 {attempt + 1} 次尝试获取验证码，剩余时间: {remaining_time}秒...")
+            return False, None
             
-            # 刷新邮箱
-            email_tab.refresh_inbox()
-            time.sleep(retry_interval)
-        
-        if verification_code:
-            # 在注册页面填写验证码
-            for i, digit in enumerate(verification_code):
-                browser_tab.ele(f"@data-index={i}").input(digit)
-                time.sleep(random.uniform(0.1, 0.3))
-            
-            if translator:
-                print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
-            else:
-                print("验证码填写完成")
-            time.sleep(3)
-            
-            # 处理最后一次 Turnstile 验证
-            if handle_turnstile(browser_tab, translator):
-                if translator:
-                    print(f"{Fore.GREEN}✅ {translator.get('register.verification_success')}{Style.RESET_ALL}")
-                else:
-                    print("最后一次验证通过！")
-                time.sleep(2)
-                
-                # 直接访问设置页面
-                if translator:
-                    print(f"{Fore.CYAN}{translator.get('register.visiting_url')}: https://www.cursor.com/settings{Style.RESET_ALL}")
-                else:
-                    print("访问设置页面...")
-                browser_tab.get("https://www.cursor.com/settings")
-                time.sleep(3)  # 等待页面加载
-                
-                # 直接返回成功，让 cursor_register.py 处理账户信息获取
-                return True
-                
-            else:
-                if translator:
-                    print(f"{Fore.RED}❌ {translator.get('register.verification_failed')}{Style.RESET_ALL}")
-                else:
-                    print("最后一次验证失败")
-                return False
-            
-        return False
-        
     except Exception as e:
         if translator:
             print(f"{Fore.RED}❌ {translator.get('register.verification_error', error=str(e))}{Style.RESET_ALL}")
         else:
             print(f"处理验证码时出错: {e}")
-        return False
+        return False, None
 
 def handle_sign_in(browser_tab, email, password, translator=None):
     """处理登录流程"""
@@ -530,12 +560,8 @@ def main(email=None, password=None, first_name=None, last_name=None, email_tab=N
                         else:
                             print("\n开始处理验证码...")
                         if handle_verification_code(page, email_tab, controller, email, password, translator):
-                            if translator:
-                                print(f"\n{Fore.GREEN}{translator.get('register.verification_success')}{Style.RESET_ALL}")
-                            else:
-                                print("\n注册流程完成！")
                             success = True
-                            return True, page  # 返回成功状态和浏览器实例
+                            return True, page  # 返回浏览器实例
                         else:
                             print("\n验证码处理失败")
                     else:

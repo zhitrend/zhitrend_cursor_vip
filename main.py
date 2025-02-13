@@ -71,8 +71,9 @@ def print_menu():
     print(f"{Fore.GREEN}0{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.exit')}")
     print(f"{Fore.GREEN}1{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.reset')}")
     print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['SUCCESS']} {translator.get('menu.register')}")
-    print(f"{Fore.GREEN}3{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.quit')}")
-    print(f"{Fore.GREEN}4{Style.RESET_ALL}. {EMOJI['LANG']} {translator.get('menu.select_language')}")
+    print(f"{Fore.GREEN}3{Style.RESET_ALL}. {EMOJI['SUCCESS']} {translator.get('menu.register_manual')}")
+    print(f"{Fore.GREEN}4{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.quit')}")
+    print(f"{Fore.GREEN}5{Style.RESET_ALL}. {EMOJI['LANG']} {translator.get('menu.select_language')}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
 
 def select_language():
@@ -117,10 +118,14 @@ def main():
                 cursor_register.main(translator)
                 break
             elif choice == "3":
+                import cursor_register_manual
+                cursor_register_manual.main(translator)
+                break
+            elif choice == "4":
                 import quit_cursor
                 quit_cursor.quit_cursor(translator)
                 break
-            elif choice == "4":
+            elif choice == "5":
                 if select_language():
                     print_menu()
                 continue

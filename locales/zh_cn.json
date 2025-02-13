@@ -4,6 +4,7 @@
         "exit": "退出程序",
         "reset": "重置机器标识",
         "register": "注册 Cursor",
+        "register_manual": "手动指定邮箱注册 Cursor",
         "quit": "退出 Cursor",
         "select_language": "选择语言",
         "input_choice": "输入选择 ({choices})",
@@ -123,7 +124,9 @@
         "get_email_address": "获取邮箱地址",
         "register_process_error": "注册流程错误: {error}",
         "update_cursor_auth_info": "更新Cursor认证信息",
-        "setting_password": "设置密码"
+        "setting_password": "设置密码",
+        "manual_code_input": "手动输入验证码",
+        "manual_email_input": "手动输入邮箱"
     },
     "auth": {
         "title": "Cursor 认证管理器",

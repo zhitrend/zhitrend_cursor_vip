@@ -16,10 +16,10 @@ class NewTempEmail:
     def get_extension_block(self):
         """获取插件路径"""
         root_dir = os.getcwd()
-        extension_path = os.path.join(root_dir, "uBlock0.chromium")
+        extension_path = os.path.join(root_dir, "PBlock")
         
         if hasattr(sys, "_MEIPASS"):
-            extension_path = os.path.join(sys._MEIPASS, "uBlock0.chromium")
+            extension_path = os.path.join(sys._MEIPASS, "PBlock")
 
         if not os.path.exists(extension_path):
             raise FileNotFoundError(f"插件不存在: {extension_path}")

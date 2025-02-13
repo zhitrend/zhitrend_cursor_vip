@@ -4,6 +4,7 @@
         "exit": "退出程序",
         "reset": "重置機器標識",
         "register": "註冊 Cursor",
+        "register_manual": "手動指定郵箱註冊 Cursor",
         "quit": "退出 Cursor",
         "select_language": "選擇語言",
         "input_choice": "輸入選擇 ({choices})",
@@ -123,7 +124,9 @@
         "get_email_address": "獲取郵箱地址",
         "register_process_error": "註冊流程錯誤: {error}",
         "update_cursor_auth_info": "更新Cursor認證信息",
-        "setting_password": "設置密碼"
+        "setting_password": "設置密碼",
+        "manual_code_input": "手動輸入驗證碼",
+        "manual_email_input": "手動輸入郵箱地址"
     },
     "auth": {
         "title": "Cursor 認證管理器",
