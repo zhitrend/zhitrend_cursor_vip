@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.3.01
+
+1. Add Manual Email Input | 增加手動輸入郵箱地址
+2. Add Manual Code Input | 增加手動輸入驗證碼
+3. Fix Cursor Options | 修復Cursor選項
+
+
 ## v1.2.02
 
 1. Add PBlock | 增加PBlock
