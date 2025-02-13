@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.2.02
+
+1. Add PBlock | 增加PBlock
+2. Remove uBlock0.chromium | 移除uBlock0.chromium
+3. Optimize the logic of the script | 優化腳本邏輯
+4. Optimize Size | 優化大小
+
 
 ## v1.2.01
 
