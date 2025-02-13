@@ -122,7 +122,8 @@
         "save_account_info_failed": "Save Account Info Failed",
         "get_email_address": "Get Email Address",
         "update_cursor_auth_info": "Update Cursor Auth Info",
-        "register_process_error": "Register Process Error: {error}"
+        "register_process_error": "Register Process Error: {error}",
+        "setting_password": "Setting Password"
     },
     "auth": {
         "title": "Cursor Auth Manager",
@@ -174,5 +175,23 @@
         "database_updated_successfully": "Database Updated Successfully",
         "database_connection_closed": "Database Connection Closed",
         "no_valid_verification_code": "No Valid Verification Code"
+    },
+    "email": {
+        "starting_browser": "Starting Browser",
+        "visiting_site": "Visiting smailpro.com",
+        "create_success": "Email Created Successfully",
+        "create_failed": "Failed to Create Email",
+        "create_error": "Email Creation Error: {error}",
+        "refreshing": "Refreshing Email",
+        "refresh_success": "Email Refreshed Successfully",
+        "refresh_error": "Email Refresh Error: {error}",
+        "refresh_button_not_found": "Refresh Button Not Found",
+        "verification_found": "Verification Found",
+        "verification_not_found": "Verification Not Found",
+        "verification_error": "Verification Error: {error}",
+        "verification_code_found": "Verification Code Found",
+        "verification_code_not_found": "Verification Code Not Found",
+        "verification_code_error": "Verification Code Error: {error}",
+        "address": "Email Address"
     }
 }

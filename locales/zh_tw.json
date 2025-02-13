@@ -122,7 +122,8 @@
         "save_account_info_failed": "保存賬戶信息失敗",
         "get_email_address": "獲取郵箱地址",
         "register_process_error": "註冊流程錯誤: {error}",
-        "update_cursor_auth_info": "更新Cursor認證信息"
+        "update_cursor_auth_info": "更新Cursor認證信息",
+        "setting_password": "設置密碼"
     },
     "auth": {
         "title": "Cursor 認證管理器",
@@ -171,5 +172,24 @@
         "save_token_failed": "保存Token失敗",
         "blocked_domain": "被屏蔽的域名",
         "no_valid_verification_code": "沒有有效的驗證碼"
-    }
+    },
+    "email": {
+        "starting_browser": "啟動瀏覽器",
+        "visiting_site": "訪問 smailpro.com",
+        "create_success": "郵箱創建成功",
+        "create_failed": "郵箱創建失敗",
+        "create_error": "郵箱創建錯誤: {error}",
+        "refreshing": "刷新郵箱",
+        "refresh_success": "郵箱刷新成功",
+        "refresh_error": "郵箱刷新錯誤: {error}",
+        "refresh_button_not_found": "未找到刷新按鈕",
+        "verification_found": "找到驗證碼",
+        "verification_not_found": "未找到驗證碼",
+        "verification_error": "驗證錯誤: {error}",
+        "verification_code_found": "找到驗證碼",
+        "verification_code_not_found": "未找到驗證碼",
+        "verification_code_error": "驗證碼錯誤: {error}",
+        "address": "郵箱地址"
+    }   
+
 } 

@@ -122,7 +122,8 @@
         "save_account_info_failed": "保存账户信息失败",
         "get_email_address": "获取邮箱地址",
         "register_process_error": "注册流程错误: {error}",
-        "update_cursor_auth_info": "更新Cursor认证信息"
+        "update_cursor_auth_info": "更新Cursor认证信息",
+        "setting_password": "设置密码"
     },
     "auth": {
         "title": "Cursor 认证管理器",
@@ -171,5 +172,23 @@
         "get_cursor_session_token_failed": "获取Cursor Session Token失败",
         "save_token_failed": "保存Token失败",
         "no_valid_verification_code": "没有有效的验证码"
+    },
+    "email": {
+        "starting_browser": "启动浏览器",
+        "visiting_site": "访问 smailpro.com",
+        "create_success": "邮箱创建成功",
+        "create_failed": "邮箱创建失败",
+        "create_error": "邮箱创建错误: {error}",
+        "refreshing": "刷新邮箱",
+        "refresh_success": "邮箱刷新成功",
+        "refresh_error": "邮箱刷新错误: {error}",
+        "refresh_button_not_found": "未找到刷新按钮",
+        "verification_found": "找到验证码",
+        "verification_not_found": "未找到验证码",
+        "verification_error": "验证错误: {error}",
+        "verification_code_found": "找到验证码",
+        "verification_code_not_found": "未找到验证码",
+        "verification_code_error": "验证码错误: {error}",
+        "address": "邮箱地址"
     }
 } 

@@ -65,33 +65,26 @@ class CursorRegistration:
         """设置邮箱"""
         try:
             print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.browser_start')}...{Style.RESET_ALL}")
-            self.browser = self.browser_manager.init_browser()
-            self.controller = BrowserControl(self.browser, self.translator)
             
-            # 打开邮箱生成器页面（第一个标签页）
-            self.controller.navigate_to(self.mail_url)
-            self.email_tab = self.browser  # 保存邮箱标签页
-            self.controller.email_tab = self.email_tab  # 同时保存到controller
+            # 使用 new_tempemail 创建临时邮箱，传入 translator
+            from new_tempemail import NewTempEmail
+            self.temp_email = NewTempEmail(self.translator)  # 传入 translator
             
-            # 生成新邮箱
-            self.controller.generate_new_email()
+            # 创建临时邮箱
+            email_address = self.temp_email.create_email()
+            if not email_address:
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.email_create_failed')}{Style.RESET_ALL}")
+                return False
             
-            # 选择随机域名
-            self.controller.select_email_domain()
+            # 保存邮箱地址和浏览器实例
+            self.email_address = email_address
+            self.email_tab = self.temp_email  # 传递 NewTempEmail 实例而不是 page
+            self.controller = BrowserControl(self.temp_email.page, self.translator)
             
-            # 获取邮箱地址
-            self.email_address = self.controller.copy_and_get_email()
-            if self.email_address:
-                print(f"{EMOJI['MAIL']}{Fore.CYAN} {self.translator.get('register.get_email_address')}: {self.email_address}{Style.RESET_ALL}")
-                
-                # 进入邮箱
-                if self.controller.view_mailbox():
-                    return True
-            
-            return False
+            return True
             
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.setup_error', error=str(e))}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.email_setup_failed', error=str(e))}{Style.RESET_ALL}")
             return False
 
     def register_cursor(self):
@@ -233,8 +226,12 @@ class CursorRegistration:
                     return True
             return False
         finally:
-            if self.browser_manager:
-                self.browser_manager.quit()
+            # 关闭邮箱标签页
+            if hasattr(self, 'temp_email'):
+                try:
+                    self.temp_email.close()
+                except:
+                    pass
 
     def update_cursor_auth(self, email=None, access_token=None, refresh_token=None):
         """更新Cursor的认证信息的便捷函数"""
