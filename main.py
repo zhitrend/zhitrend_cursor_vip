@@ -103,7 +103,7 @@ def main():
     
     while True:
         try:
-            choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices='0-4')}: {Style.RESET_ALL}")
+            choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices='0-5')}: {Style.RESET_ALL}")
 
             if choice == "0":
                 print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.exit')}...{Style.RESET_ALL}")

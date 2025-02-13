@@ -18,7 +18,7 @@ This is a tool to automatically register , support Windows and macOS systems, co
 這是一個自動化工具，自動註冊（除了Google驗證碼)，支持 Windows 和 macOS 系統，完成Auth驗證，重置Cursor的配置。
 
 <p align="center">
-  <img src="./images/new107_2025-01-15_13-53-56.png" alt="new" width="400"/><br>
+  <img src="./images/pronew_2025-02-13_15-01-32.png" alt="new" width="400"/><br>
 </p>
 
 ##### If you dont have google chrome , you can download it from [here](https://www.google.com/intl/en_pk/chrome/)

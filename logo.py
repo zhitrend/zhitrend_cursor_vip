@@ -28,7 +28,7 @@ CURSOR_LOGO = f"""
 {Fore.GREEN}
                 Author: Pin Studios | yeongpin
 {Fore.RED}
-        Press 4 to change language | 按下 4 键切换语言
+        Press 5 to change language | 按下 5 键切换语言
 {Style.RESET_ALL}
     """
 
