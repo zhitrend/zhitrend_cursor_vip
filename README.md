@@ -111,6 +111,19 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 
 本工具僅供學習和研究使用，使用本工具所產生的任何後果由使用者自行承擔。 <br>
 
-源代碼靈感來之 | Original code inspiration from [Here](https://github.com/hmhm2022/gpt-cursor-auto)
-
 This tool is only for learning and research purposes, and any consequences arising from the use of this tool are borne by the user.
+
+## 💰 Buy Me a Coffee | 請我喝杯咖啡
+
+<table>
+<tr>
+<td><p align="center">
+  <img src="./images/provi-code.jpg" alt="buy_me_a_coffee" width="400"/><br>
+</p></td>
+<td><p align="center">
+  <img src="./images/paypal.png" alt="buy_me_a_coffee" width="400"/><br>
+</p></td>
+</tr>
+</table>
+
+
