@@ -128,4 +128,12 @@ This tool is only for learning and research purposes, and any consequences arisi
   </table>
 </div>
 
+## ⭐ Star History
 
+<a href="https://star-history.com/#yeongpin/cursor-free-vip&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=yeongpin/cursor-free-vip&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=yeongpin/cursor-free-vip&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=yeongpin/cursor-free-vip&type=Date" />
+ </picture>
+</a>
