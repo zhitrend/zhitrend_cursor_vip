@@ -9,6 +9,7 @@
 [![Release](https://img.shields.io/github/v/release/yeongpin/cursor-free-vip?style=flat-square&logo=github&color=blue)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 [![Stars](https://img.shields.io/github/stars/yeongpin/cursor-free-vip?style=flat-square&logo=github)](https://github.com/yeongpin/cursor-free-vip/stargazers)
+[![Download](https://img.shields.io/github/downloads/yeongpin/cursor-free-vip/total?style=flat-square&logo=github&color=52c41a)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 
 </p>
 <h4>Support Latest 0.45.11 Version | 支持最新0.45.11版本</h4>
@@ -128,10 +129,4 @@ This tool is only for learning and research purposes, and any consequences arisi
   </table>
 </div>
 
-## ⭐ Star History
 
-<div align="center">
-
-[![Star History Chart](https://api.star-history.com/svg?repos=yeongpin/cursor-free-vip&type=Date)](https://star-history.com/#yeongpin/cursor-free-vip&Date)
-
-</div>
