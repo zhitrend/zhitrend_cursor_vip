@@ -11,7 +11,8 @@
         "invalid_choice": "无效选择，请重试",
         "program_terminated": "程序被用户终止",
         "error_occurred": "发生错误: {error}",
-        "press_enter": "按回车键退出"
+        "press_enter": "按回车键退出",
+        "disable_auto_update": "禁用 Cursor 自动更新"
     },
     "languages": {
         "en": "English",
@@ -193,5 +194,18 @@
         "verification_code_not_found": "未找到验证码",
         "verification_code_error": "验证码错误: {error}",
         "address": "邮箱地址"
+    },
+    "update": {
+        "title": "禁用 Cursor 自动更新",
+        "disable_success": "自动更新禁用成功",
+        "disable_failed": "禁用自动更新失败: {error}",
+        "press_enter": "按回车键退出",
+        "start_disable": "开始禁用自动更新",
+        "killing_processes": "杀死进程",
+        "processes_killed": "进程已杀死",
+        "removing_directory": "删除目录",
+        "directory_removed": "目录已删除",
+        "creating_block_file": "创建阻止文件",
+        "block_file_created": "阻止文件已创建"
     }
 } 

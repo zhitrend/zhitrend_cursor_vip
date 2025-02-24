@@ -11,7 +11,8 @@
         "invalid_choice": "Invalid choice. Please try again",
         "program_terminated": "Program terminated by user",
         "error_occurred": "An error occurred: {error}",
-        "press_enter": "Press Enter to Exit"
+        "press_enter": "Press Enter to Exit",
+        "disable_auto_update": "Disable Cursor Auto Update"
     },
     "languages": {
         "en": "English",
@@ -196,5 +197,18 @@
         "verification_code_not_found": "Verification Code Not Found",
         "verification_code_error": "Verification Code Error: {error}",
         "address": "Email Address"
+    },
+    "update": {
+        "title": "Disable Cursor Auto Update",
+        "disable_success": "Auto Update Disabled Successfully",
+        "disable_failed": "Disable Auto Update Failed: {error}",
+        "press_enter": "Press Enter to Exit",
+        "start_disable": "Start Disabling Auto Update",
+        "killing_processes": "Killing Processes",
+        "processes_killed": "Processes Killed",
+        "removing_directory": "Removing Directory",
+        "directory_removed": "Directory Removed",
+        "creating_block_file": "Creating Block File",
+        "block_file_created": "Block File Created"
     }
 }

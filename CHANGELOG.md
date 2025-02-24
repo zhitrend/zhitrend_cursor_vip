@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.4.01
+
+1. Add Disable Cursor Auto Upgrade | 增加禁用Cursor自動升級
+
 ## v1.3.02
 
 1. Add Buy Me a Coffee | 增加請我喝杯咖啡
