@@ -12,11 +12,11 @@
 [![Download](https://img.shields.io/github/downloads/yeongpin/cursor-free-vip/total?style=flat-square&logo=github&color=52c41a)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 
 </p>
-<h4>Support Latest 0.45.11 Version | 支持最新0.45.11版本</h4>
+<h4>Support Latest 0.45.16 Version | 支持最新0.45.16版本</h4>
 
 This is a tool to automatically register , support Windows and macOS systems, complete Auth verification, and reset Cursor's configuration.
 
-這是一個自動化工具，自動註冊（除了Google驗證碼)，支持 Windows 和 macOS 系統，完成Auth驗證，重置Cursor的配置。
+這是一個自動化工具，自動註冊 ，支持 Windows 和 macOS 系統，完成Auth驗證，重置Cursor的配置。
 
 <p align="center">
   <img src="./images/pronew_2025-02-13_15-01-32.png" alt="new" width="400"/><br>
