@@ -129,4 +129,10 @@ This tool is only for learning and research purposes, and any consequences arisi
   </table>
 </div>
 
+## ⭐ Star History | 星星數
 
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=yeongpin/cursor-free-vip&type=Date)](https://star-history.com/#yeongpin/cursor-free-vip&Date)
+
+</div>
