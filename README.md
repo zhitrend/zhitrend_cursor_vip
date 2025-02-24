@@ -86,6 +86,8 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 
 ## ❗ Note | 注意事項
 
+* Use administrator to run the script <br>請使用管理員身份運行腳本
+
 * Confirm that Cursor is closed before running the script <br>請確保在運行腳本前已經關閉 Cursor<br>
 
 * This tool is only for learning and research purposes <br>此工具僅供學習和研究使用<br>
@@ -136,3 +138,12 @@ This tool is only for learning and research purposes, and any consequences arisi
 [![Star History Chart](https://api.star-history.com/svg?repos=yeongpin/cursor-free-vip&type=Date)](https://star-history.com/#yeongpin/cursor-free-vip&Date)
 
 </div>
+
+## 📝 License | 授權
+
+本項目採用 [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) 授權。 
+Please refer to the [LICENSE](LICENSE.md) file for details.
+
+
+
+
