@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP_${{ env.VERSION }}_windows.exe
-        path: dist/*
+        path: dist/CursorFreeVIP_${{ env.VERSION }}_windows.exe
 
   build-macos-arm64:
     needs: create-tag
@@ -90,12 +90,13 @@ jobs:
     - name: Build MacOS ARM executable
       run: |
         pyinstaller build.spec
+        mv "dist/CursorFreeVIP_${{ env.VERSION }}_mac" "dist/CursorFreeVIP_${{ env.VERSION }}_mac_arm64"
 
     - name: Upload MacOS ARM artifact
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP_${{ env.VERSION }}_mac_arm64
-        path: dist/*
+        path: dist/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
 
   build-linux:
     needs: create-tag
@@ -120,14 +121,18 @@ jobs:
         pip install -r requirements.txt
         
     - name: Build Linux executable
+      env:
+        VERSION: ${{ env.VERSION }}
       run: |
         pyinstaller build.spec
+        echo "Contents of dist directory:"
+        ls -la dist/
         
     - name: Upload Linux artifact
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP_${{ env.VERSION }}_linux
-        path: dist/*
+        path: dist/CursorFreeVIP_${{ env.VERSION }}_linux
 
 
   build-macos-intel:
@@ -155,14 +160,16 @@ jobs:
     - name: Build MacOS Intel executable
       env:
         TARGET_ARCH: 'x86_64'
+        VERSION: ${{ env.VERSION }}
       run: |
         arch -x86_64 python3 -m PyInstaller build.spec
+        mv "dist/CursorFreeVIP_${{ env.VERSION }}_mac" "dist/CursorFreeVIP_${{ env.VERSION }}_mac_intel"
         
     - name: Upload MacOS Intel artifact
       uses: actions/upload-artifact@v4
       with:
         name: CursorFreeVIP_${{ env.VERSION }}_mac_intel
-        path: dist/*
+        path: dist/CursorFreeVIP_${{ env.VERSION }}_mac_intel
 
 
   create-release:
@@ -182,24 +189,20 @@ jobs:
       - name: Prepare release files
         run: |
           cd artifacts
-          # 重命名文件为最终的可执行文件名
-          mv CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP.exe CursorFreeVIP_${{ env.VERSION }}_windows.exe
-          mv CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP CursorFreeVIP_${{ env.VERSION }}_mac_arm64
-          mv CursorFreeVIP_${{ env.VERSION }}_linux/CursorFreeVIP CursorFreeVIP_${{ env.VERSION }}_linux
-          mv CursorFreeVIP_${{ env.VERSION }}_mac_intel/CursorFreeVIP CursorFreeVIP_${{ env.VERSION }}_mac_intel
-          # 删除空目录
-          rm -rf */
+          echo "Contents of artifacts directory:"
           ls -la
-
+          echo "Contents of subdirectories:"
+          ls -la */
+          
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
           files: |
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux
-            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP_${{ env.VERSION }}_windows.exe
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_linux/CursorFreeVIP_${{ env.VERSION }}_linux
+            artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel/CursorFreeVIP_${{ env.VERSION }}_mac_intel
           draft: false
           prerelease: false
         env:
