@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.4.04
+
+1. Change Some Language Info to English | 更改一些語言信息為英文
+2. Add Auto Detect System Language | 增加自動檢測系統語言
+3. Fixed Some Issues | 修復一些問題
+
+
 ## v1.4.03
 
 1. Switch to API-based Registration System | 改用API註冊系統替代瀏覽器操作

@@ -11,10 +11,10 @@ import tempfile
 from colorama import Fore, Style, init
 from typing import Tuple
 
-# 初始化colorama
+# Initialize colorama
 init()
 
-# 定义emoji常量
+# Define emoji constants
 EMOJI = {
     "FILE": "📄",
     "BACKUP": "💾",
@@ -25,7 +25,7 @@ EMOJI = {
 }
 
 def get_cursor_paths(translator=None) -> Tuple[str, str]:
-    """根据不同操作系统获取 Cursor 相关路径"""
+    """ Get Cursor related paths"""
     system = platform.system()
 
     paths_map = {
@@ -65,7 +65,7 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
     )
 
 def version_check(version: str, min_version: str = "", max_version: str = "", translator=None) -> bool:
-    """版本号检查"""
+    """Version number check"""
     version_pattern = r"^\d+\.\d+\.\d+$"
     try:
         if not re.match(version_pattern, version):
@@ -92,7 +92,7 @@ def version_check(version: str, min_version: str = "", max_version: str = "", tr
         return False
 
 def check_cursor_version(translator) -> bool:
-    """检查 Cursor 版本"""
+    """Check Cursor version"""
     try:
         pkg_path, _ = get_cursor_paths(translator)
         with open(pkg_path, "r", encoding="utf-8") as f:
@@ -103,7 +103,7 @@ def check_cursor_version(translator) -> bool:
         return False
 
 def modify_main_js(main_path: str, translator) -> bool:
-    """修改 main.js 文件"""
+    """Modify main.js file"""
     try:
         original_stat = os.stat(main_path)
         original_mode = original_stat.st_mode
@@ -142,14 +142,14 @@ def modify_main_js(main_path: str, translator) -> bool:
         return False
 
 def patch_cursor_get_machine_id(translator) -> bool:
-    """修补 Cursor getMachineId 函数"""
+    """Patch Cursor getMachineId function"""
     try:
         print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('reset.start_patching')}...{Style.RESET_ALL}")
         
-        # 获取路径
+        # Get paths
         pkg_path, main_path = get_cursor_paths(translator)
         
-        # 检查文件权限
+        # Check file permissions
         for file_path in [pkg_path, main_path]:
             if not os.path.isfile(file_path):
                 print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.file_not_found', path=file_path)}{Style.RESET_ALL}")
@@ -158,7 +158,7 @@ def patch_cursor_get_machine_id(translator) -> bool:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.no_write_permission', path=file_path)}{Style.RESET_ALL}")
                 return False
 
-        # 获取版本号
+        # Get version number
         try:
             with open(pkg_path, "r", encoding="utf-8") as f:
                 version = json.load(f)["version"]
@@ -167,20 +167,20 @@ def patch_cursor_get_machine_id(translator) -> bool:
             print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.read_version_failed', error=str(e))}{Style.RESET_ALL}")
             return False
 
-        # 检查版本
+        # Check version
         if not version_check(version, min_version="0.45.0", translator=translator):
             print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.version_not_supported')}{Style.RESET_ALL}")
             return False
 
         print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('reset.version_check_passed')}{Style.RESET_ALL}")
 
-        # 备份文件
+        # Backup file
         backup_path = main_path + ".bak"
         if not os.path.exists(backup_path):
             shutil.copy2(main_path, backup_path)
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('reset.backup_created', path=backup_path)}{Style.RESET_ALL}")
 
-        # 修改文件
+        # Modify file
         if not modify_main_js(main_path, translator):
             return False
 
@@ -195,7 +195,7 @@ class MachineIDResetter:
     def __init__(self, translator=None):
         self.translator = translator
 
-        # 判断操作系统
+        # Check operating system
         if sys.platform == "win32":  # Windows
             appdata = os.getenv("APPDATA")
             if appdata is None:
@@ -224,17 +224,17 @@ class MachineIDResetter:
             raise NotImplementedError(f"Not Supported OS: {sys.platform}")
 
     def generate_new_ids(self):
-        """生成新的机器ID"""
-        # 生成新的UUID
+        """Generate new machine ID"""
+        # Generate new UUID
         dev_device_id = str(uuid.uuid4())
 
-        # 生成新的machineId (64个字符的十六进制)
+        # Generate new machineId (64 characters of hexadecimal)
         machine_id = hashlib.sha256(os.urandom(32)).hexdigest()
 
-        # 生成新的macMachineId (128个字符的十六进制)
+        # Generate new macMachineId (128 characters of hexadecimal)
         mac_machine_id = hashlib.sha512(os.urandom(64)).hexdigest()
 
-        # 生成新的sqmId
+        # Generate new sqmId
         sqm_id = "{" + str(uuid.uuid4()).upper() + "}"
 
         return {
@@ -242,11 +242,11 @@ class MachineIDResetter:
             "telemetry.macMachineId": mac_machine_id,
             "telemetry.machineId": machine_id,
             "telemetry.sqmId": sqm_id,
-            "storage.serviceMachineId": dev_device_id,  # 添加 storage.serviceMachineId
+            "storage.serviceMachineId": dev_device_id,  # Add storage.serviceMachineId
         }
 
     def update_sqlite_db(self, new_ids):
-        """更新 SQLite 数据库中的机器ID"""
+        """Update machine ID in SQLite database"""
         try:
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.updating_sqlite')}...{Style.RESET_ALL}")
             
@@ -281,7 +281,7 @@ class MachineIDResetter:
             return False
 
     def update_system_ids(self, new_ids):
-        """更新系统级别的ID"""
+        """Update system-level IDs"""
         try:
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.updating_system_ids')}...{Style.RESET_ALL}")
             
@@ -297,7 +297,7 @@ class MachineIDResetter:
             return False
 
     def _update_windows_machine_guid(self):
-        """更新Windows MachineGuid"""
+        """Update Windows MachineGuid"""
         try:
             import winreg
             key = winreg.OpenKey(
@@ -318,11 +318,11 @@ class MachineIDResetter:
             raise
 
     def _update_macos_platform_uuid(self, new_ids):
-        """更新macOS Platform UUID"""
+        """Update macOS Platform UUID"""
         try:
             uuid_file = "/var/root/Library/Preferences/SystemConfiguration/com.apple.platform.uuid.plist"
             if os.path.exists(uuid_file):
-                # 使用sudo来执行plutil命令
+                # Use sudo to execute plutil command
                 cmd = f'sudo plutil -replace "UUID" -string "{new_ids["telemetry.macMachineId"]}" "{uuid_file}"'
                 result = os.system(cmd)
                 if result == 0:
@@ -334,7 +334,7 @@ class MachineIDResetter:
             raise
 
     def reset_machine_ids(self):
-        """重置机器ID并备份原文件"""
+        """Reset machine ID and backup original file"""
         try:
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.checking')}...{Style.RESET_ALL}")
 
@@ -360,26 +360,26 @@ class MachineIDResetter:
             print(f"{Fore.CYAN}{EMOJI['RESET']} {self.translator.get('reset.generating')}...{Style.RESET_ALL}")
             new_ids = self.generate_new_ids()
 
-            # 更新配置文件
+            # Update configuration file
             config.update(new_ids)
 
             print(f"{Fore.CYAN}{EMOJI['FILE']} {self.translator.get('reset.saving_json')}...{Style.RESET_ALL}")
             with open(self.db_path, "w", encoding="utf-8") as f:
                 json.dump(config, f, indent=4)
 
-            # 更新SQLite数据库
+            # Update SQLite database
             self.update_sqlite_db(new_ids)
 
-            # 更新系统ID
+            # Update system IDs
             self.update_system_ids(new_ids)
 
-            # 检查 Cursor 版本并执行相应的操作
+            # Check Cursor version and perform corresponding actions
             greater_than_0_45 = check_cursor_version(self.translator)
             if greater_than_0_45:
-                print(f"{Fore.CYAN}{EMOJI['INFO']} 检测到 Cursor 版本 >= 0.45.0，正在修补 getMachineId...{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.detecting_version')} >= 0.45.0，{self.translator.get('reset.patching_getmachineid')}{Style.RESET_ALL}")
                 patch_cursor_get_machine_id(self.translator)
             else:
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Cursor 版本 < 0.45.0，跳过 getMachineId 修补{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('reset.version_less_than_0_45')}{Style.RESET_ALL}")
 
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.success')}{Style.RESET_ALL}")
             print(f"\n{Fore.CYAN}{self.translator.get('reset.new_id')}:{Style.RESET_ALL}")
@@ -397,12 +397,12 @@ class MachineIDResetter:
             return False
 
 def run(translator=None):
-    """便捷函数，用于直接调用重置功能"""
+    """Convenient function for directly calling the reset function"""
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{EMOJI['RESET']} {translator.get('reset.title')}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
 
-    resetter = MachineIDResetter(translator)  # 正確傳遞 translator
+    resetter = MachineIDResetter(translator)  # Correctly pass translator
     resetter.reset_machine_ids()
 
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")

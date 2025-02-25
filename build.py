@@ -8,7 +8,7 @@ import shutil
 from logo import print_logo
 from dotenv import load_dotenv
 
-# 忽略特定警告
+# Ignore specific warnings
 warnings.filterwarnings("ignore", category=SyntaxWarning)
 
 class LoadingAnimation:
@@ -50,21 +50,21 @@ def simulate_progress(message, duration=1.0, steps=20):
         progress_bar(i, steps, prefix="Progress:", length=40)
 
 def build():
-    # 清理屏幕
+    # Clean screen
     os.system("cls" if platform.system().lower() == "windows" else "clear")
     
-    # 顯示 logo
+    # Display logo
     print_logo()
     
-    # 清理 PyInstaller 緩存
-    print("\033[93m🧹 清理構建緩存...\033[0m")
+    # Clean PyInstaller cache
+    print("\033[93m🧹 Cleaning build cache...\033[0m")
     if os.path.exists('build'):
         shutil.rmtree('build')
     
-    # 重新加載環境變量以確保獲取最新版本
+    # Reload environment variables to ensure getting the latest version
     load_dotenv(override=True)
     version = os.getenv('VERSION', '1.0.0')
-    print(f"\033[93m📦 正在構建版本: v{version}\033[0m")
+    print(f"\033[93m📦 Building version: v{version}\033[0m")
 
     try:
         simulate_progress("Preparing build environment...", 0.5)
@@ -72,7 +72,7 @@ def build():
         loading = LoadingAnimation()
         loading.start("Building in progress")
         
-        # 根据系统类型设置输出名称
+        # Set output name based on system type
         system = platform.system().lower()
         if system == "windows":
             os_type = "windows"
@@ -86,7 +86,7 @@ def build():
             
         output_name = f"CursorFreeVIP_{version}_{os_type}"
         
-        # 构建命令
+        # Build command
         build_command = f'pyinstaller --clean --noconfirm build.spec'
         output_path = os.path.join('dist', f'{output_name}{ext}')
         
@@ -95,16 +95,16 @@ def build():
         loading.stop()
 
         if os.path.exists(output_path):
-            print(f"\n\033[92m✅ 構建完成！")
-            print(f"📦 可執行文件位於: {output_path}\033[0m")
+            print(f"\n\033[92m✅ Build completed!")
+            print(f"📦 Executable file located: {output_path}\033[0m")
         else:
-            print("\n\033[91m❌ 構建失敗：未找到輸出文件\033[0m")
+            print("\n\033[91m❌ Build failed: Output file not found\033[0m")
             return False
 
     except Exception as e:
         if loading:
             loading.stop()
-        print(f"\n\033[91m❌ 構建過程出錯: {str(e)}\033[0m")
+        print(f"\n\033[91m❌ Build process error: {str(e)}\033[0m")
         return False
 
     return True

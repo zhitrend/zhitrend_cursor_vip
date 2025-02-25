@@ -41,11 +41,11 @@ class NewTempEmail:
             # 获取可用域名列表
             domains_response = requests.get(f"{self.api_url}/domains")
             if domains_response.status_code != 200:
-                raise Exception("Failed to get available domains")
+                raise Exception(f"{self.translator.get('email.failed_to_get_available_domains')}")
                 
             domains = domains_response.json()["hydra:member"]
             if not domains:
-                raise Exception("No available domains")
+                raise Exception(f"{self.translator.get('email.no_available_domains')}")
                 
             # 生成随机用户名和密码
             username, password = self._generate_credentials()
@@ -60,7 +60,7 @@ class NewTempEmail:
             
             create_response = requests.post(f"{self.api_url}/accounts", json=account_data)
             if create_response.status_code != 201:
-                raise Exception("Failed to create account")
+                raise Exception(f"{self.translator.get('email.failed_to_create_account')}")
                 
             # 获取访问令牌
             token_data = {
@@ -70,7 +70,7 @@ class NewTempEmail:
             
             token_response = requests.post(f"{self.api_url}/token", json=token_data)
             if token_response.status_code != 200:
-                raise Exception("Failed to get access token")
+                raise Exception(f"{self.translator.get('email.failed_to_get_access_token')}")
                 
             self.token = token_response.json()["token"]
             self.email = email

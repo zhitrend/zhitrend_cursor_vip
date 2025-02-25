@@ -64,7 +64,11 @@
         "patch_completed": "getMachineId修補完成",
         "patch_failed": "getMachineId修補失敗: {error}",
         "version_check_passed": "Cursor版本檢查通過",
-        "file_modified": "文件已修改"
+        "file_modified": "文件已修改",
+        "version_less_than_0_45": "Cursor版本 < 0.45.0，跳过getMachineId修补",
+        "detecting_version": "檢測Cursor版本",
+        "patching_getmachineid": "修補getMachineId",
+        "version_greater_than_0_45": "Cursor版本 >= 0.45.0，修補getMachineId"
     },
     "register": {
         "title": "Cursor 註冊工具",
@@ -92,7 +96,6 @@
         "no_turnstile": "未檢測到 Turnstile 驗證",
         "turnstile_passed": "驗證通過",
         "verification_start": "開始獲取驗證碼",
-        "waiting_for_verification_code": "等待驗證碼",
         "verification_code_filled": "驗證碼填寫完成",
         "login_success_and_jump_to_settings_page": "成功登錄並跳轉到設置頁面",
         "detect_login_page": "檢測到登錄頁面，開始登錄...",

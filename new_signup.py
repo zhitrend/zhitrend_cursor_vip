@@ -243,7 +243,7 @@ def fill_password(page, password, translator=None):
         if translator:
             print(f"{Fore.CYAN}🔑 {translator.get('register.setting_password')}{Style.RESET_ALL}")
         else:
-            print("\n正在设置密码...")
+            print(f"\n{translator.get('register.setting_password')}")
         password_input = page.ele("@name=password")
         if password_input:
             password_input.input(password)
@@ -257,14 +257,14 @@ def fill_password(page, password, translator=None):
             if translator:
                 print(f"{Fore.GREEN}✅ {translator.get('register.password_success')}{Style.RESET_ALL}")
             else:
-                print(f"密码设置完成: {password}")
+                print(f"{translator.get('register.password_success')}: {password}")
             return True
             
     except Exception as e:
         if translator:
             print(f"{Fore.RED}❌ {translator.get('register.password_error', error=str(e))}{Style.RESET_ALL}")
         else:
-            print(f"设置密码时出错: {e}")
+            print(f"{translator.get('register.password_error')}: {e}")
         return False
 
 def handle_verification_code(browser_tab, email_tab, controller, email, password, translator=None):
@@ -273,7 +273,7 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
         if translator:
             print(f"\n{Fore.CYAN}{translator.get('register.waiting_for_verification_code')}{Style.RESET_ALL}")
         else:
-            print("\n等待并获取验证码...")
+            print(f"\n{translator.get('register.waiting_for_verification_code')}")
             
         # 检查是否使用手动输入验证码
         if hasattr(controller, 'get_verification_code') and email_tab is None:  # 手动模式
@@ -284,7 +284,7 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
                     browser_tab.ele(f"@data-index={i}").input(digit)
                     time.sleep(random.uniform(0.1, 0.3))
                 
-                print("验证码填写完成")
+                print(f"{translator.get('register.verification_success')}")
                 time.sleep(3)
                 
                 # 处理最后一次 Turnstile 验证
@@ -292,11 +292,11 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
                     if translator:
                         print(f"{translator.get('register.verification_success')}")
                     else:
-                        print("最后一次验证通过！")
+                        print(f"{translator.get('register.verification_success')}")
                     time.sleep(2)
                     
                     # 访问设置页面
-                    print("访问设置页面...")
+                    print(f"{translator.get('register.visiting_url')}: https://www.cursor.com/settings")
                     browser_tab.get("https://www.cursor.com/settings")
                     time.sleep(3)  # 等待页面加载
                     return True, browser_tab
@@ -305,7 +305,7 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
                 
         # 自动获取验证码逻辑
         elif email_tab:
-            print("等待验证码邮件...")
+            print(f"{translator.get('register.waiting_for_verification_code')}")
             time.sleep(5)  # 等待验证码邮件
 
             # 使用已有的 email_tab 刷新邮箱

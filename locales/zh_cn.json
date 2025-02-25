@@ -64,7 +64,11 @@
         "patch_completed": "getMachineId修补完成",
         "patch_failed": "getMachineId修补失败: {error}",
         "version_check_passed": "Cursor版本检查通过",
-        "file_modified": "文件已修改"
+        "file_modified": "文件已修改",
+        "version_less_than_0_45": "Cursor版本 < 0.45.0，跳过getMachineId修补",
+        "detecting_version": "检测Cursor版本",
+        "patching_getmachineid": "修补getMachineId",
+        "version_greater_than_0_45": "Cursor版本 >= 0.45.0，修补getMachineId"
     },
     "register": {
         "title": "Cursor 注册工具",

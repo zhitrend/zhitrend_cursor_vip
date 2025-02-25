@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 
 # 检查并安装必要的依赖
 check_dependencies() {
-    echo -e "${YELLOW}检查系统依赖...${NC}"
+    echo -e "${YELLOW}Checking system dependencies...${NC}"
     
     # 检查是否为 Ubuntu/Debian
     if [ -f /etc/debian_version ]; then
@@ -16,42 +16,42 @@ check_dependencies() {
         PACKAGES="python3 python3-pip python3-venv"
         for pkg in $PACKAGES; do
             if ! dpkg -l | grep -q "^ii  $pkg "; then
-                echo -e "${YELLOW}安装 $pkg...${NC}"
+                echo -e "${YELLOW}Installing $pkg...${NC}"
                 sudo apt-get update
                 sudo apt-get install -y $pkg
             fi
         done
     else
-        echo -e "${RED}不支持的系统，请手动安装 python3, pip3 和 python3-venv${NC}"
+        echo -e "${RED}Unsupported system, please install python3, pip3 and python3-venv manually${NC}"
         exit 1
     fi
 }
 
 # 创建并激活虚拟环境
 setup_venv() {
-    echo -e "${GREEN}正在创建虚拟环境...${NC}"
+    echo -e "${GREEN}Creating virtual environment...${NC}"
     python3 -m venv venv
     
-    echo -e "${GREEN}启动虚拟环境...${NC}"
+    echo -e "${GREEN}Starting virtual environment...${NC}"
     . ./venv/bin/activate || source ./venv/bin/activate
 }
 
 # 安装依赖
 install_dependencies() {
-    echo -e "${GREEN}安装依赖...${NC}"
+    echo -e "${GREEN}Installing dependencies...${NC}"
     python3 -m pip install --upgrade pip
     pip3 install -r requirements.txt
 }
 
 # 构建程序
 build_program() {
-    echo -e "${GREEN}开始构建...${NC}"
+    echo -e "${GREEN}Starting build...${NC}"
     python3 build.py
 }
 
 # 清理
 cleanup() {
-    echo -e "${GREEN}清理虚拟环境...${NC}"
+    echo -e "${GREEN}Cleaning virtual environment...${NC}"
     deactivate 2>/dev/null || true
     rm -rf venv
 }
@@ -73,8 +73,8 @@ main() {
     # 清理
     cleanup
     
-    echo -e "${GREEN}完成！${NC}"
-    echo "按任意键退出..."
+    echo -e "${GREEN}Completed!${NC}"
+    echo "Press any key to exit..."
     # 使用兼容的方式读取输入
     if [ "$(uname)" = "Linux" ]; then
         read dummy

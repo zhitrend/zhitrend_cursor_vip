@@ -1,3 +1,8 @@
 cursor_accounts.txt
 /venv
 /__pycache__
+dist
+build
+install.bat
+run.bat
+temp_account_info.txt

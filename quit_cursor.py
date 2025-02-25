@@ -4,10 +4,10 @@ from colorama import Fore, Style, init
 import sys
 import os
 
-# 初始化colorama
+# Initialize colorama
 init()
 
-# 定义emoji常量
+# Define emoji constants
 EMOJI = {
     "PROCESS": "⚙️",
     "SUCCESS": "✅",
@@ -19,15 +19,15 @@ EMOJI = {
 class CursorQuitter:
     def __init__(self, timeout=5, translator=None):
         self.timeout = timeout
-        self.translator = translator  # 使用传入的翻译器
+        self.translator = translator  # Use the passed translator
         
     def quit_cursor(self):
-        """温和地关闭 Cursor 进程"""
+        """Gently close Cursor processes"""
         try:
             print(f"{Fore.CYAN}{EMOJI['PROCESS']} {self.translator.get('quit_cursor.start')}...{Style.RESET_ALL}")
             cursor_processes = []
             
-            # 收集所有 Cursor 进程
+            # Collect all Cursor processes
             for proc in psutil.process_iter(['pid', 'name']):
                 try:
                     if proc.info['name'].lower() in ['cursor.exe', 'cursor']:
@@ -39,7 +39,7 @@ class CursorQuitter:
                 print(f"{Fore.GREEN}{EMOJI['INFO']} {self.translator.get('quit_cursor.no_process')}{Style.RESET_ALL}")
                 return True
 
-            # 温和地请求进程终止
+            # Gently request processes to terminate
             for proc in cursor_processes:
                 try:
                     if proc.is_running():
@@ -48,7 +48,7 @@ class CursorQuitter:
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
 
-            # 等待进程自然终止
+            # Wait for processes to terminate naturally
             print(f"{Fore.CYAN}{EMOJI['WAIT']} {self.translator.get('quit_cursor.waiting')}...{Style.RESET_ALL}")
             start_time = time.time()
             while time.time() - start_time < self.timeout:
@@ -66,7 +66,7 @@ class CursorQuitter:
                     
                 time.sleep(0.5)
                 
-            # 如果超时后仍有进程在运行
+            # If processes are still running after timeout
             if still_running:
                 process_list = ", ".join([str(p.pid) for p in still_running])
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('quit_cursor.timeout', pids=process_list)}{Style.RESET_ALL}")
@@ -79,11 +79,11 @@ class CursorQuitter:
             return False
 
 def quit_cursor(translator=None, timeout=5):
-    """便捷函数，用于直接调用退出功能"""
+    """Convenient function for directly calling the quit function"""
     quitter = CursorQuitter(timeout, translator)
     return quitter.quit_cursor()
 
 if __name__ == "__main__":
-    # 如果直接运行，使用默认翻译器
+    # If run directly, use the default translator
     from main import translator as main_translator
     quit_cursor(main_translator)

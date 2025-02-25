@@ -5,10 +5,10 @@ import shutil
 from colorama import Fore, Style, init
 import subprocess
 
-# 初始化 colorama
+# Initialize colorama
 init()
 
-# 定义 emoji 常量
+# Define emoji constants
 EMOJI = {
     "PROCESS": "🔄",
     "SUCCESS": "✅",
@@ -31,7 +31,7 @@ class AutoUpdateDisabler:
         }
 
     def _kill_cursor_processes(self):
-        """结束所有 Cursor 进程"""
+        """End all Cursor processes"""
         try:
             print(f"{Fore.CYAN}{EMOJI['PROCESS']} {self.translator.get('update.killing_processes') if self.translator else '正在结束 Cursor 进程...'}{Style.RESET_ALL}")
             
@@ -48,7 +48,7 @@ class AutoUpdateDisabler:
             return False
 
     def _remove_updater_directory(self):
-        """删除更新程序目录"""
+        """Delete updater directory"""
         try:
             updater_path = self.updater_paths.get(self.system)
             if not updater_path:
@@ -70,7 +70,7 @@ class AutoUpdateDisabler:
             return False
 
     def _create_blocking_file(self):
-        """创建阻止文件"""
+        """Create blocking file"""
         try:
             updater_path = self.updater_paths.get(self.system)
             if not updater_path:
@@ -78,14 +78,14 @@ class AutoUpdateDisabler:
 
             print(f"{Fore.CYAN}{EMOJI['FILE']} {self.translator.get('update.creating_block_file') if self.translator else '正在创建阻止文件...'}{Style.RESET_ALL}")
             
-            # 创建空文件
+            # Create empty file
             open(updater_path, 'w').close()
             
-            # 设置只读属性
+            # Set read-only attribute
             if self.system == "Windows":
                 os.system(f'attrib +r "{updater_path}"')
             else:
-                os.chmod(updater_path, 0o444)  # 设置为只读
+                os.chmod(updater_path, 0o444)  # Set to read-only
                 
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.block_file_created') if self.translator else '阻止文件已创建'}{Style.RESET_ALL}")
             return True
@@ -95,19 +95,19 @@ class AutoUpdateDisabler:
             return False
 
     def disable_auto_update(self):
-        """禁用自动更新"""
+        """Disable auto update"""
         try:
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('update.start_disable') if self.translator else '开始禁用自动更新...'}{Style.RESET_ALL}")
             
-            # 1. 结束进程
+            # 1. End processes
             if not self._kill_cursor_processes():
                 return False
                 
-            # 2. 删除目录
+            # 2. Delete directory
             if not self._remove_updater_directory():
                 return False
                 
-            # 3. 创建阻止文件
+            # 3. Create blocking file
             if not self._create_blocking_file():
                 return False
                 
@@ -119,16 +119,16 @@ class AutoUpdateDisabler:
             return False
 
 def run(translator=None):
-    """便捷函数，用于直接调用禁用功能"""
+    """Convenient function for directly calling the disable function"""
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}{EMOJI['STOP']} {translator.get('update.title') if translator else '禁用 Cursor 自动更新'}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['STOP']} {translator.get('update.title') if translator else 'Disable Cursor Auto Update'}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
 
     disabler = AutoUpdateDisabler(translator)
     disabler.disable_auto_update()
 
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
-    input(f"{EMOJI['INFO']} {translator.get('update.press_enter') if translator else '按回车键继续...'}")
+    input(f"{EMOJI['INFO']} {translator.get('update.press_enter') if translator else 'Press Enter to Continue...'}")
 
 if __name__ == "__main__":
     from main import translator as main_translator

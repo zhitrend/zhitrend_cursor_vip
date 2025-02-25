@@ -10,10 +10,10 @@ from reset_machine_manual import MachineIDResetter
 os.environ["PYTHONVERBOSE"] = "0"
 os.environ["PYINSTALLER_VERBOSE"] = "0"
 
-# 初始化colorama
+# Initialize colorama
 init()
 
-# 定义emoji常量
+# Define emoji constants
 EMOJI = {
     'START': '🚀',
     'FORM': '📝',
@@ -33,7 +33,7 @@ EMOJI = {
 class CursorRegistration:
     def __init__(self, translator=None):
         self.translator = translator
-        # 设置为显示模式
+        # Set to display mode
         os.environ['BROWSER_HEADLESS'] = 'False'
         self.browser_manager = BrowserManager()
         self.browser = None
@@ -44,7 +44,7 @@ class CursorRegistration:
         self.signup_tab = None
         self.email_tab = None
         
-        # 账号信息
+        # Account information
         self.password = self._generate_password()
         self.first_name = self._generate_name()
         self.last_name = self._generate_name()
@@ -61,9 +61,9 @@ class CursorRegistration:
         return first_letter + rest_letters
 
     def setup_email(self):
-        """设置邮箱"""
+        """Setup Email"""
         try:
-            print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.manual_email_input') if self.translator else '请输入邮箱地址：'}")
+            print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.manual_email_input') if self.translator else 'Please enter your email address:'}")
             self.email_address = input().strip()
             
             if '@' not in self.email_address:
@@ -77,9 +77,9 @@ class CursorRegistration:
             return False
 
     def get_verification_code(self):
-        """手动获取验证码"""
+        """Manually Get Verification Code"""
         try:
-            print(f"{Fore.CYAN}{EMOJI['CODE']} {self.translator.get('register.manual_code_input') if self.translator else '请输入验证码：'}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['CODE']} {self.translator.get('register.manual_code_input') if self.translator else 'Please enter the verification code:'}")
             code = input().strip()
             
             if not code.isdigit() or len(code) != 6:
@@ -93,31 +93,31 @@ class CursorRegistration:
             return None
 
     def register_cursor(self):
-        """注册 Cursor"""
+        """Register Cursor"""
         browser_tab = None
         try:
             print(f"{Fore.CYAN}{EMOJI['START']} {self.translator.get('register.register_start')}...{Style.RESET_ALL}")
             
-            # 直接使用 new_signup.py 进行注册
+            # Use new_signup.py directly for registration
             from new_signup import main as new_signup_main
             
-            # 执行新的注册流程，传入 translator
+            # Execute new registration process, passing translator
             result, browser_tab = new_signup_main(
                 email=self.email_address,
                 password=self.password,
                 first_name=self.first_name,
                 last_name=self.last_name,
-                email_tab=None,  # 不需要邮箱标签页
-                controller=self,  # 传入 self 而不是 self.controller
+                email_tab=None,  # No email tab needed
+                controller=self,  # Pass self instead of self.controller
                 translator=self.translator
             )
             
             if result:
-                # 使用返回的浏览器实例获取账户信息
-                self.signup_tab = browser_tab  # 保存浏览器实例
+                # Use the returned browser instance to get account information
+                self.signup_tab = browser_tab  # Save browser instance
                 success = self._get_account_info()
                 
-                # 获取信息后关闭浏览器
+                # Close browser after getting information
                 if browser_tab:
                     try:
                         browser_tab.quit()
@@ -132,7 +132,7 @@ class CursorRegistration:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.register_process_error', error=str(e))}{Style.RESET_ALL}")
             return False
         finally:
-            # 确保在任何情况下都关闭浏览器
+            # Ensure browser is closed in any case
             if browser_tab:
                 try:
                     browser_tab.quit()
@@ -140,7 +140,7 @@ class CursorRegistration:
                     pass
                 
     def _get_account_info(self):
-        """获取账户信息和 Token"""
+        """Get Account Information and Token"""
         try:
             self.signup_tab.get(self.settings_url)
             time.sleep(2)
@@ -191,22 +191,22 @@ class CursorRegistration:
             return False
 
     def _save_account_info(self, token, total_usage):
-        """保存账户信息到文件"""
+        """Save Account Information to File"""
         try:
-            # 先更新认证信息
+            # Update authentication information first
             print(f"{Fore.CYAN}{EMOJI['KEY']} {self.translator.get('register.update_cursor_auth_info')}...{Style.RESET_ALL}")
             if self.update_cursor_auth(email=self.email_address, access_token=token, refresh_token=token):
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.cursor_auth_info_updated')}...{Style.RESET_ALL}")
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.cursor_auth_info_update_failed')}...{Style.RESET_ALL}")
 
-            # 重置机器ID
+            # Reset machine ID
             print(f"{Fore.CYAN}{EMOJI['UPDATE']} {self.translator.get('register.reset_machine_id')}...{Style.RESET_ALL}")
-            resetter = MachineIDResetter(self.translator)  # 创建实例时传入translator
-            if not resetter.reset_machine_ids():  # 直接调用reset_machine_ids方法
+            resetter = MachineIDResetter(self.translator)  # Create instance with translator
+            if not resetter.reset_machine_ids():  # Call reset_machine_ids method directly
                 raise Exception("Failed to reset machine ID")
             
-            # 保存账户信息到文件
+            # Save account information to file
             with open('cursor_accounts.txt', 'a', encoding='utf-8') as f:
                 f.write(f"\n{'='*50}\n")
                 f.write(f"Email: {self.email_address}\n")
@@ -223,7 +223,7 @@ class CursorRegistration:
             return False
 
     def start(self):
-        """启动注册流程"""
+        """Start Registration Process"""
         try:
             if self.setup_email():
                 if self.register_cursor():
@@ -231,7 +231,7 @@ class CursorRegistration:
                     return True
             return False
         finally:
-            # 关闭邮箱标签页
+            # Close email tab
             if hasattr(self, 'temp_email'):
                 try:
                     self.temp_email.close()
@@ -239,7 +239,7 @@ class CursorRegistration:
                     pass
 
     def update_cursor_auth(self, email=None, access_token=None, refresh_token=None):
-        """更新Cursor的认证信息的便捷函数"""
+        """Convenient function to update Cursor authentication information"""
         auth_manager = CursorAuth(translator=self.translator)
         return auth_manager.update_auth(email, access_token, refresh_token)
 

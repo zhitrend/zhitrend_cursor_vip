@@ -64,7 +64,11 @@
         "patch_completed": "Patching getMachineId Completed",
         "patch_failed": "Patching getMachineId Failed: {error}",
         "version_check_passed": "Cursor Version Check Passed",
-        "file_modified": "File Modified"
+        "file_modified": "File Modified",
+        "version_less_than_0_45": "Cursor Version < 0.45.0, Skip Patching getMachineId",
+        "detecting_version": "Detecting Cursor Version",
+        "patching_getmachineid": "Patching getMachineId",
+        "version_greater_than_0_45": "Cursor Version >= 0.45.0, Patching getMachineId"
     },
     "register": {
         "title": "Cursor Registration Tool",
