@@ -1,5 +1,15 @@
 # Change Log
 
+## v1.4.06
+
+1. Add: Blocked Domains Loaded | 增加被屏蔽的域名加載
+2. Fix: Cleanup Error | 修復清理進程時出錯
+3. Fix: Blocked Domains Loaded Error | 修復被屏蔽的域名加載錯誤
+4. Fix: Available Domains Loaded Error | 修復可用域名加載錯誤
+5. Fix: Domains Filtered Error | 修復過濾後剩餘域名錯誤
+6. Fix: Domains Excluded Error | 修復排除域名錯誤
+
+
 ## v1.4.05
 
 1. Fix: macOS Language Detection | 修復macOS語言檢測
