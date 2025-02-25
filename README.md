@@ -1,3 +1,8 @@
+FORKED PROJECT , ALL CREDITS GO TO OWNER:
+
+- ADDED 2 API TEMP MAIL
+- UP SUPPORT TO LATEST VERSION
+
 # ➤ Cursor Free VIP
 <div align="center">
 <p align="center">
@@ -12,7 +17,7 @@
 [![Download](https://img.shields.io/github/downloads/yeongpin/cursor-free-vip/total?style=flat-square&logo=github&color=52c41a)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 
 </p>
-<h4>Support Latest 0.45.16 Version | 支持最新0.45.16版本</h4>
+<h4>Support Latest 0.46.2 Version | 支持最新0.46.2版本</h4>
 
 This is a tool to automatically register , support Windows and macOS systems, complete Auth verification, and reset Cursor's configuration.
 
