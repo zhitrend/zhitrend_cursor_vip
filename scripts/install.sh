@@ -50,12 +50,21 @@ get_latest_version() {
     echo -e "${GREEN}✅ 找到最新版本: ${VERSION}${NC}"
 }
 
-# 檢測系統類型
+# 檢測系統類型和架構
 detect_os() {
     if [[ "$(uname)" == "Darwin" ]]; then
-        OS="mac"
+        # 检测 macOS 架构
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == "arm64" ]]; then
+            OS="mac_arm64"
+            echo -e "${CYAN}ℹ️ 检测到 macOS ARM64 架构${NC}"
+        else
+            OS="mac_intel"
+            echo -e "${CYAN}ℹ️ 检测到 macOS Intel 架构${NC}"
+        fi
     else
         OS="linux"
+        echo -e "${CYAN}ℹ️ 检测到 Linux 系统${NC}"
     fi
 }
 
@@ -67,6 +76,8 @@ install_cursor_free_vip() {
     local download_url="https://github.com/yeongpin/cursor-free-vip/releases/download/v${VERSION}/${binary_name}"
     
     echo -e "${CYAN}ℹ️ 正在下載到 ${downloads_dir}...${NC}"
+    echo -e "${CYAN}ℹ️ 下載鏈接: ${download_url}${NC}"
+    
     if ! curl -L -o "${binary_path}" "$download_url"; then
         echo -e "${RED}❌ 下載失敗${NC}"
         exit 1
