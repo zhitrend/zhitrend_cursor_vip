@@ -26,6 +26,10 @@ class CursorAuth:
             self.db_path = os.path.join(
                 os.getenv("APPDATA"), "Cursor", "User", "globalStorage", "state.vscdb"
             )
+        elif os.name =='posix':
+            self.db_path = os.path.expanduser(
+                            "~/.config/Cursor/User/globalStorage/state.vscdb"
+                        )
         else:  # macOS
             self.db_path = os.path.expanduser(
                 "~/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
