@@ -5,13 +5,12 @@ import sys
 import json
 from logo import print_logo
 from colorama import Fore, Style, init
-import ctypes
-from ctypes import windll
 import locale
 import platform
 
 # 只在 Windows 系统上导入 windll
 if platform.system() == 'Windows':
+    import ctypes
     from ctypes import windll
 
 # 初始化colorama
@@ -38,21 +37,22 @@ class Translator:
         self.fallback_language = 'en'  # Fallback language if translation is missing
         self.load_translations()
     
-    def _detect_system_language(self):
-        """检测系统语言"""
-        system = platform.system()
-        
-        if system == 'Windows':
-            return self._detect_windows_language()
-        elif system == 'Darwin':  # macOS
-            return self._detect_macos_language()
-        elif system == 'Linux':
-            return self._detect_linux_language()
-        else:
-            return 'en'  # 默认英语
+    def detect_system_language(self):
+        """Detect system language and return corresponding language code"""
+        try:
+            system = platform.system()
+            
+            if system == 'Windows':
+                return self._detect_windows_language()
+            else:
+                return self._detect_unix_language()
+                
+        except Exception as e:
+            print(f"{Fore.YELLOW}{EMOJI['INFO']} Failed to detect system language: {e}{Style.RESET_ALL}")
+            return 'en'
     
     def _detect_windows_language(self):
-        """检测 Windows 系统语言"""
+        """Detect language on Windows systems"""
         try:
             # 确保我们在 Windows 上
             if not hasattr(ctypes, 'windll'):
@@ -64,50 +64,44 @@ class Translator:
             threadid = user32.GetWindowThreadProcessId(hwnd, 0)
             layout_id = user32.GetKeyboardLayout(threadid) & 0xFFFF
             
-            # 根据键盘布局 ID 判断语言
-            if layout_id == 0x0804:
-                return 'zh_CN'  # 简体中文
-            elif layout_id == 0x0404:
-                return 'zh_TW'  # 繁体中文
-            else:
-                return 'en'  # 默认英语
-        except Exception as e:
-            print(f"Error detecting Windows language: {e}")
-            return 'en'
-    
-    def _detect_macos_language(self):
-        """检测 macOS 系统语言"""
-        try:
-            # 使用 defaults 命令获取系统语言设置
-            import subprocess
-            result = subprocess.run(['defaults', 'read', '-g', 'AppleLanguages'], 
-                                   capture_output=True, text=True)
-            output = result.stdout.strip()
+            # Map language ID to our language codes
+            language_map = {
+                0x0409: 'en',      # English
+                0x0404: 'zh_tw',   # Traditional Chinese
+                0x0804: 'zh_cn',   # Simplified Chinese
+            }
             
-            # 解析输出
-            if 'zh-Hans' in output:
-                return 'zh_CN'  # 简体中文
-            elif 'zh-Hant' in output or 'zh_TW' in output:
-                return 'zh_TW'  # 繁体中文
-            else:
-                return 'en'  # 默认英语
-        except Exception as e:
-            print(f"Error detecting macOS language: {e}")
-            return 'en'
+            return language_map.get(layout_id, 'en')
+        except:
+            return self._detect_unix_language()
     
-    def _detect_linux_language(self):
-        """检测 Linux 系统语言"""
+    def _detect_unix_language(self):
+        """Detect language on Unix-like systems (Linux, macOS)"""
         try:
-            # 检查环境变量
-            lang = os.environ.get('LANG', '').lower()
-            if lang.startswith('zh_cn'):
-                return 'zh_CN'
-            elif lang.startswith('zh_tw'):
-                return 'zh_TW'
-            else:
+            # Get the system locale
+            system_locale = locale.getdefaultlocale()[0]
+            if not system_locale:
                 return 'en'
-        except Exception as e:
-            print(f"Error detecting Linux language: {e}")
+            
+            system_locale = system_locale.lower()
+            
+            # Map locale to our language codes
+            if system_locale.startswith('zh_tw') or system_locale.startswith('zh_hk'):
+                return 'zh_tw'
+            elif system_locale.startswith('zh_cn'):
+                return 'zh_cn'
+            elif system_locale.startswith('en'):
+                return 'en'
+            
+            # Try to get language from LANG environment variable as fallback
+            env_lang = os.getenv('LANG', '').lower()
+            if 'tw' in env_lang or 'hk' in env_lang:
+                return 'zh_tw'
+            elif 'cn' in env_lang:
+                return 'zh_cn'
+            
+            return 'en'
+        except:
             return 'en'
     
     def load_translations(self):
