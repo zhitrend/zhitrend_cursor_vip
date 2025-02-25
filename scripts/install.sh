@@ -103,7 +103,7 @@ install_cursor_free_vip() {
         else
             exit 1
         fi
-    }
+    fi
     
     # 下载文件
     if ! curl -L -o "${binary_path}" "$download_url"; then
