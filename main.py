@@ -11,6 +11,7 @@ import platform
 # 只在 Windows 系统上导入 windll
 if platform.system() == 'Windows':
     import ctypes
+    # 只在 Windows 上导入 windll
     from ctypes import windll
 
 # 初始化colorama
@@ -33,7 +34,7 @@ EMOJI = {
 class Translator:
     def __init__(self):
         self.translations = {}
-        self.current_language = self._detect_system_language()
+        self.current_language = self.detect_system_language()  # 使用正确的方法名
         self.fallback_language = 'en'  # Fallback language if translation is missing
         self.load_translations()
     
@@ -55,7 +56,7 @@ class Translator:
         """Detect language on Windows systems"""
         try:
             # 确保我们在 Windows 上
-            if not hasattr(ctypes, 'windll'):
+            if platform.system() != 'Windows':
                 return 'en'
                 
             # 获取键盘布局
