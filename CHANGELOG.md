@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.4.05
+
+1. Fix: macOS Language Detection | 修復macOS語言檢測
+
+
 ## v1.4.04
 
 1. Change Some Language Info to English | 更改一些語言信息為英文
