@@ -62,9 +62,13 @@ detect_os() {
             OS="mac_intel"
             echo -e "${CYAN}ℹ️ 检测到 macOS Intel 架构${NC}"
         fi
-    else
+    elif [[ "$(uname)" == "Linux" ]]; then
         OS="linux"
         echo -e "${CYAN}ℹ️ 检测到 Linux 系统${NC}"
+    else
+        # 假设是 Windows
+        OS="windows"
+        echo -e "${CYAN}ℹ️ 检测到 Windows 系统${NC}"
     fi
 }
 
@@ -78,8 +82,31 @@ install_cursor_free_vip() {
     echo -e "${CYAN}ℹ️ 正在下載到 ${downloads_dir}...${NC}"
     echo -e "${CYAN}ℹ️ 下載鏈接: ${download_url}${NC}"
     
-    # 使用 -v 参数显示详细信息
-    if ! curl -v -L -o "${binary_path}" "$download_url"; then
+    # 先检查文件是否存在
+    if curl --output /dev/null --silent --head --fail "$download_url"; then
+        echo -e "${GREEN}✅ 文件存在，开始下载...${NC}"
+    else
+        echo -e "${RED}❌ 下载链接不存在: ${download_url}${NC}"
+        echo -e "${YELLOW}⚠️ 尝试不带架构的版本...${NC}"
+        
+        # 尝试不带架构的版本
+        if [[ "$OS" == "mac_arm64" || "$OS" == "mac_intel" ]]; then
+            OS="mac"
+            binary_name="CursorFreeVIP_${VERSION}_${OS}"
+            download_url="https://github.com/yeongpin/cursor-free-vip/releases/download/v${VERSION}/${binary_name}"
+            echo -e "${CYAN}ℹ️ 新下载链接: ${download_url}${NC}"
+            
+            if ! curl --output /dev/null --silent --head --fail "$download_url"; then
+                echo -e "${RED}❌ 新下载链接也不存在${NC}"
+                exit 1
+            fi
+        else
+            exit 1
+        fi
+    }
+    
+    # 下载文件
+    if ! curl -L -o "${binary_path}" "$download_url"; then
         echo -e "${RED}❌ 下載失敗${NC}"
         exit 1
     fi
