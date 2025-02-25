@@ -78,8 +78,23 @@ install_cursor_free_vip() {
     echo -e "${CYAN}ℹ️ 正在下載到 ${downloads_dir}...${NC}"
     echo -e "${CYAN}ℹ️ 下載鏈接: ${download_url}${NC}"
     
-    if ! curl -L -o "${binary_path}" "$download_url"; then
+    # 使用 -v 参数显示详细信息
+    if ! curl -v -L -o "${binary_path}" "$download_url"; then
         echo -e "${RED}❌ 下載失敗${NC}"
+        exit 1
+    fi
+    
+    # 检查下载的文件大小
+    local file_size=$(stat -f%z "${binary_path}" 2>/dev/null || stat -c%s "${binary_path}" 2>/dev/null)
+    echo -e "${CYAN}ℹ️ 下載的文件大小: ${file_size} 字節${NC}"
+    
+    # 如果文件太小，可能是错误信息
+    if [ "$file_size" -lt 1000 ]; then
+        echo -e "${YELLOW}⚠️ 警告: 下載的文件太小，可能不是有效的可執行文件${NC}"
+        echo -e "${YELLOW}⚠️ 文件內容:${NC}"
+        cat "${binary_path}"
+        echo ""
+        echo -e "${RED}❌ 下載失敗，請檢查版本號和操作系統是否正確${NC}"
         exit 1
     fi
     
