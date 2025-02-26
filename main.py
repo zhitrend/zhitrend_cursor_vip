@@ -218,19 +218,19 @@ def main():
             elif choice == "1":
                 import reset_machine_manual
                 reset_machine_manual.run(translator)
-                break
+                print_menu()
             elif choice == "2":
                 import cursor_register
                 cursor_register.main(translator)
-                break
+                print_menu()
             elif choice == "3":
                 import cursor_register_manual
                 cursor_register_manual.main(translator)
-                break
+                print_menu()
             elif choice == "4":
                 import quit_cursor
                 quit_cursor.quit_cursor(translator)
-                break
+                print_menu()
             elif choice == "5":
                 if select_language():
                     print_menu()
@@ -238,7 +238,7 @@ def main():
             elif choice == "6":
                 import disable_auto_update
                 disable_auto_update.run(translator)
-                break
+                print_menu()
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
                 print_menu()
@@ -249,10 +249,7 @@ def main():
             return
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.error_occurred', error=str(e))}{Style.RESET_ALL}")
-            break
-
-    print(f"\n{Fore.CYAN}{'═' * 50}{Style.RESET_ALL}")
-    input(f"{EMOJI['INFO']} {translator.get('menu.press_enter')}...{Style.RESET_ALL}")
+            print_menu()
 
 if __name__ == "__main__":
     main()
