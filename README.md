@@ -1,7 +1,7 @@
 # ➤ Cursor Free VIP
 <div align="center">
 <p align="center">
-  <img src="./images/logo.png" alt="Cursor Pro Logo" width="200"/>
+  <img src="./images/logo.png" alt="Cursor Pro Logo" width="200" style="border-radius: 6px;"/>
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@ This is a tool to automatically register , support Windows and macOS systems, co
 這是一個自動化工具，自動註冊 ，支持 Windows 和 macOS 系統，完成Auth驗證，重置Cursor的配置。
 
 <p align="center">
-  <img src="./images/pronew_2025-02-13_15-01-32.png" alt="new" width="400"/><br>
+  <img src="./images/new_2025-02-27_10-42-44.png" alt="new" width="400" style="border-radius: 6px;"/><br>
 </p>
 
 ##### If you dont have google chrome , you can download it from [here](https://www.google.com/intl/en_pk/chrome/)
