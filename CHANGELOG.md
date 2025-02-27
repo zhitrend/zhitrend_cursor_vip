@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.4.07
+1. Add Removed break statements after each operation | 修改結束event後的break暫停應用
+2. Added print_menu() calls to show the menu again | 添加print_menu（）調用以再次顯示菜單
+3. Updated error handling to show menu instead of exiting | 更新錯誤處理以顯示菜單而不是退出
+
 ## v1.4.06
 
 1. Add: Blocked Domains Loaded | 增加被屏蔽的域名加載
