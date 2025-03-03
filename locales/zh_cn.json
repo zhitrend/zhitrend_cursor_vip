@@ -131,7 +131,12 @@
         "update_cursor_auth_info": "更新Cursor认证信息",
         "setting_password": "设置密码",
         "manual_code_input": "手动输入验证码",
-        "manual_email_input": "手动输入邮箱"
+        "manual_email_input": "手动输入邮箱",
+        "password": "密码",
+        "first_name": "名字",
+        "last_name": "姓氏",
+        "exit_signal": "退出信号",
+        "email_address": "邮箱地址"
     },
     "auth": {
         "title": "Cursor 认证管理器",

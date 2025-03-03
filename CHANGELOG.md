@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.5.02
+1. Add: Generate Random Name Alias | 增加生成隨機真實姓名
+2. Add: Realistic Name Input | 增加真實姓名輸入
+3. Optimize: Error Handling | 優化錯誤處理
+4. Optimize: Translation | 優化翻譯
+5. Optimize: Performance | 優化性能
+
 ## v1.5.01
 1. Add: Check Latest Version | 增加檢查最新版本
 2. Add: Update Command | 增加更新命令
