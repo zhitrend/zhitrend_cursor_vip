@@ -211,5 +211,13 @@
         "directory_removed": "目錄已刪除",
         "creating_block_file": "創建阻止文件",
         "block_file_created": "阻止文件已創建"
+    },
+    "updater": {
+        "checking": "檢查更新...",
+        "new_version_available": "有新版本可用! (當前版本: {current}, 最新版本: {latest})",
+        "updating": "正在更新到最新版本。程序將自動重啟。",
+        "up_to_date": "您使用的是最新版本。",
+        "check_failed": "檢查更新失敗: {error}",
+        "continue_anyway": "繼續使用當前版本..."
     }
 } 
