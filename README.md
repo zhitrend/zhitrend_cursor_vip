@@ -109,6 +109,11 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 歡迎提交 Issue 和 Pull Request！
 
 
+<a href="https://github.com/yeongpin/cursor-free-vip/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=yeongpin/cursor-free-vip" />
+</a>
+<br /><br />
+
 
 ## 📩 Disclaimer | 免責聲明
 
