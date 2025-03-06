@@ -64,6 +64,21 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
         os.path.join(base_path, paths_map[system]["main"]),
     )
 
+def get_cursor_machine_id_path(translator=None) -> str:
+    """
+    Get Cursor machineId file path based on operating system
+    Returns:
+        str: Path to machineId file
+    """
+    if sys.platform == "win32":  # Windows
+        return os.path.join(os.getenv("APPDATA"), "Cursor", "machineId")
+    elif sys.platform == "linux":  # Linux
+        return os.path.expanduser("~/.config/Cursor/machineId")
+    elif sys.platform == "darwin":  # macOS
+        return os.path.expanduser("~/Library/Application Support/Cursor/machineId")
+    else:
+        raise OSError(f"Unsupported operating system: {sys.platform}")
+
 def get_workbench_cursor_path(translator=None) -> str:
     """Get Cursor workbench.desktop.main.js path"""
     system = platform.system()
@@ -338,6 +353,8 @@ class MachineIDResetter:
         # Generate new sqmId
         sqm_id = "{" + str(uuid.uuid4()).upper() + "}"
 
+        self.update_machine_id_file(dev_device_id)
+
         return {
             "telemetry.devDeviceId": dev_device_id,
             "telemetry.macMachineId": mac_machine_id,
@@ -410,12 +427,12 @@ class MachineIDResetter:
             new_guid = str(uuid.uuid4())
             winreg.SetValueEx(key, "MachineGuid", 0, winreg.REG_SZ, new_guid)
             winreg.CloseKey(key)
-            print("Windows MachineGuid updated successfully")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.windows_machine_guid_updated')}{Style.RESET_ALL}")
         except PermissionError:
-            print("Permission denied: Run as administrator to update Windows MachineGuid")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.permission_denied')}{Style.RESET_ALL}")
             raise
         except Exception as e:
-            print(f"Failed to update Windows MachineGuid: {e}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.update_windows_machine_guid_failed', error=str(e))}{Style.RESET_ALL}")
             raise
 
     def _update_macos_platform_uuid(self, new_ids):
@@ -427,11 +444,11 @@ class MachineIDResetter:
                 cmd = f'sudo plutil -replace "UUID" -string "{new_ids["telemetry.macMachineId"]}" "{uuid_file}"'
                 result = os.system(cmd)
                 if result == 0:
-                    print("macOS Platform UUID updated successfully")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.macos_platform_uuid_updated')}{Style.RESET_ALL}")
                 else:
-                    raise Exception("Failed to execute plutil command")
+                    raise Exception(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.failed_to_execute_plutil_command')}{Style.RESET_ALL}")
         except Exception as e:
-            print(f"Failed to update macOS Platform UUID: {e}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.update_macos_platform_uuid_failed', error=str(e))}{Style.RESET_ALL}")
             raise
 
     def reset_machine_ids(self):
@@ -499,6 +516,44 @@ class MachineIDResetter:
             return False
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.process_error', error=str(e))}{Style.RESET_ALL}")
+            return False
+
+    def update_machine_id_file(self, machine_id: str) -> bool:
+        """
+        Update machineId file with new machine_id
+        Args:
+            machine_id (str): New machine ID to write
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            # Get the machineId file path
+            machine_id_path = get_cursor_machine_id_path()
+            
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(machine_id_path), exist_ok=True)
+
+            # Create backup if file exists
+            if os.path.exists(machine_id_path):
+                backup_path = machine_id_path + ".backup"
+                try:
+                    shutil.copy2(machine_id_path, backup_path)
+                    print(f"{Fore.GREEN}{EMOJI['INFO']} {self.translator.get('reset.backup_created', path=backup_path) if self.translator else f'Backup created at: {backup_path}'}{Style.RESET_ALL}")
+                except Exception as e:
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('reset.backup_creation_failed', error=str(e)) if self.translator else f'Could not create backup: {str(e)}'}{Style.RESET_ALL}")
+
+            # Write new machine ID to file
+            with open(machine_id_path, "w", encoding="utf-8") as f:
+                f.write(machine_id)
+
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.update_success') if self.translator else 'Successfully updated machineId file'}{Style.RESET_ALL}")
+            return True
+
+        except Exception as e:
+            error_msg = f"Failed to update machineId file: {str(e)}"
+            if self.translator:
+                error_msg = self.translator.get('reset.update_failed', error=str(e))
+            print(f"{Fore.RED}{EMOJI['ERROR']} {error_msg}{Style.RESET_ALL}")
             return False
 
 def run(translator=None):
