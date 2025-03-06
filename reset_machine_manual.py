@@ -64,6 +64,43 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
         os.path.join(base_path, paths_map[system]["main"]),
     )
 
+def get_workbench_cursor_path(translator=None) -> str:
+    """Get Cursor workbench.desktop.main.js path"""
+    system = platform.system()
+    
+    paths_map = {
+        "Darwin": {  # macOS
+            "base": "/Applications/Cursor.app/Contents/Resources/app",
+            "main": "out/vs/workbench/workbench.desktop.main.js"
+        },
+        "Windows": {
+            "base": os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app"),
+            "main": "out/vs/workbench/workbench.desktop.main.js"
+        },
+        "Linux": {
+            "bases": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app"],
+            "main": "out/vs/workbench/workbench.desktop.main.js"
+        }
+    }
+
+    if system not in paths_map:
+        raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
+
+    if system == "Linux":
+        for base in paths_map["Linux"]["bases"]:
+            main_path = os.path.join(base, paths_map["Linux"]["main"])
+            if os.path.exists(main_path):
+                return main_path
+        raise OSError(translator.get('reset.linux_path_not_found') if translator else "在 Linux 系统上未找到 Cursor 安装路径")
+
+    base_path = paths_map[system]["base"]
+    main_path = os.path.join(base_path, paths_map[system]["main"])
+    
+    if not os.path.exists(main_path):
+        raise OSError(translator.get('reset.file_not_found', path=main_path) if translator else f"未找到 Cursor main.js 文件: {main_path}")
+        
+    return main_path
+
 def version_check(version: str, min_version: str = "", max_version: str = "", translator=None) -> bool:
     """Version number check"""
     version_pattern = r"^\d+\.\d+\.\d+$"
@@ -100,6 +137,70 @@ def check_cursor_version(translator) -> bool:
         return version_check(version, min_version="0.45.0", translator=translator)
     except Exception as e:
         print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.check_version_failed', error=str(e))}{Style.RESET_ALL}")
+        return False
+
+def modify_workbench_js(file_path: str, translator=None) -> bool:
+    """
+    Modify file content
+    """
+    try:
+        # Save original file permissions
+        original_stat = os.stat(file_path)
+        original_mode = original_stat.st_mode
+        original_uid = original_stat.st_uid
+        original_gid = original_stat.st_gid
+
+        # Create temporary file
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", errors="ignore", delete=False) as tmp_file:
+            # Read original content
+            with open(file_path, "r", encoding="utf-8", errors="ignore") as main_file:
+                content = main_file.read()
+
+            # Define replacement patterns
+            CButton_old_pattern = r'$(k,E(Ks,{title:"Upgrade to Pro",size:"small",get codicon(){return F.rocket},get onClick(){return t.pay}}),null)'
+            CButton_new_pattern = r'$(k,E(Ks,{title:"yeongpin GitHub",size:"small",get codicon(){return F.rocket},get onClick(){return function(){window.open("https://www.github.com/yeongpin","_blank")}}}),null)'
+
+            CBadge_old_pattern = r'<div>Pro Trial'
+            CBadge_new_pattern = r'<div>Pro'
+
+            CToast_old_pattern = r'notifications-toasts'
+            CToast_new_pattern = r'notifications-toasts hidden'
+
+            # Replace content
+            content = content.replace(CButton_old_pattern, CButton_new_pattern)
+            content = content.replace(CBadge_old_pattern, CBadge_new_pattern)
+            content = content.replace(CToast_old_pattern, CToast_new_pattern)
+
+            # Write to temporary file
+            tmp_file.write(content)
+            tmp_path = tmp_file.name
+
+        # Backup original file
+        backup_path = file_path + ".backup"
+        if os.path.exists(backup_path):
+            os.remove(backup_path)
+        shutil.copy2(file_path, backup_path)
+        
+        # Move temporary file to original position
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        shutil.move(tmp_path, file_path)
+
+        # Restore original permissions
+        os.chmod(file_path, original_mode)
+        if os.name != "nt":  # Not Windows
+            os.chown(file_path, original_uid, original_gid)
+
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('reset.file_modified')}{Style.RESET_ALL}")
+        return True
+
+    except Exception as e:
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.modify_file_failed', error=str(e))}{Style.RESET_ALL}")
+        if "tmp_path" in locals():
+            try:
+                os.unlink(tmp_path)
+            except:
+                pass
         return False
 
 def modify_main_js(main_path: str, translator) -> bool:
@@ -372,6 +473,10 @@ class MachineIDResetter:
 
             # Update system IDs
             self.update_system_ids(new_ids)
+
+            # Modify workbench.desktop.main.js
+            workbench_path = get_workbench_cursor_path(self.translator)
+            modify_workbench_js(workbench_path, self.translator)
 
             # Check Cursor version and perform corresponding actions
             greater_than_0_45 = check_cursor_version(self.translator)

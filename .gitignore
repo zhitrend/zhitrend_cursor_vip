@@ -13,6 +13,7 @@ build.mac.command
 build.py
 build.sh
 ENV/
+test.py
 
 install.bat
 run.bat

@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.6.02
+1. Hotfix: Small Problem | 修復一些問題
+2. Add: Test some Bypass Code | 測試一些繞過代碼
+
 ## v1.6.01
 1. Fix: Cursor Auth | 修復Cursor Auth
 2. Add: Create Account Maximum Retry | 增加創建賬號最大重試次數
