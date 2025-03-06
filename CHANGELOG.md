@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.6.03
+1. Hotfix: Small Problem | 修復一些問題
+
 ## v1.6.02
 1. Hotfix: Small Problem | 修復一些問題
 2. Add: Test some Bypass Code | 測試一些繞過代碼
