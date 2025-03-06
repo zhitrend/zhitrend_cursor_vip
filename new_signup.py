@@ -100,6 +100,9 @@ def setup_driver(translator=None):
     
     # 使用无痕模式
     co.set_argument("--incognito")
+
+    # 设置随机端口
+    co.set_argument("--no-sandbox")
     
     # 设置随机端口
     co.auto_port()

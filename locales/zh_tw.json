@@ -202,7 +202,8 @@
         "blocked_domains_loaded_timeout": "加載被屏蔽的域名超時: {timeout}秒",
         "blocked_domains_loaded_timeout_error": "加載被屏蔽的域名超時錯誤: {error}",
         "available_domains_loaded": "獲取到 {count} 個可用域名",
-        "domains_filtered": "過濾後剩餘 {count} 個可用域名"
+        "domains_filtered": "過濾後剩餘 {count} 個可用域名",
+        "trying_to_create_email": "嘗試創建郵箱: {email}"
     },
     "update": {
         "title": "禁用 Cursor 自动更新",

@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.5.03
+1. HOTFIX: Stuck on starting browser | 修復啟動瀏覽器卡住問題
+2. Small Fix: Error Handling | 小修錯誤處理
+3. Small Fix: Translation | 小修翻譯
+4. Small Fix: Performance | 小修性能
+
 ## v1.5.02
 1. Add: Generate Random Name Alias | 增加生成隨機真實姓名
 2. Add: Realistic Name Input | 增加真實姓名輸入

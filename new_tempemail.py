@@ -66,13 +66,13 @@ class NewTempEmail:
         return filtered_domains
         
     def _generate_credentials(self):
-        """生成随机用户名和密码"""
+        """generate random username and password"""
         username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
         password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=12))
         return username, password
         
     def create_email(self):
-        """创建临时邮箱"""
+        """create temporary email"""
         try:
             if self.translator:
                 print(f"{Fore.CYAN}ℹ️ {self.translator.get('email.visiting_site').replace('mail.tm', self.selected_service['name'])}{Style.RESET_ALL}")
@@ -135,7 +135,10 @@ class NewTempEmail:
                 selected_domain = filtered_domains[0]['domain']
                 email = f"{username}@{selected_domain}"
                 
-                print(f"{Fore.CYAN}ℹ️ 尝试创建邮箱: {email}{Style.RESET_ALL}")
+                if self.translator:
+                    print(f"{Fore.CYAN}ℹ️ {self.translator.get('email.trying_to_create_email', email=email)}{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.CYAN}ℹ️ 尝试创建邮箱: {email}{Style.RESET_ALL}")
                 
                 account_data = {
                     "address": email,
@@ -150,8 +153,14 @@ class NewTempEmail:
                 create_response = requests.post(f"{self.api_url}/accounts", json=account_data, timeout=15)
                 
                 if create_response.status_code != 201:
-                    print(f"{Fore.RED}❌ 创建账户失败: 状态码 {create_response.status_code}{Style.RESET_ALL}")
-                    print(f"{Fore.RED}❌ 响应内容: {create_response.text}{Style.RESET_ALL}")
+                    if self.translator:
+                        print(f"{Fore.RED}❌ {self.translator.get('email.failed_to_create_account', error=create_response.status_code)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.RED}❌ 创建账户失败: 状态码 {create_response.status_code}{Style.RESET_ALL}")
+                    if self.translator:
+                        print(f"{Fore.RED}❌ {self.translator.get('email.failed_to_create_account', error=create_response.text)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.RED}❌ 响应内容: {create_response.text}{Style.RESET_ALL}")
                     
                     # 如果是域名问题，尝试下一个域名
                     if len(filtered_domains) > 1 and ("domain" in create_response.text.lower() or "address" in create_response.text.lower()):
@@ -164,7 +173,10 @@ class NewTempEmail:
                         
                     raise Exception(f"{self.translator.get('email.failed_to_create_account') if self.translator else '创建账户失败'}")
             except Exception as e:
-                print(f"{Fore.RED}❌ 创建账户时出错: {str(e)}{Style.RESET_ALL}")
+                if self.translator:
+                    print(f"{Fore.RED}❌ {self.translator.get('email.failed_to_create_account', error=str(e))}{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.RED}❌ 创建账户时出错: {str(e)}{Style.RESET_ALL}")
                 raise
                 
             # 获取访问令牌
@@ -176,8 +188,14 @@ class NewTempEmail:
                 
                 token_response = requests.post(f"{self.api_url}/token", json=token_data, timeout=10)
                 if token_response.status_code != 200:
-                    print(f"{Fore.RED}❌ 获取令牌失败: 状态码 {token_response.status_code}{Style.RESET_ALL}")
-                    print(f"{Fore.RED}❌ 响应内容: {token_response.text}{Style.RESET_ALL}")
+                    if self.translator:
+                        print(f"{Fore.RED}❌ {self.translator.get('email.failed_to_get_access_token', error=token_response.status_code)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.RED}❌ 获取令牌失败: 状态码 {token_response.status_code}{Style.RESET_ALL}")
+                    if self.translator:
+                        print(f"{Fore.RED}❌ {self.translator.get('email.failed_to_get_access_token', error=token_response.text)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.RED}❌ 响应内容: {token_response.text}{Style.RESET_ALL}")
                     raise Exception(f"{self.translator.get('email.failed_to_get_access_token') if self.translator else '获取访问令牌失败'}")
                     
                 self.token = token_response.json()["token"]
@@ -200,12 +218,12 @@ class NewTempEmail:
             return None
             
     def close(self):
-        """关闭浏览器"""
+        """close browser"""
         if self.page:
             self.page.quit()
 
     def refresh_inbox(self):
-        """刷新邮箱"""
+        """refresh inbox"""
         try:
             if self.translator:
                 print(f"{Fore.CYAN}🔄 {self.translator.get('email.refreshing')}{Style.RESET_ALL}")
@@ -271,7 +289,7 @@ class NewTempEmail:
             return False
 
     def get_verification_code(self):
-        """获取验证码"""
+        """get verification code"""
         try:
             # 使用 API 获取邮件列表
             headers = {"Authorization": f"Bearer {self.token}"}

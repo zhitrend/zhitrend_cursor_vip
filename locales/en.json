@@ -224,7 +224,8 @@
         "blocked_domains_loaded_timeout": "Blocked Domains Loaded Timeout: {timeout}s",
         "blocked_domains_loaded_timeout_error": "Blocked Domains Loaded Timeout Error: {error}",
         "available_domains_loaded": "Available Domains Loaded: {count}",
-        "domains_filtered": "Domains Filtered: {count}"
+        "domains_filtered": "Domains Filtered: {count}",
+        "trying_to_create_email": "Trying to create email: {email}"
     },
     "update": {
         "title": "Disable Cursor Auto Update",
