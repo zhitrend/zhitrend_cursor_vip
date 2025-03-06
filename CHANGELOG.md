@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.6.01
+1. Fix: Cursor Auth | 修復Cursor Auth
+2. Add: Create Account Maximum Retry | 增加創建賬號最大重試次數
+3. Fix: Cursor Auth Error | 修復Cursor Auth錯誤
+4. Fix: Update Curl Faild | 修復更新Curl失敗
+
 ## v1.5.03
 1. HOTFIX: Stuck on starting browser | 修復啟動瀏覽器卡住問題
 2. Small Fix: Error Handling | 小修錯誤處理

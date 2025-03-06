@@ -45,3 +45,6 @@ Thumbs.db
 *.log
 *.db
 *.sqlite3
+
+# Mac
+run_venv.mac.command
