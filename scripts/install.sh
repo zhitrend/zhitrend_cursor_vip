@@ -134,7 +134,7 @@ install_cursor_free_vip() {
                 echo -e "${RED}❌ New download link does not exist${NC}"
                 exit 1
             fi
-        } elif [[ "$OS" == "linux_x64" || "$OS" == "linux_arm64" ]]; then
+        elif [[ "$OS" == "linux_x64" || "$OS" == "linux_arm64" ]]; then
             OS="linux"
             binary_name="CursorFreeVIP_${VERSION}_${OS}"
             download_url="https://github.com/yeongpin/cursor-free-vip/releases/download/v${VERSION}/${binary_name}"
@@ -144,9 +144,9 @@ install_cursor_free_vip() {
                 echo -e "${RED}❌ New download link does not exist${NC}"
                 exit 1
             fi
-        } else {
+        else
             exit 1
-        }
+        fi
     fi
     
     # Download file
