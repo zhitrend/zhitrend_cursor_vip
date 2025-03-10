@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.7.02
+1. Fix: Cursor Path | 修復Cursor路徑
+2. Add: Config File | 增加配置文件
+3. Remove: Workbench Cursor Path | 移除Workbench Cursor路徑
+4. Remove: Cursor Main JS | 移除Cursor main.js
+
 ## v1.7.01
 - Refactoring: Extract configuration-related code from the `setup_driver` function to an independent `setup_config` function
 - Optimization: Improve code maintainability and make configuration management and browser settings more clear

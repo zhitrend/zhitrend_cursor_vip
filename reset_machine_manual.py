@@ -10,6 +10,8 @@ import re
 import tempfile
 from colorama import Fore, Style, init
 from typing import Tuple
+import configparser
+from new_signup import get_user_documents_path
 
 # Initialize colorama
 init()
@@ -70,14 +72,41 @@ def get_cursor_machine_id_path(translator=None) -> str:
     Returns:
         str: Path to machineId file
     """
+    # Read configuration
+    config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+    config_file = os.path.join(config_dir, "config.ini")
+    config = configparser.ConfigParser()
+    
+    if os.path.exists(config_file):
+        config.read(config_file)
+    
     if sys.platform == "win32":  # Windows
-        return os.path.join(os.getenv("APPDATA"), "Cursor", "machineId")
+        if not config.has_section('WindowsPaths'):
+            config.add_section('WindowsPaths')
+            config.set('WindowsPaths', 'machine_id_path', 
+                os.path.join(os.getenv("APPDATA"), "Cursor", "machineId"))
+        return config.get('WindowsPaths', 'machine_id_path')
+        
     elif sys.platform == "linux":  # Linux
-        return os.path.expanduser("~/.config/Cursor/machineId")
+        if not config.has_section('LinuxPaths'):
+            config.add_section('LinuxPaths')
+            config.set('LinuxPaths', 'machine_id_path',
+                os.path.expanduser("~/.config/Cursor/machineId"))
+        return config.get('LinuxPaths', 'machine_id_path')
+        
     elif sys.platform == "darwin":  # macOS
-        return os.path.expanduser("~/Library/Application Support/Cursor/machineId")
+        if not config.has_section('MacPaths'):
+            config.add_section('MacPaths')
+            config.set('MacPaths', 'machine_id_path',
+                os.path.expanduser("~/Library/Application Support/Cursor/machineId"))
+        return config.get('MacPaths', 'machine_id_path')
+        
     else:
         raise OSError(f"Unsupported operating system: {sys.platform}")
+
+    # Save any changes to config file
+    with open(config_file, 'w', encoding='utf-8') as f:
+        config.write(f)
 
 def get_workbench_cursor_path(translator=None) -> str:
     """Get Cursor workbench.desktop.main.js path"""
@@ -318,42 +347,72 @@ class MachineIDResetter:
     def __init__(self, translator=None):
         self.translator = translator
 
+        # Read configuration
+        config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+        config_file = os.path.join(config_dir, "config.ini")
+        config = configparser.ConfigParser()
+        
+        if not os.path.exists(config_file):
+            raise FileNotFoundError(f"Config file not found: {config_file}")
+        
+        config.read(config_file)
+
         # Check operating system
         if sys.platform == "win32":  # Windows
             appdata = os.getenv("APPDATA")
             if appdata is None:
                 raise EnvironmentError("APPDATA Environment Variable Not Set")
-            self.db_path = os.path.join(
-                appdata, "Cursor", "User", "globalStorage", "storage.json"
-            )
-            self.sqlite_path = os.path.join(
-                appdata, "Cursor", "User", "globalStorage", "state.vscdb"
-            )
-        elif sys.platform == "darwin":  # macOS
-            self.db_path = os.path.abspath(os.path.expanduser(
-                "~/Library/Application Support/Cursor/User/globalStorage/storage.json"
-            ))
-            self.sqlite_path = os.path.abspath(os.path.expanduser(
-                "~/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
-            ))
-        elif sys.platform == "linux":  # Linux
-            # 获取实际用户的主目录
-            sudo_user = os.environ.get('SUDO_USER')
-            if sudo_user:
-                actual_home = f"/home/{sudo_user}"
-            else:
-                actual_home = os.path.expanduser("~")
+            
+            if not config.has_section('WindowsPaths'):
+                config.add_section('WindowsPaths')
+                config.set('WindowsPaths', 'storage_path', os.path.join(
+                    appdata, "Cursor", "User", "globalStorage", "storage.json"
+                ))
+                config.set('WindowsPaths', 'sqlite_path', os.path.join(
+                    appdata, "Cursor", "User", "globalStorage", "state.vscdb"
+                ))
                 
-            self.db_path = os.path.abspath(os.path.join(
-                actual_home,
-                ".config/Cursor/User/globalStorage/storage.json"
-            ))
-            self.sqlite_path = os.path.abspath(os.path.join(
-                actual_home,
-                ".config/Cursor/User/globalStorage/state.vscdb"
-            ))
+            self.db_path = config.get('WindowsPaths', 'storage_path')
+            self.sqlite_path = config.get('WindowsPaths', 'sqlite_path')
+            
+        elif sys.platform == "darwin":  # macOS
+            if not config.has_section('MacPaths'):
+                config.add_section('MacPaths')
+                config.set('MacPaths', 'storage_path', os.path.abspath(os.path.expanduser(
+                    "~/Library/Application Support/Cursor/User/globalStorage/storage.json"
+                )))
+                config.set('MacPaths', 'sqlite_path', os.path.abspath(os.path.expanduser(
+                    "~/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
+                )))
+                
+            self.db_path = config.get('MacPaths', 'storage_path')
+            self.sqlite_path = config.get('MacPaths', 'sqlite_path')
+            
+        elif sys.platform == "linux":  # Linux
+            if not config.has_section('LinuxPaths'):
+                config.add_section('LinuxPaths')
+                # 获取实际用户的主目录
+                sudo_user = os.environ.get('SUDO_USER')
+                actual_home = f"/home/{sudo_user}" if sudo_user else os.path.expanduser("~")
+                
+                config.set('LinuxPaths', 'storage_path', os.path.abspath(os.path.join(
+                    actual_home,
+                    ".config/Cursor/User/globalStorage/storage.json"
+                )))
+                config.set('LinuxPaths', 'sqlite_path', os.path.abspath(os.path.join(
+                    actual_home,
+                    ".config/Cursor/User/globalStorage/state.vscdb"
+                )))
+                
+            self.db_path = config.get('LinuxPaths', 'storage_path')
+            self.sqlite_path = config.get('LinuxPaths', 'sqlite_path')
+            
         else:
             raise NotImplementedError(f"Not Supported OS: {sys.platform}")
+
+        # Save any changes to config file
+        with open(config_file, 'w', encoding='utf-8') as f:
+            config.write(f)
 
     def generate_new_ids(self):
         """Generate new machine ID"""
@@ -507,17 +566,22 @@ class MachineIDResetter:
             # Update system IDs
             self.update_system_ids(new_ids)
 
-            # Modify workbench.desktop.main.js
-            workbench_path = get_workbench_cursor_path(self.translator)
-            modify_workbench_js(workbench_path, self.translator)
 
+            ### Remove In v1.7.02
+            # Modify workbench.desktop.main.js
+            
+            # workbench_path = get_workbench_cursor_path(self.translator)
+            # modify_workbench_js(workbench_path, self.translator)
+
+            ### Remove In v1.7.02
             # Check Cursor version and perform corresponding actions
-            greater_than_0_45 = check_cursor_version(self.translator)
-            if greater_than_0_45:
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.detecting_version')} >= 0.45.0，{self.translator.get('reset.patching_getmachineid')}{Style.RESET_ALL}")
-                patch_cursor_get_machine_id(self.translator)
-            else:
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('reset.version_less_than_0_45')}{Style.RESET_ALL}")
+            
+            # greater_than_0_45 = check_cursor_version(self.translator)
+            # if greater_than_0_45:
+            #     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.detecting_version')} >= 0.45.0，{self.translator.get('reset.patching_getmachineid')}{Style.RESET_ALL}")
+            #     patch_cursor_get_machine_id(self.translator)
+            # else:
+            #     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('reset.version_less_than_0_45')}{Style.RESET_ALL}")
 
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.success')}{Style.RESET_ALL}")
             print(f"\n{Fore.CYAN}{self.translator.get('reset.new_id')}:{Style.RESET_ALL}")

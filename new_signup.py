@@ -170,6 +170,29 @@ def setup_config(translator=None):
             }
         }
 
+        # Add OS-specific path configurations
+        if sys.platform == "win32":
+            appdata = os.getenv("APPDATA")
+            default_config['WindowsPaths'] = {
+                'storage_path': os.path.join(appdata, "Cursor", "User", "globalStorage", "storage.json"),
+                'sqlite_path': os.path.join(appdata, "Cursor", "User", "globalStorage", "state.vscdb"),
+                'machine_id_path': os.path.join(os.getenv("APPDATA"), "Cursor", "machineId")
+            }
+        elif sys.platform == "darwin":
+            default_config['MacPaths'] = {
+                'storage_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/storage.json")),
+                'sqlite_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/state.vscdb")),
+                'machine_id_path': os.path.expanduser("~/Library/Application Support/Cursor/machineId")
+            }
+        elif sys.platform == "linux":
+            sudo_user = os.environ.get('SUDO_USER')
+            actual_home = f"/home/{sudo_user}" if sudo_user else os.path.expanduser("~")
+            default_config['LinuxPaths'] = {
+                'storage_path': os.path.abspath(os.path.join(actual_home, ".config/Cursor/User/globalStorage/storage.json")),
+                'sqlite_path': os.path.abspath(os.path.join(actual_home, ".config/Cursor/User/globalStorage/state.vscdb")),
+                'machine_id_path': os.path.expanduser("~/.config/Cursor/machineId")
+            }
+
         if os.path.exists(config_file):
             config.read(config_file)
             config_modified = False
