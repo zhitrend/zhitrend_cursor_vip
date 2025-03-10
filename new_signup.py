@@ -59,31 +59,15 @@ def fill_signup_form(page, first_name, last_name, email, translator=None):
             print(f"{Fore.CYAN}📧 {translator.get('register.filling_form')}{Style.RESET_ALL}")
         else:
             print("\n正在填写注册表单...")
-        
-        # 填写名字
-        first_name_input = page.ele("@name=first_name")
-        if first_name_input:
-            first_name_input.input(first_name)
-            time.sleep(random.uniform(0.5, 1.0))
-        
-        # 填写姓氏
-        last_name_input = page.ele("@name=last_name")
-        if last_name_input:
-            last_name_input.input(last_name)
-            time.sleep(random.uniform(0.5, 1.0))
-        
-        # 填写邮箱
-        email_input = page.ele("@name=email")
-        if email_input:
-            email_input.input(email)
-            time.sleep(random.uniform(0.5, 1.0))
-        
-        # 点击提交按钮
-        submit_button = page.ele("@type=submit")
-        if submit_button:
-            submit_button.click()
-            time.sleep(random.uniform(2.0, 3.0))
             
+        # 构建带参数的URL
+        encoded_email = email.replace('@', '%40')
+        signup_url = f"https://authenticator.cursor.sh/sign-up/password?first_name={first_name}&last_name={last_name}&email={encoded_email}&redirect_uri=https%3A%2F%2Fcursor.com%2Fapi%2Fauth%2Fcallback"
+        
+        # 直接访问URL
+        page.get(signup_url)
+        time.sleep(random.uniform(2.0, 3.0))
+        
         if translator:
             print(f"{Fore.GREEN}✅ {translator.get('register.form_success')}{Style.RESET_ALL}")
         else:
@@ -416,44 +400,43 @@ def fill_password(page, password: str, translator=None) -> bool:
     try:
         print(f"{Fore.CYAN}🔑 {translator.get('register.setting_password') if translator else '设置密码'}{Style.RESET_ALL}")
         
-        # 等待密码框出现
+        # 等待密码框出现并尝试多次
         max_retries = 5
         for i in range(max_retries):
-            try:
-                # 使用 DrissionPage 的方式查找密码输入框
-                password_input = page.ele('@type=password', timeout=3)
-                if password_input:
-                    break
-                time.sleep(2)
-            except:
-                if i == max_retries - 1:
-                    print(f"{Fore.RED}❌ {translator.get('register.password_field_not_found') if translator else '未找到密码输入框'}{Style.RESET_ALL}")
-                    return False
-                continue
-
-        if password_input:
-            # 清除可能存在的旧值
-            password_input.click()
-            time.sleep(0.5)
-            password_input.input(password)
-            time.sleep(1)
-
-            # 查找并点击提交按钮
-            submit_button = page.ele('@type=submit')
-            if submit_button:
-                submit_button.click()
-                time.sleep(2)
-                return True
-            else:
-                print(f"{Fore.RED}❌ {translator.get('register.continue_button_not_found') if translator else '未找到继续按钮'}{Style.RESET_ALL}")
+            # 检查是否出现错误信息
+            if page.ele("This email is not available."):
+                print(f"{Fore.RED}❌ {translator.get('register.email_used') if translator else '注册失败：邮箱已被使用'}{Style.RESET_ALL}")
                 return False
-        else:
-            print(f"{Fore.RED}❌ {translator.get('register.password_input_failed') if translator else '密码输入失败'}{Style.RESET_ALL}")
-            return False
+
+            # 查找密码输入框
+            password_input = page.ele("@name=password")
+            if password_input:
+                # 清除可能存在的旧值并输入新密码
+                password_input.click()
+                time.sleep(random.uniform(0.5, 1))
+                password_input.input(password)
+                time.sleep(random.uniform(1, 2))
+
+                # 查找并点击提交按钮
+                submit_button = page.ele("@type=submit")
+                if submit_button:
+                    submit_button.click()
+                    print(f"{Fore.GREEN}✅ {translator.get('register.password_submitted') if translator else '密码已提交'}{Style.RESET_ALL}")
+                    time.sleep(random.uniform(2, 3))
+                    return True
+                else:
+                    print(f"{Fore.YELLOW}⚠️ {translator.get('register.retry_submit') if translator else '未找到提交按钮，重试中...'}{Style.RESET_ALL}")
+            
+            # 如果没找到密码框，等待后重试
+            time.sleep(2)
+            if i < max_retries - 1:  # 不是最后一次尝试时才打印
+                print(f"{Fore.YELLOW}⚠️ {translator.get('register.retry_password', attempt=i+1) if translator else f'第 {i+1} 次尝试设置密码...'}{Style.RESET_ALL}")
+
+        print(f"{Fore.RED}❌ {translator.get('register.password_set_failed') if translator else '密码设置失败：超过重试次数'}{Style.RESET_ALL}")
+        return False
 
     except Exception as e:
-        print(f"{Fore.RED}❌ {translator.get('register.password_setting_error', error=str(e)) if translator else f'设置密码时出错: {str(e)}'}{Style.RESET_ALL}")
-            
+        print(f"{Fore.RED}❌ {translator.get('register.password_error', error=str(e)) if translator else f'设置密码时出错: {str(e)}'}{Style.RESET_ALL}")
         return False
 
 def handle_verification_code(browser_tab, email_tab, controller, email, password, translator=None):
