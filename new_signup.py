@@ -568,9 +568,9 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
             # 获取验证码，设置超时
             verification_code = None
             max_attempts = 20
-            retry_interval = float(config.get('Timing', 'retry_interval', fallback='10'))  # 使用配置值
+            retry_interval = get_random_wait_time(config, 'retry_interval')  # 使用 get_random_wait_time
             start_time = time.time()
-            timeout = float(config.get('Timing', 'max_timeout', fallback='160'))  # 使用配置值
+            timeout = float(config.get('Timing', 'max_timeout', fallback='160'))  # 這個可以保持不變因為是固定值
 
             if translator:
                 print(f"{Fore.CYAN}{translator.get('register.start_getting_verification_code')}{Style.RESET_ALL}")
@@ -594,7 +594,7 @@ def handle_verification_code(browser_tab, email_tab, controller, email, password
                 
                 # 刷新邮箱
                 email_tab.refresh_inbox()
-                time.sleep(get_random_wait_time(config, 'retry_interval'))  # 使用 get_random_wait_time
+                time.sleep(retry_interval)  # 使用 get_random_wait_time
             
             if verification_code:
                 # 在注册页面填写验证码

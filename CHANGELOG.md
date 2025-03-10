@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.7.04
+1. Hotfix: Small Problem | 修復一些小問題
+
 ## v1.7.03
 1. Hotfix: Small Problem | 修復一些小問題
 
