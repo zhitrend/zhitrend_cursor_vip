@@ -140,7 +140,7 @@ retry_interval = 8-12
 # Max Timeout | 最大超時時間
 max_timeout = 160
 ```
-</details> <br>
+</details>
 
 * Use administrator to run the script <br>請使用管理員身份運行腳本
 
