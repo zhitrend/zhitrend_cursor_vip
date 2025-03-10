@@ -99,6 +99,11 @@ chromepath = C:\Program Files\Google/Chrome/Application/chrome.exe
 handle_turnstile_time = 2
 # Handle Tuenstile Wait Random Time (must merge 1-3 or 1,3) | 等待人機驗證隨機時間（必須是 1-3 或者 1,3 這樣的組合）
 handle_turnstile_random_time = 1-3
+
+[OSPaths]
+storage_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/storage.json
+sqlite_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/state.vscdb
+machine_id_path = /Users/username/Library/Application Support/Cursor/machineId
 ```
 
 * Use administrator to run the script <br>請使用管理員身份運行腳本
