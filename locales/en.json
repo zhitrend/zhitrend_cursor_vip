@@ -68,7 +68,11 @@
         "version_less_than_0_45": "Cursor Version < 0.45.0, Skip Patching getMachineId",
         "detecting_version": "Detecting Cursor Version",
         "patching_getmachineid": "Patching getMachineId",
-        "version_greater_than_0_45": "Cursor Version >= 0.45.0, Patching getMachineId"
+        "version_greater_than_0_45": "Cursor Version >= 0.45.0, Patching getMachineId",
+        "permission_denied": "Permission Denied: {error}",
+        "backup_created": "Backup Created",
+        "update_success": "Update Success",
+        "update_failed": "Update Failed: {error}"
     },
     "register": {
         "title": "Cursor Registration Tool",
@@ -141,7 +145,9 @@
         "verification_failed": "Verification Failed",
         "verification_error": "Verification Error: {error}",
         "config_option_added": "Config Option Added: {option}",
-        "config_updated": "Config Updated"
+        "config_updated": "Config Updated",
+        "password_submitted": "Password Submitted",
+        "total_usage": "Total Usage: {usage}"
     },
     "auth": {
         "title": "Cursor Auth Manager",

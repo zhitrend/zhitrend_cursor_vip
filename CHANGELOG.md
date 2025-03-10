@@ -1,5 +1,8 @@
 # Change Log
 
+## v1.7.03
+1. Hotfix: Small Problem | 修復一些小問題
+
 ## v1.7.02
 1. Fix: Cursor Path | 修復Cursor路徑
 2. Add: Config File | 增加配置文件
