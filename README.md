@@ -101,24 +101,41 @@ handle_turnstile_time = 2
 handle_turnstile_random_time = 1-3
 
 [OSPaths]
+# Storage Path | 存儲路徑
 storage_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/storage.json
+# SQLite Path | SQLite路徑
 sqlite_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/state.vscdb
+# Machine ID Path | 機器ID路徑
 machine_id_path = /Users/username/Library/Application Support/Cursor/machineId
 
 [Timing]
+# Min Random Time | 最小隨機時間
 min_random_time = 0.1
+# Max Random Time | 最大隨機時間
 max_random_time = 0.8
+# Page Load Wait | 頁面加載等待時間
 page_load_wait = 0.1-0.8
+# Input Wait | 輸入等待時間
 input_wait = 0.3-0.8
+# Submit Wait | 提交等待時間
 submit_wait = 0.5-1.5
+# Verification Code Input | 驗證碼輸入等待時間
 verification_code_input = 0.1-0.3
+# Verification Success Wait | 驗證成功等待時間
 verification_success_wait = 2-3
+# Verification Retry Wait | 驗證重試等待時間
 verification_retry_wait = 2-3
+# Email Check Initial Wait | 郵件檢查初始等待時間
 email_check_initial_wait = 4-6
+# Email Refresh Wait | 郵件刷新等待時間
 email_refresh_wait = 2-4
+# Settings Page Load Wait | 設置頁面加載等待時間
 settings_page_load_wait = 1-2
+# Failed Retry Time | 失敗重試時間
 failed_retry_time = 0.5-1
+# Retry Interval | 重試間隔
 retry_interval = 8-12
+# Max Timeout | 最大超時時間
 max_timeout = 160
 ```
 
