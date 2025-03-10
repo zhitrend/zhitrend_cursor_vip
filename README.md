@@ -88,6 +88,8 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 
 📝 Config | 文件配置
 `Win / Macos / Linux Path | 路徑 [Documents/.cursor-free-vip/config.ini]`
+<details>
+<summary><b>⭐ Config | 文件配置</b></summary>
 
 ```
 [Chrome]
@@ -138,6 +140,7 @@ retry_interval = 8-12
 # Max Timeout | 最大超時時間
 max_timeout = 160
 ```
+</details> <br>
 
 * Use administrator to run the script <br>請使用管理員身份運行腳本
 
