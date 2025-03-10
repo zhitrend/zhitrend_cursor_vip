@@ -72,7 +72,19 @@
         "permission_denied": "权限拒绝: {error}",
         "backup_created": "备份已创建",
         "update_success": "更新成功",
-        "update_failed": "更新失败: {error}"
+        "update_failed": "更新失败: {error}",
+        "windows_machine_guid_updated": "Windows机器GUID更新成功",
+        "reading_package_json": "读取package.json {path}",
+        "invalid_json_object": "JSON对象无效",
+        "no_version_field": "package.json中没有版本字段",
+        "version_field_empty": "版本字段为空",
+        "invalid_version_format": "版本格式无效: {version}",
+        "found_version": "找到版本: {version}",
+        "version_parse_error": "版本解析错误: {error}",
+        "package_not_found": "package.json未找到: {path}",
+        "check_version_failed": "检查版本失败: {error}",
+        "stack_trace": "堆栈跟踪",
+        "version_too_low": "Cursor版本太低: {version} < 0.45.0"
     },
     "register": {
         "title": "Cursor 注册工具",

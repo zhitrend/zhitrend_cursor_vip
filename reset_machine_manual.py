@@ -12,6 +12,7 @@ from colorama import Fore, Style, init
 from typing import Tuple
 import configparser
 from new_signup import get_user_documents_path
+import traceback
 
 # Initialize colorama
 init()
@@ -29,42 +30,45 @@ EMOJI = {
 def get_cursor_paths(translator=None) -> Tuple[str, str]:
     """ Get Cursor related paths"""
     system = platform.system()
-
-    paths_map = {
-        "Darwin": {
-            "base": "/Applications/Cursor.app/Contents/Resources/app",
-            "package": "package.json",
-            "main": "out/main.js",
-        },
-        "Windows": {
-            "base": os.path.join(
-                os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app"
-            ),
-            "package": "package.json",
-            "main": "out/main.js",
-        },
-        "Linux": {
-            "bases": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app"],
-            "package": "package.json",
-            "main": "out/main.js",
-        },
-    }
-
-    if system not in paths_map:
+    
+    # 讀取配置文件
+    config = configparser.ConfigParser()
+    config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
+    config_file = os.path.join(config_dir, "config.ini")
+    
+    if not os.path.exists(config_file):
+        raise OSError(translator.get('reset.config_not_found') if translator else "找不到配置文件")
+        
+    config.read(config_file)
+    
+    # 根據系統獲取路徑
+    if system == "Darwin":
+        section = 'MacPaths'
+    elif system == "Windows":
+        section = 'WindowsPaths'
+    elif system == "Linux":
+        section = 'LinuxPaths'
+    else:
         raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
-
-    if system == "Linux":
-        for base in paths_map["Linux"]["bases"]:
-            pkg_path = os.path.join(base, paths_map["Linux"]["package"])
-            if os.path.exists(pkg_path):
-                return (pkg_path, os.path.join(base, paths_map["Linux"]["main"]))
-        raise OSError(translator.get('reset.linux_path_not_found') if translator else "在 Linux 系统上未找到 Cursor 安装路径")
-
-    base_path = paths_map[system]["base"]
-    return (
-        os.path.join(base_path, paths_map[system]["package"]),
-        os.path.join(base_path, paths_map[system]["main"]),
-    )
+        
+    if not config.has_section(section) or not config.has_option(section, 'cursor_path'):
+        raise OSError(translator.get('reset.path_not_configured') if translator else "未配置 Cursor 路徑")
+        
+    base_path = config.get(section, 'cursor_path')
+    
+    if not os.path.exists(base_path):
+        raise OSError(translator.get('reset.path_not_found', path=base_path) if translator else f"找不到 Cursor 路徑: {base_path}")
+        
+    pkg_path = os.path.join(base_path, "package.json")
+    main_path = os.path.join(base_path, "out/main.js")
+    
+    # 檢查文件是否存在
+    if not os.path.exists(pkg_path):
+        raise OSError(translator.get('reset.package_not_found', path=pkg_path) if translator else f"找不到 package.json: {pkg_path}")
+    if not os.path.exists(main_path):
+        raise OSError(translator.get('reset.main_not_found', path=main_path) if translator else f"找不到 main.js: {main_path}")
+    
+    return (pkg_path, main_path)
 
 def get_cursor_machine_id_path(translator=None) -> str:
     """
@@ -176,11 +180,60 @@ def check_cursor_version(translator) -> bool:
     """Check Cursor version"""
     try:
         pkg_path, _ = get_cursor_paths(translator)
-        with open(pkg_path, "r", encoding="utf-8") as f:
-            version = json.load(f)["version"]
-        return version_check(version, min_version="0.45.0", translator=translator)
+        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('reset.reading_package_json', path=pkg_path)}{Style.RESET_ALL}")
+        
+        try:
+            with open(pkg_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except UnicodeDecodeError:
+            # 如果 UTF-8 讀取失敗，嘗試其他編碼
+            with open(pkg_path, "r", encoding="latin-1") as f:
+                data = json.load(f)
+                
+        if not isinstance(data, dict):
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.invalid_json_object')}{Style.RESET_ALL}")
+            return False
+            
+        if "version" not in data:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.no_version_field')}{Style.RESET_ALL}")
+            return False
+            
+        version = str(data["version"]).strip()
+        if not version:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.version_field_empty')}{Style.RESET_ALL}")
+            return False
+            
+        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('reset.found_version', version=version)}{Style.RESET_ALL}")
+        
+        # 檢查版本格式
+        if not re.match(r"^\d+\.\d+\.\d+$", version):
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.invalid_version_format', version=version)}{Style.RESET_ALL}")
+            return False
+            
+        # 比較版本
+        try:
+            current = tuple(map(int, version.split(".")))
+            min_ver = (0, 45, 0)  # 直接使用元組而不是字符串
+            
+            if current >= min_ver:
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('reset.version_check_passed', version=version, min_version='0.45.0')}{Style.RESET_ALL}")
+                return True
+            else:
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('reset.version_too_low', version=version, min_version='0.45.0')}{Style.RESET_ALL}")
+                return False
+        except ValueError as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.version_parse_error', error=str(e))}{Style.RESET_ALL}")
+            return False
+            
+    except FileNotFoundError as e:
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.package_not_found', path=pkg_path)}{Style.RESET_ALL}")
+        return False
+    except json.JSONDecodeError as e:
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.invalid_json_object')}{Style.RESET_ALL}")
+        return False
     except Exception as e:
         print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.check_version_failed', error=str(e))}{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('reset.stack_trace')}: {traceback.format_exc()}{Style.RESET_ALL}")
         return False
 
 def modify_workbench_js(file_path: str, translator=None) -> bool:
@@ -576,12 +629,12 @@ class MachineIDResetter:
             ### Remove In v1.7.02
             # Check Cursor version and perform corresponding actions
             
-            # greater_than_0_45 = check_cursor_version(self.translator)
-            # if greater_than_0_45:
-            #     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.detecting_version')} >= 0.45.0，{self.translator.get('reset.patching_getmachineid')}{Style.RESET_ALL}")
-            #     patch_cursor_get_machine_id(self.translator)
-            # else:
-            #     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('reset.version_less_than_0_45')}{Style.RESET_ALL}")
+            greater_than_0_45 = check_cursor_version(self.translator)
+            if greater_than_0_45:
+                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.detecting_version')} >= 0.45.0，{self.translator.get('reset.patching_getmachineid')}{Style.RESET_ALL}")
+                patch_cursor_get_machine_id(self.translator)
+            else:
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('reset.version_less_than_0_45')}{Style.RESET_ALL}")
 
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.success')}{Style.RESET_ALL}")
             print(f"\n{Fore.CYAN}{self.translator.get('reset.new_id')}:{Style.RESET_ALL}")

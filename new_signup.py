@@ -207,21 +207,25 @@ def setup_config(translator=None):
             default_config['WindowsPaths'] = {
                 'storage_path': os.path.join(appdata, "Cursor", "User", "globalStorage", "storage.json"),
                 'sqlite_path': os.path.join(appdata, "Cursor", "User", "globalStorage", "state.vscdb"),
-                'machine_id_path': os.path.join(os.getenv("APPDATA"), "Cursor", "machineId")
+                'machine_id_path': os.path.join(os.getenv("APPDATA"), "Cursor", "machineId"),
+                'cursor_path': os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app")
             }
         elif sys.platform == "darwin":
             default_config['MacPaths'] = {
                 'storage_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/storage.json")),
                 'sqlite_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/state.vscdb")),
-                'machine_id_path': os.path.expanduser("~/Library/Application Support/Cursor/machineId")
+                'machine_id_path': os.path.expanduser("~/Library/Application Support/Cursor/machineId"),
+                'cursor_path': "/Applications/Cursor.app/Contents/Resources/app"
             }
         elif sys.platform == "linux":
             sudo_user = os.environ.get('SUDO_USER')
             actual_home = f"/home/{sudo_user}" if sudo_user else os.path.expanduser("~")
+            
             default_config['LinuxPaths'] = {
                 'storage_path': os.path.abspath(os.path.join(actual_home, ".config/Cursor/User/globalStorage/storage.json")),
                 'sqlite_path': os.path.abspath(os.path.join(actual_home, ".config/Cursor/User/globalStorage/state.vscdb")),
-                'machine_id_path': os.path.expanduser("~/.config/Cursor/machineId")
+                'machine_id_path': os.path.expanduser("~/.config/Cursor/machineId"),
+                'cursor_path': "/opt/Cursor/resources/app"  # 默認路徑
             }
 
         if os.path.exists(config_file):

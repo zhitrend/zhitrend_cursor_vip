@@ -72,7 +72,20 @@
         "permission_denied": "Permission Denied: {error}",
         "backup_created": "Backup Created",
         "update_success": "Update Success",
-        "update_failed": "Update Failed: {error}"
+        "update_failed": "Update Failed: {error}",
+        "windows_machine_guid_updated": "Windows Machine GUID Updated Successfully",
+        "reading_package_json": "Reading package.json {path}",
+        "invalid_json_object": "Invalid JSON Object",
+        "no_version_field": "No Version Field Found in package.json",
+        "version_field_empty": "Version Field is Empty",
+        "invalid_version_format": "Invalid Version Format: {version}",
+        "found_version": "Found Version: {version}",
+        "version_parse_error": "Version Parse Error: {error}",
+        "package_not_found": "Package.json Not Found: {path}",
+        "check_version_failed": "Check Version Failed: {error}",
+        "stack_trace": "Stack Trace",
+        "version_too_low": "Cursor Version Too Low: {version} < 0.45.0"
+        
     },
     "register": {
         "title": "Cursor Registration Tool",

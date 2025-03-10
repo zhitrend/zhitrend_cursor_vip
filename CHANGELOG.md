@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.7.05
+1. Fix: Cursor Version Check | 修復Cursor版本檢查
+2. Fix: Small Problem | 修復一些小問題
+
+
 ## v1.7.04
 1. Hotfix: Small Problem | 修復一些小問題
 
