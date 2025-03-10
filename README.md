@@ -104,6 +104,22 @@ handle_turnstile_random_time = 1-3
 storage_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/storage.json
 sqlite_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/state.vscdb
 machine_id_path = /Users/username/Library/Application Support/Cursor/machineId
+
+[Timing]
+min_random_time = 0.1
+max_random_time = 0.8
+page_load_wait = 0.1-0.8
+input_wait = 0.3-0.8
+submit_wait = 0.5-1.5
+verification_code_input = 0.1-0.3
+verification_success_wait = 2-3
+verification_retry_wait = 2-3
+email_check_initial_wait = 4-6
+email_refresh_wait = 2-4
+settings_page_load_wait = 1-2
+failed_retry_time = 0.5-1
+retry_interval = 8-12
+max_timeout = 160
 ```
 
 * Use administrator to run the script <br>請使用管理員身份運行腳本
