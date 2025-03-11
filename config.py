@@ -13,7 +13,7 @@ def setup_config(translator=None):
         
         config = configparser.ConfigParser()
         
-        # 默認配置
+        # Default configuration
         default_config = {
             'Chrome': {
                 'chromepath': get_default_chrome_path()
@@ -40,7 +40,7 @@ def setup_config(translator=None):
             }
         }
 
-        # 添加系統特定路徑配置
+        # Add system-specific path configuration
         if sys.platform == "win32":
             appdata = os.getenv("APPDATA")
             localappdata = os.getenv("LOCALAPPDATA", "")
@@ -71,7 +71,7 @@ def setup_config(translator=None):
                 'updater_path': os.path.expanduser("~/.config/cursor-updater")
             }
 
-        # 讀取現有配置並合併
+        # Read existing configuration and merge
         if os.path.exists(config_file):
             config.read(config_file, encoding='utf-8')
             config_modified = False

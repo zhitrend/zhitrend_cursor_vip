@@ -26,7 +26,7 @@ class AutoUpdateDisabler:
         self.translator = translator
         self.system = platform.system()
         
-        # 从配置文件获取路径
+        # Get path from configuration file
         config = get_config(translator)
         if config:
             if self.system == "Windows":
@@ -36,7 +36,7 @@ class AutoUpdateDisabler:
             elif self.system == "Linux":
                 self.updater_path = config.get('LinuxPaths', 'updater_path', fallback=os.path.expanduser("~/.config/cursor-updater"))
         else:
-            # 如果配置加载失败，使用默认路径
+            # If configuration loading fails, use default paths
             self.updater_paths = {
                 "Windows": os.path.join(os.getenv("LOCALAPPDATA", ""), "cursor-updater"),
                 "Darwin": os.path.expanduser("~/Library/Application Support/cursor-updater"),

@@ -42,7 +42,7 @@ class CursorRegistration:
         self.signup_tab = None
         self.email_tab = None
         
-        # 账号信息
+        # Account information
         self.password = self._generate_password()
         # Generate first name and last name separately
         first_name = random.choice([
@@ -196,17 +196,17 @@ class CursorRegistration:
     def _save_account_info(self, token, total_usage):
         """Save Account Information to File"""
         try:
-            # 先更新认证信息
+            # Update authentication information first
             print(f"{Fore.CYAN}{EMOJI['KEY']} {self.translator.get('register.update_cursor_auth_info')}...{Style.RESET_ALL}")
             if self.update_cursor_auth(email=self.email_address, access_token=token, refresh_token=token):
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('register.cursor_auth_info_updated')}...{Style.RESET_ALL}")
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('register.cursor_auth_info_update_failed')}...{Style.RESET_ALL}")
 
-            # 重置机器ID
+            # Reset machine ID
             print(f"{Fore.CYAN}{EMOJI['UPDATE']} {self.translator.get('register.reset_machine_id')}...{Style.RESET_ALL}")
-            resetter = MachineIDResetter(self.translator)  # 创建实例时传入translator
-            if not resetter.reset_machine_ids():  # 直接调用reset_machine_ids方法
+            resetter = MachineIDResetter(self.translator)  # Pass translator when creating instance
+            if not resetter.reset_machine_ids():  # Call reset_machine_ids method directly
                 raise Exception("Failed to reset machine ID")
             
             # Save account information to file

@@ -263,7 +263,7 @@ class NewTempEmail:
             return False
 
     def check_for_cursor_email(self):
-        """检查是否有 Cursor 的验证邮件"""
+        """Check if there is a Cursor verification email"""
         try:
             # Use API to get email list
             headers = {"Authorization": f"Bearer {self.token}"}

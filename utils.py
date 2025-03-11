@@ -28,5 +28,5 @@ def get_linux_cursor_path():
         os.path.expanduser("~/.local/share/cursor/resources/app")
     ]
     
-    # 返回第一个存在的路径，如果都不存在则返回第一个路径
+    # return the first path that exists
     return next((path for path in possible_paths if os.path.exists(path)), possible_paths[0]) 

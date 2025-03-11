@@ -11,16 +11,16 @@ import requests
 import subprocess
 from config import get_config  
 
-# 只在 Windows 系统上导入 windll
+# Only import windll on Windows systems
 if platform.system() == 'Windows':
     import ctypes
     # 只在 Windows 上导入 windll
     from ctypes import windll
 
-# 初始化colorama
+# Initialize colorama
 init()
 
-# 定义emoji和颜色常量
+# Define emoji and color constants
 EMOJI = {
     "FILE": "📄",
     "BACKUP": "💾",
@@ -37,7 +37,7 @@ EMOJI = {
 class Translator:
     def __init__(self):
         self.translations = {}
-        self.current_language = self.detect_system_language()  # 使用正确的方法名
+        self.current_language = self.detect_system_language()  # Use correct method name
         self.fallback_language = 'en'  # Fallback language if translation is missing
         self.load_translations()
     
@@ -58,11 +58,11 @@ class Translator:
     def _detect_windows_language(self):
         """Detect language on Windows systems"""
         try:
-            # 确保我们在 Windows 上
+            # Ensure we are on Windows
             if platform.system() != 'Windows':
                 return 'en'
                 
-            # 获取键盘布局
+            # Get keyboard layout
             user32 = ctypes.windll.user32
             hwnd = user32.GetForegroundWindow()
             threadid = user32.GetWindowThreadProcessId(hwnd, 0)
@@ -168,7 +168,7 @@ class Translator:
         """Get list of available languages"""
         return list(self.translations.keys())
 
-# 创建翻译器实例
+# Create translator instance
 translator = Translator()
 
 def print_menu():
@@ -239,7 +239,7 @@ def check_latest_version():
         if latest_version != version:
             print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('updater.new_version_available', current=version, latest=latest_version)}{Style.RESET_ALL}")
             
-            # 詢問用戶是否要更新
+            # Ask user if they want to update
             while True:
                 choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('updater.update_confirm', choices='Y/n')}: {Style.RESET_ALL}").lower()
                 if choice in ['', 'y', 'yes']:
@@ -298,7 +298,7 @@ def check_latest_version():
 def main():
     print_logo()
     
-    # 初始化配置
+    # Initialize configuration
     config = get_config(translator)
     if not config:
         print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.config_init_failed')}{Style.RESET_ALL}")
