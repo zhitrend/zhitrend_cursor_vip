@@ -1,5 +1,19 @@
 # Change Log
 
+## v1.7.06
+1. Add: Update Confirm | 增加更新確認
+2. Add: Update Skipped | 增加更新跳過
+3. Add: Invalid Choice | 增加無效選擇
+4. Fix: Cursor Path | 修復Cursor路徑
+5. Fix: Path Encoding | 修復路徑編碼
+6. Fix: Getting Verification Code | 修復獲取驗證碼
+7. Fix: Setting Password | 修復設置密碼
+8. Fix: Disable Auto Update | 修復禁用自動更新
+9. Add Config.py | 增加Config.py
+10. Add utils.py | 增加utils.py
+11. Rebuild some logic | 重新構建一些邏輯
+
+
 ## v1.7.05
 1. Fix: Cursor Version Check | 修復Cursor版本檢查
 2. Fix: Small Problem | 修復一些小問題

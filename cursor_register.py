@@ -2,8 +2,6 @@ import os
 from colorama import Fore, Style, init
 import time
 import random
-from browser import BrowserManager
-from control import BrowserControl
 from cursor_auth import CursorAuth
 from reset_machine_manual import MachineIDResetter
 
@@ -35,7 +33,6 @@ class CursorRegistration:
         self.translator = translator
         # Set to display mode
         os.environ['BROWSER_HEADLESS'] = 'False'
-        self.browser_manager = BrowserManager()
         self.browser = None
         self.controller = None
         self.mail_url = "https://yopmail.com/zh/email-generator"

@@ -2,6 +2,7 @@ import sqlite3
 import os
 import sys
 from colorama import Fore, Style, init
+from config import get_config
 
 # 初始化colorama
 init()
@@ -21,21 +22,40 @@ EMOJI = {
 class CursorAuth:
     def __init__(self, translator=None):
         self.translator = translator
-        # 判断操作系统
-        if sys.platform == "win32":  # Windows
-            self.db_path = os.path.join(
-                os.getenv("APPDATA"), "Cursor", "User", "globalStorage", "state.vscdb"
-            )
-        elif sys.platform == 'linux':
-            self.db_path = os.path.expanduser(
-                            "~/.config/Cursor/User/globalStorage/state.vscdb"
-                        )
-        elif sys.platform == 'darwin':  # macOS
-            self.db_path = os.path.expanduser(
-                "~/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
-            )
-        else:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('auth.unsupported_platform')}{Style.RESET_ALL}")
+        
+        # 获取配置
+        config = get_config(translator)
+        if not config:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('auth.config_error') if self.translator else 'Failed to load configuration'}{Style.RESET_ALL}")
+            sys.exit(1)
+            
+        # 根据操作系统获取路径
+        try:
+            if sys.platform == "win32":  # Windows
+                if not config.has_section('WindowsPaths'):
+                    raise ValueError("Windows paths not configured")
+                self.db_path = config.get('WindowsPaths', 'sqlite_path')
+                
+            elif sys.platform == 'linux':  # Linux
+                if not config.has_section('LinuxPaths'):
+                    raise ValueError("Linux paths not configured")
+                self.db_path = config.get('LinuxPaths', 'sqlite_path')
+                
+            elif sys.platform == 'darwin':  # macOS
+                if not config.has_section('MacPaths'):
+                    raise ValueError("macOS paths not configured")
+                self.db_path = config.get('MacPaths', 'sqlite_path')
+                
+            else:
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('auth.unsupported_platform') if self.translator else 'Unsupported platform'}{Style.RESET_ALL}")
+                sys.exit(1)
+                
+            # 验证路径是否存在
+            if not os.path.exists(os.path.dirname(self.db_path)):
+                raise FileNotFoundError(f"Database directory not found: {os.path.dirname(self.db_path)}")
+                
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('auth.path_error', error=str(e)) if self.translator else f'Error getting database path: {str(e)}'}{Style.RESET_ALL}")
             sys.exit(1)
 
         # 检查数据库文件是否存在

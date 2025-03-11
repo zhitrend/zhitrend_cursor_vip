@@ -9,6 +9,7 @@ import locale
 import platform
 import requests
 import subprocess
+from config import get_config  
 
 # 只在 Windows 系统上导入 windll
 if platform.system() == 'Windows':
@@ -238,6 +239,17 @@ def check_latest_version():
         if latest_version != version:
             print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('updater.new_version_available', current=version, latest=latest_version)}{Style.RESET_ALL}")
             
+            # 詢問用戶是否要更新
+            while True:
+                choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('updater.update_confirm', choices='Y/n')}: {Style.RESET_ALL}").lower()
+                if choice in ['', 'y', 'yes']:
+                    break
+                elif choice in ['n', 'no']:
+                    print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('updater.update_skipped')}{Style.RESET_ALL}")
+                    return
+                else:
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
+            
             try:
                 # Execute update command based on platform
                 if platform.system() == 'Windows':
@@ -287,8 +299,7 @@ def main():
     print_logo()
     
     # 初始化配置
-    from new_signup import setup_config
-    config = setup_config(translator)
+    config = get_config(translator)
     if not config:
         print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.config_init_failed')}{Style.RESET_ALL}")
         return

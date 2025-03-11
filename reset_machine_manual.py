@@ -13,6 +13,7 @@ from typing import Tuple
 import configparser
 from new_signup import get_user_documents_path
 import traceback
+from config import get_config
 
 # Initialize colorama
 init()
@@ -39,7 +40,7 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
     if not os.path.exists(config_file):
         raise OSError(translator.get('reset.config_not_found') if translator else "找不到配置文件")
         
-    config.read(config_file)
+    config.read(config_file, encoding='utf-8')  # 指定編碼
     
     # 根據系統獲取路徑
     if system == "Darwin":
@@ -408,7 +409,7 @@ class MachineIDResetter:
         if not os.path.exists(config_file):
             raise FileNotFoundError(f"Config file not found: {config_file}")
         
-        config.read(config_file)
+        config.read(config_file, encoding='utf-8')
 
         # Check operating system
         if sys.platform == "win32":  # Windows
@@ -690,7 +691,9 @@ class MachineIDResetter:
             return False
 
 def run(translator=None):
-    """Convenient function for directly calling the reset function"""
+    config = get_config(translator)
+    if not config:
+        return False
     print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{EMOJI['RESET']} {translator.get('reset.title')}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")

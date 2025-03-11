@@ -141,7 +141,9 @@
         "config_option_added": "配置項已添加: {option}",
         "config_updated": "配置已更新",
         "password_submitted": "密碼已提交",
-        "total_usage": "總使用量: {usage}"
+        "total_usage": "總使用量: {usage}",
+        "setting_on_password": "設置密碼",
+        "getting_code": "正在獲取驗證碼，將在60秒內嘗試..."
     },
     "auth": {
         "title": "Cursor 認證管理器",
@@ -248,6 +250,9 @@
         "updating": "正在更新到最新版本。程序將自動重啟。",
         "up_to_date": "您使用的是最新版本。",
         "check_failed": "檢查更新失敗: {error}",
-        "continue_anyway": "繼續使用當前版本..."
+        "continue_anyway": "繼續使用當前版本...",
+        "update_confirm": "是否要更新到最新版本? (Y/n)",
+        "update_skipped": "跳過更新。",
+        "invalid_choice": "選擇無效。請輸入 'Y' 或 'n'."
     }
 } 
