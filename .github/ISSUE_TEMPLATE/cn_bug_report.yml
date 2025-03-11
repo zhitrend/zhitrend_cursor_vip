@@ -1,4 +1,4 @@
-name: 🐛 错误报告
+name: ❌ 错误报告 [中文]
 description: 创建一个报告以帮助我们改进
 title: '[Bug]: '
 labels: ['bug']
@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         感谢您花时间填写此错误报告！
-        在提交 Issue 前请确保您已经阅读了[github issues](https://github.com/yeongpin/cursor-free-vip/issues)
+        在提交 Issue 前请确保您已经阅读了[Github Issues](https://github.com/yeongpin/cursor-free-vip/issues)
 
   - type: checkboxes
     id: checklist
@@ -18,7 +18,7 @@ body:
       options:
         - label: 我理解 Issue 是用于反馈和解决问题的，而非吐槽评论区，将尽可能提供更多信息帮助问题解决。
           required: true
-        - label: 我已经查看了置顶 Issue 并搜索了现有的 [开放Issue](https://github.com/yeongpin/cursor-free-vip/issues)和[已关闭Issue](https://github.com/yeongpin/cursor-free-vip/issues?q=is%3Aissue%20state%3Aclosed%20)，没有找到类似的问题。
+        - label: 我已经查看了置顶 Issue 并搜索了现有的 [开放 Issue](https://github.com/yeongpin/cursor-free-vip/issues)和[已关闭 Issue](https://github.com/yeongpin/cursor-free-vip/issues?q=is%3Aissue%20state%3Aclosed%20)，没有找到类似的问题。
           required: true
         - label: 我填写了简短且清晰明确的标题，以便开发者在翻阅 Issue 列表时能快速确定大致问题。而不是“一个建议”、“卡住了”等。
           required: true
@@ -55,7 +55,7 @@ body:
       placeholder: 告诉我们发生了什么...
     validations:
       required: true
-      
+
   - type: textarea
     id: logs
     attributes:
