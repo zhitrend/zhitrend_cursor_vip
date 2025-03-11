@@ -1,0 +1,70 @@
+name: 🐛 错误报告
+description: 创建一个报告以帮助我们改进
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您花时间填写此错误报告！
+        在提交 Issue 前请确保您已经阅读了[github issues](https://github.com/yeongpin/cursor-free-vip/issues)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 提交前检查
+      description: |
+        请确保您在提交 Issue 前已经完成了以下所有步骤
+      options:
+        - label: 我理解 Issue 是用于反馈和解决问题的，而非吐槽评论区，将尽可能提供更多信息帮助问题解决。
+          required: true
+        - label: 我已经查看了置顶 Issue 并搜索了现有的 [开放Issue](https://github.com/yeongpin/cursor-free-vip/issues)和[已关闭Issue](https://github.com/yeongpin/cursor-free-vip/issues?q=is%3Aissue%20state%3Aclosed%20)，没有找到类似的问题。
+          required: true
+        - label: 我填写了简短且清晰明确的标题，以便开发者在翻阅 Issue 列表时能快速确定大致问题。而不是“一个建议”、“卡住了”等。
+          required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 平台
+      description: 您正在使用哪个平台？
+      options:
+        - Windows x32
+        - Windows x64
+        - macOS Intel
+        - macOS ARM64
+        - Linux x64
+        - Linux ARM64
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 您正在运行的 Cursor Free Vip 版本是什么？
+      placeholder: 例如 v1.0.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 错误描述
+      description: 描述问题时请尽可能详细
+      placeholder: 告诉我们发生了什么...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志输出
+      description: 请复制并粘贴任何相关的日志输出
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 附加信息
+      description: 任何能让我们对你所遇到的问题有更多了解的东西
