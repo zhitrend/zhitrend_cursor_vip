@@ -58,13 +58,8 @@ def run_as_admin():
         return False
         
     try:
-        if is_frozen():
-            # If frozen executable
-            args = [sys.executable] + sys.argv
-        else:
-            # If Python script
-            args = [sys.executable] + sys.argv
-            
+        args = [sys.executable] + sys.argv
+        
         # Request elevation via ShellExecute
         print(f"{Fore.YELLOW}{EMOJI['ADMIN']} Requesting administrator privileges...{Style.RESET_ALL}")
         ctypes.windll.shell32.ShellExecuteW(None, "runas", args[0], " ".join('"' + arg + '"' for arg in args[1:]), None, 1)
