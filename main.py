@@ -31,8 +31,42 @@ EMOJI = {
     "MENU": "📋",
     "ARROW": "➜",
     "LANG": "🌐",
-    "UPDATE": "🔄"
+    "UPDATE": "🔄",
+    "ADMIN": "🔐"
 }
+
+# Function to check if running as frozen executable
+def is_frozen():
+    """Check if the script is running as a frozen executable."""
+    return getattr(sys, 'frozen', False)
+
+# Function to check admin privileges (Windows only)
+def is_admin():
+    """Check if the script is running with admin privileges (Windows only)."""
+    if platform.system() == 'Windows':
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin() != 0
+        except Exception:
+            return False
+    # Always return True for non-Windows to avoid changing behavior
+    return True
+
+# Function to restart with admin privileges
+def run_as_admin():
+    """Restart the current script with admin privileges (Windows only)."""
+    if platform.system() != 'Windows':
+        return False
+        
+    try:
+        args = [sys.executable] + sys.argv
+        
+        # Request elevation via ShellExecute
+        print(f"{Fore.YELLOW}{EMOJI['ADMIN']} Requesting administrator privileges...{Style.RESET_ALL}")
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", args[0], " ".join('"' + arg + '"' for arg in args[1:]), None, 1)
+        return True
+    except Exception as e:
+        print(f"{Fore.RED}{EMOJI['ERROR']} Failed to restart with admin privileges: {e}{Style.RESET_ALL}")
+        return False
 
 class Translator:
     def __init__(self):
@@ -296,6 +330,14 @@ def check_latest_version():
         return
 
 def main():
+    # Check for admin privileges if running as executable on Windows only
+    if platform.system() == 'Windows' and is_frozen() and not is_admin():
+        print(f"{Fore.YELLOW}{EMOJI['ADMIN']} Running as executable, administrator privileges required.{Style.RESET_ALL}")
+        if run_as_admin():
+            sys.exit(0)  # Exit after requesting admin privileges
+        else:
+            print(f"{Fore.YELLOW}{EMOJI['INFO']} Continuing without administrator privileges.{Style.RESET_ALL}")
+    
     print_logo()
     
     # Initialize configuration
