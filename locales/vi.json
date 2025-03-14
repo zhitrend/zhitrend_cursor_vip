@@ -15,9 +15,9 @@
         "disable_auto_update": "Tắt Tự Động Cập Nhật Cursor"
     },
     "languages": {
-        "en": "Tiếng Anh",
-        "zh_cn": "Tiếng Trung (Giản Thể)",
-        "zh_tw": "Tiếng Trung (Phồn Thể)",
+        "en": "English",
+        "zh_cn": "简体中文",
+        "zh_tw": "繁體中文",
         "vi": "Tiếng Việt"
     },
     "quit_cursor": {
