@@ -1,5 +1,15 @@
 # Change Log
 
+## v1.7.07
+1. Add: Vietnamese Language | 增加越南語言
+2. Add: Admin Privilege Management for Windows Executable | 增加Windows可執行文件管理員權限
+3. Implement admin privilege detection for Windows platform | 實現Windows平台管理員權限檢測
+4. Add functions to check and request admin rights when running as a frozen executable | 增加檢查和請求管理員權限的功能
+5. Enhance startup process with admin privilege verification | 增強啟動過程中的管理員權限驗證
+6. Add new admin-related emoji to the EMOJI dictionary | 增加新的管理員相關表情符號到EMOJI字典
+7. Provide fallback mechanism for non-Windows platforms (macos and linux ) | 提供非Windows平台（macos和linux）的回退機制
+These changes make the application more user-friendly by only requesting admin privileges when necessary (when running as an executable). | 這些改進使應用程序更易於使用，只在必要時（當作為可執行文件運行時）請求管理員權限。
+
 ## v1.7.06
 1. Add: Update Confirm | 增加更新確認
 2. Add: Update Skipped | 增加更新跳過
