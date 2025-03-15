@@ -1,5 +1,13 @@
 # Change Log
 
+## v1.7.08
+1. Add: Google OAuth Authentication | 增加 Google OAuth 認證
+2. Add: GitHub OAuth Authentication | 增加 GitHub OAuth 認證
+3. Add: Lifetime Access for OAuth Users | 增加 OAuth 用戶終身訪問權限
+4. Add: OAuth Authentication Integration | 增加 OAuth 認證集成
+5. Update: Menu System with OAuth Options | 更新菜單系統，添加 OAuth 選項
+6. Add: Multi-language Support for OAuth | 增加 OAuth 多語言支持
+
 ## v1.7.07
 1. Add: Vietnamese Language | 增加越南語言
 2. Add: Admin Privilege Management for Windows Executable | 增加 Windows 可執行文件管理員權限

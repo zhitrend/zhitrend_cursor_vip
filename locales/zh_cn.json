@@ -4,6 +4,8 @@
         "exit": "退出程序",
         "reset": "重置机器标识",
         "register": "注册新 Cursor 账号",
+        "register_google": "使用 Google 账号注册",
+        "register_github": "使用 GitHub 账号注册",
         "register_manual": "使用自定义邮箱注册",
         "quit": "关闭 Cursor 应用",
         "select_language": "更改语言",
