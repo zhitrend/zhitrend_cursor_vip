@@ -610,8 +610,8 @@ class OAuthHandler:
                                                     print(f"{Fore.CYAN}{EMOJI['INFO']} Redirecting to authenticator.cursor.sh...{Style.RESET_ALL}")
                                                     
                                                     # Explicitly navigate to the authentication page
-                                                   #self.browser.get("https://authenticator.cursor.sh/sign-up")
-                                                  #  time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                                                    self.browser.get("https://authenticator.cursor.sh/sign-up")
+                                                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
                                                     
                                                     # Call handle_google_auth again to repeat the entire process
                                                     print(f"{Fore.CYAN}{EMOJI['INFO']} Starting new Google authentication...{Style.RESET_ALL}")
