@@ -4,6 +4,8 @@
         "exit": "Exit Program",
         "reset": "Reset Machine ID",
         "register": "Register New Cursor Account",
+        "register_google": "Register with Google Account",
+        "register_github": "Register with GitHub Account",
         "register_manual": "Register Cursor with Custom Email",
         "quit": "Close Cursor Application",
         "select_language": "Change Language",

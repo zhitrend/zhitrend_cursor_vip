@@ -36,6 +36,10 @@ Cursor's configuration.
 
 ## ✨ Features | 功能特點
 
+* 🌟 Google OAuth Authentication with Lifetime Access<br>使用 Google OAuth 認證（終身訪問）<br>
+
+* ⭐ GitHub OAuth Authentication with Lifetime Access<br>使用 GitHub OAuth 認證（終身訪問）<br>
+
 * Automatically register Cursor membership<br>自動註冊 Cursor 會員<br>
 
 * Support Windows and macOS systems<br>支持 Windows 和 macOS 系統<br>
@@ -43,6 +47,8 @@ Cursor's configuration.
 * Complete Auth verification<br>完成 Auth 驗證<br>
 
 * Reset Cursor's configuration<br>重置 Cursor 的配置<br>
+
+* Multi-language support (English, 简体中文, 繁體中文, Vietnamese)<br>多語言支持（英文、简体中文、繁體中文、越南語）<br>
 
 ## 💻 System Support | 系統支持
 
