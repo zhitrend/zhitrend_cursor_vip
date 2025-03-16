@@ -15,7 +15,8 @@
         "error_occurred": "An error occurred: {error}. Please try again",
         "press_enter": "Press Enter to Exit",
         "disable_auto_update": "Disable Cursor Auto-Update",
-        "lifetime_access_enabled": "LIFETIME ACCESS ENABLED"
+        "lifetime_access_enabled": "LIFETIME ACCESS ENABLED",
+        "totally_reset": "Totally Reset Cursor"
     },
     "languages": {
         "en": "English",

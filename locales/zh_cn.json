@@ -15,7 +15,8 @@
         "error_occurred": "发生错误：{error}，请重试",
         "press_enter": "按回车键退出",
         "disable_auto_update": "禁用 Cursor 自动更新",
-        "lifetime_access_enabled": "永久订阅"
+        "lifetime_access_enabled": "永久订阅",
+        "totally_reset": "完全重置 Cursor"
     },
     "languages": {
         "en": "English",

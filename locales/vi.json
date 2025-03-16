@@ -12,8 +12,9 @@
         "program_terminated": "Chương trình đã bị người dùng chấm dứt",
         "error_occurred": "Đã xảy ra lỗi: {error}. Vui lòng thử lại",
         "press_enter": "Nhấn Enter để Thoát",
-        "disable_auto_update": "Tắt Tự Động Cập Nhật Cursor",
-        "lifetime_access_enabled": "LIFETIME ACCESS ENABLED"
+        "disable_auto_update": "Tắt tự động cập nhật Cursor",
+        "lifetime_access_enabled": "ĐÃ BẬT TRUY CẬP TRỌN ĐỜI",
+        "totally_reset": "Đặt lại hoàn toàn Cursor"
     },
     "languages": {
         "en": "English",

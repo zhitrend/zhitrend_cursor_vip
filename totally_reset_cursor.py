@@ -473,3 +473,15 @@ if __name__ == "__main__":
         print(f"\n❌ An unexpected error occurred: {str(e)}\n")
         print("   Please report this issue to Prathmesh </> on Discord: prathmesh_pro")
         sys.exit(1)
+
+def run(translator=None):
+    """Entry point for the totally reset cursor functionality when called from the main menu."""
+    try:
+        reset_cursor()
+        input("\nPress Enter to return to main menu...")
+    except KeyboardInterrupt:
+        print("\n\n🛑 Process interrupted by user. Returning to main menu...\n")
+    except Exception as e:
+        print(f"\n❌ An unexpected error occurred: {str(e)}\n")
+        print("   Please report this issue to Prathmesh </> on Discord: prathmesh_pro")
+        input("\nPress Enter to return to main menu...")
