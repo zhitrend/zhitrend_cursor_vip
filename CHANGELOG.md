@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.7.10 ( Pre - Release 版本 )
+1. Add: Totally Reset Cursor | 增加完全重置 Cursor
+2. Add: Multi-language Support for Totally Reset | 增加完全重置多語言支持
+
 ## v1.7.09
 1. Add: Development Version Check | 增加開發版本檢查
 2. Remove: Github Trial Reset | 移除 Github 試用重置
