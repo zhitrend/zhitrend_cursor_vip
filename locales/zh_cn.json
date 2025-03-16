@@ -14,7 +14,8 @@
         "program_terminated": "程序已被用户终止",
         "error_occurred": "发生错误：{error}，请重试",
         "press_enter": "按回车键退出",
-        "disable_auto_update": "禁用 Cursor 自动更新"
+        "disable_auto_update": "禁用 Cursor 自动更新",
+        "lifetime_access_enabled": "永久订阅"
     },
     "languages": {
         "en": "English",
@@ -274,6 +275,7 @@
         "continue_anyway": "继续使用当前版本...",
         "update_confirm": "是否要更新到最新版本? (Y/n)",
         "update_skipped": "跳过更新。",
-        "invalid_choice": "选择无效。请输入 'Y' 或 'n'."
+        "invalid_choice": "选择无效。请输入 'Y' 或 'n'.",
+        "development_version": "开发版本 {current} > {latest}"
     }
 } 

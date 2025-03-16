@@ -14,7 +14,8 @@
         "program_terminated": "Program was terminated by user",
         "error_occurred": "An error occurred: {error}. Please try again",
         "press_enter": "Press Enter to Exit",
-        "disable_auto_update": "Disable Cursor Auto-Update"
+        "disable_auto_update": "Disable Cursor Auto-Update",
+        "lifetime_access_enabled": "LIFETIME ACCESS ENABLED"
     },
     "languages": {
         "en": "English",
@@ -278,6 +279,7 @@
         "continue_anyway": "Continuing with current version...",
         "update_confirm": "Do you want to update to the latest version? (Y/n)",
         "update_skipped": "Skipping update.",
-        "invalid_choice": "Invalid choice. Please enter 'Y' or 'n'."
+        "invalid_choice": "Invalid choice. Please enter 'Y' or 'n'.",
+        "development_version": "Development Version {current} > {latest}"
     }
 }

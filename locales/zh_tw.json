@@ -12,7 +12,8 @@
         "program_terminated": "程式已被使用者終止",
         "error_occurred": "發生錯誤：{error}，請重試",
         "press_enter": "按返回鍵退出",
-        "disable_auto_update": "停用 Cursor 自動更新"
+        "disable_auto_update": "停用 Cursor 自動更新",
+        "lifetime_access_enabled": "永久訂閱"
     },
     "languages": {
         "en": "English",
@@ -254,6 +255,7 @@
         "continue_anyway": "繼續使用當前版本...",
         "update_confirm": "是否要更新到最新版本? (Y/n)",
         "update_skipped": "跳過更新。",
-        "invalid_choice": "選擇無效。請輸入 'Y' 或 'n'."
+        "invalid_choice": "選擇無效。請輸入 'Y' 或 'n'.",
+        "development_version": "開發版本 {current} > {latest}"
     }
 } 
