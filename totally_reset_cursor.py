@@ -11,80 +11,103 @@ import string
 import re
 from datetime import datetime
 import subprocess
+from colorama import Fore, Style, init
+from main import translator
+from main import EMOJI
+
+# Initialize colorama
+init()
+
+# Define emoji and color constants
+EMOJI = {
+    "FILE": "📄",
+    "BACKUP": "💾",
+    "SUCCESS": "✅",
+    "ERROR": "❌",
+    "INFO": "ℹ️",
+    "RESET": "🔄",
+    "MENU": "📋",
+    "ARROW": "➜",
+    "LANG": "🌐",
+    "UPDATE": "🔄",
+    "ADMIN": "🔐",
+    "STOP": "🛑",
+    "DISCLAIMER": "⚠️",
+    "WARNING": "⚠️"
+}
 
 def display_banner():
     """Displays a stylized banner for the tool."""
-    print("\n" + "="*70)
-    print("                      CURSOR AI RESET TOOL")
-    print("              Developed by Prathmesh </> (Discord: prathmesh_pro)")
-    print("="*70 + "\n")
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['STOP']} {translator.get('totally_reset.title')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
 
 def display_features():
     """Displays the features of the Cursor AI Reset Tool."""
-    print("\n📋 FEATURES:")
-    print("  • Complete removal of Cursor AI settings and configurations")
-    print("  • Clears all cached data including AI history and prompts")
-    print("  • Resets machine ID to bypass trial detection")
-    print("  • Creates new randomized machine identifiers")
-    print("  • Removes custom extensions and preferences")
-    print("  • Resets trial information and activation data")
-    print("  • Deep scan for hidden license and trial-related files")
-    print("  • Safely preserves non-Cursor files and applications")
-    print("  • Compatible with Windows, macOS, and Linux\n")
+    print(f"\n{Fore.CYAN}{EMOJI['MENU']} {translator.get('totally_reset.feature_title')}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_1')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_2')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_3')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_4')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_5')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_6')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_7')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_8')} {Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.feature_9')} {Style.RESET_ALL}\n")
 
 def display_disclaimer():
     """Displays a disclaimer for the user."""
-    print("\n⚠️ DISCLAIMER:")
-    print("  This tool will permanently delete all Cursor AI settings,")
-    print("  configurations, and cached data. This action cannot be undone.")
-    print("  Your code files will NOT be affected, and the tool is designed")
-    print("  to only target Cursor AI editor files and trial detection mechanisms.")
-    print("  Other applications on your system will not be affected.")
-    print("  You will need to set up Cursor AI again after running this tool.")
-    print("  Use at your own risk.\n")
+    print(f"\n{Fore.RED}{EMOJI['DISCLAIMER']}  {translator.get('totally_reset.disclaimer_title')}{Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_1')} {Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_2')} {Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_3')} {Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_4')} {Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_5')} {Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_6')} {Style.RESET_ALL}")
+    print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.disclaimer_7')} {Style.RESET_ALL} \n")
 
 def get_confirmation():
     """Gets confirmation from the user to proceed."""
     while True:
-        choice = input("⚠️ Do you want to proceed with resetting Cursor AI? (Y/n): ").strip().lower()
+        choice = input(f"{Fore.RED}{EMOJI['WARNING']}  {translator.get('totally_reset.confirm_title')} (Y/n): ").strip().lower()
         if choice == "y" or choice == "":
             return True
         elif choice == "n":
             return False
         else:
-            print("Please enter 'Y' or 'n'")
+            print(f"{EMOJI['ERROR']} {translator.get('totally_reset.invalid_choice')}")
 
 def remove_dir(path):
     """Removes a directory if it exists and logs the action."""
     # Safety check to ensure we're only deleting Cursor-related directories
     if not is_cursor_related(path):
-        print(f"[⚠️] Skipped for safety (not Cursor-related): {path}")
+        print(f"{Fore.RED}{EMOJI['WARNING']} {translator.get('totally_reset.skipped_for_safety', path=path)} {Style.RESET_ALL}")
         return
         
     if os.path.exists(path):
         try:
             shutil.rmtree(path, ignore_errors=True)
-            print(f"[✅] Deleted: {path}")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.deleted', path=path)} {Style.RESET_ALL}")
         except Exception as e:
-            print(f"[❌] Error deleting {path}: {str(e)}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.error_deleting', path=path, error=str(e))} {Style.RESET_ALL}")
     else:
-        print(f"[ℹ️] Not Found: {path}")
+        print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.not_found', path=path)} {Style.RESET_ALL}")
 
 def remove_file(path):
     """Removes a file if it exists and logs the action."""
     # Safety check to ensure we're only deleting Cursor-related files
     if not is_cursor_related(path):
-        print(f"[⚠️] Skipped for safety (not Cursor-related): {path}")
+        print(f"{Fore.RED}{EMOJI['WARNING']} {translator.get('totally_reset.skipped_for_safety', path=path)} {Style.RESET_ALL}")
         return
         
     if os.path.isfile(path):
         try:
             os.remove(path)
-            print(f"[✅] Deleted file: {path}")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.deleted', path=path)} {Style.RESET_ALL}")
         except Exception as e:
-            print(f"[❌] Error deleting file {path}: {str(e)}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.error_deleting', path=path, error=str(e))} {Style.RESET_ALL}")
     else:
-        print(f"[ℹ️] File not found: {path}")
+        print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.not_found', path=path)} {Style.RESET_ALL}")
 
 def is_cursor_related(path):
     """
@@ -146,7 +169,7 @@ def find_cursor_license_files(base_path, pattern):
                         matches.append(full_path)
         return matches
     except Exception as e:
-        print(f"[ℹ️] Error searching for files in {base_path}: {str(e)}")
+        print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.error_searching', path=base_path, error=str(e))} {Style.RESET_ALL}")
         return []
 
 def generate_new_machine_id():
@@ -168,13 +191,13 @@ def create_fake_machine_id(path):
             
         with open(path, 'w') as f:
             f.write(new_id)
-        print(f"[✅] Created new machine ID: {path}")
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.created_machine_id', path=path)} {Style.RESET_ALL}")
     except Exception as e:
-        print(f"[❌] Error creating machine ID file {path}: {str(e)}")
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.error_creating_machine_id', path=path, error=str(e))} {Style.RESET_ALL}")
 
 def reset_machine_id(system, home):
     """Resets machine ID in all possible locations."""
-    print("\n🔄 Resetting machine identifiers to bypass trial detection...\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.resetting_machine_id')} {Style.RESET_ALL}")
     
     # Common machine ID locations based on OS
     if system == "Windows":
@@ -210,16 +233,16 @@ def reset_machine_id(system, home):
     if system == "Windows":
         try:
             # Windows: Create a temporary VBS script to reset machine GUID
-            print("[ℹ️] Note: Complete machine ID reset may require running as administrator")
+            print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.note_complete_machine_id_reset_may_require_running_as_administrator')} {Style.RESET_ALL}")
         except Exception as e:
-            print(f"[ℹ️] Windows machine ID modification skipped: {str(e)}")
+            print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.windows_machine_id_modification_skipped', error=str(e))} {Style.RESET_ALL}")
     
     elif system == "Linux":
         try:
             # Linux: Create a random machine-id in /etc/ (needs sudo)
-            print("[ℹ️] Note: Complete system machine-id reset may require sudo privileges")
+            print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.note_complete_system_machine_id_reset_may_require_sudo_privileges')} {Style.RESET_ALL}")
         except Exception as e:
-            print(f"[ℹ️] Linux machine-id modification skipped: {str(e)}")
+            print(f"{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.linux_machine_id_modification_skipped', error=str(e))} {Style.RESET_ALL}")
 
 def create_fake_trial_info(path, system, home):
     """Creates fake trial information to extend trial period."""
@@ -246,9 +269,9 @@ def create_fake_trial_info(path, system, home):
             
         with open(path, 'w') as f:
             json.dump(fake_trial, f)
-        print(f"[✅] Created extended trial info: {path}")
+        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.created_extended_trial_info', path=path)} {Style.RESET_ALL}")
     except Exception as e:
-        print(f"[❌] Error creating trial info file {path}: {str(e)}")
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.error_creating_trial_info', path=path, error=str(e))} {Style.RESET_ALL}")
 
 def reset_cursor():
     """Completely resets Cursor AI by removing all settings, caches, and extensions."""
@@ -260,10 +283,10 @@ def reset_cursor():
     display_disclaimer()
     
     if not get_confirmation():
-        print("\n🛑 Reset cancelled. Exiting without making any changes.\n")
+        print(f"\n{Fore.CYAN}{EMOJI['STOP']} {translator.get('totally_reset.reset_cancelled')} {Style.RESET_ALL}")
         return
 
-    print("\n🚀 Resetting Cursor AI Editor... Please wait.\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.resetting_cursor_ai_editor')} {Style.RESET_ALL}")
 
     # Define paths based on OS
     if system == "Windows":
@@ -288,9 +311,8 @@ def reset_cursor():
         ]
         
         # Registry instructions for Windows
-        print("\n📝 NOTE: For complete reset on Windows, you might also need to clean registry entries.")
-        print("   Run 'regedit' and search for keys containing 'Cursor' or 'CursorAI'")
-        print("   under HKEY_CURRENT_USER\\Software\\ and delete them.\n")
+        print(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.windows_registry_instructions')} {Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.windows_registry_instructions_2')} {Style.RESET_ALL}")
 
     elif system == "Darwin":  # macOS
         cursor_paths = [
@@ -336,11 +358,11 @@ def reset_cursor():
         ]
 
     else:
-        print("❌ Unsupported OS. Exiting.")
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.unsupported_os')} {Style.RESET_ALL}")
         return
 
     # Remove main Cursor directories
-    print("\n🔄 Removing main Cursor directories and files...\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.removing_main_cursor_directories_and_files')} {Style.RESET_ALL}")
     for path in cursor_paths:
         remove_dir(path)
 
@@ -408,12 +430,12 @@ def reset_cursor():
         ])
 
     # Remove known trial/license files
-    print("\n🔄 Removing known trial data and license information...\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.removing_known')} {Style.RESET_ALL}")
     for path in cursor_trial_files:
         remove_file(path)
 
     # Deep search for additional trial/license files
-    print("\n🔍 Performing deep scan for additional Cursor license files...\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.performing_deep_scan')} {Style.RESET_ALL}")
     all_found_files = []
     for base_path in license_search_paths:
         if os.path.exists(base_path):
@@ -421,14 +443,14 @@ def reset_cursor():
             all_found_files.extend(found_files)
     
     if all_found_files:
-        print(f"\n🔎 Found {len(all_found_files)} additional potential license/trial files:\n")
+        print(f"\n🔎 {translator.get('totally_reset.found_additional_potential_license_trial_files', count=len(all_found_files))}\n")
         for file_path in all_found_files:
             remove_file(file_path)
     else:
-        print("\n🔎 No additional license/trial files found in deep scan.\n")
+        print(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.no_additional_license_trial_files_found_in_deep_scan')} {Style.RESET_ALL}")
 
     # Check for and remove localStorage files that might contain settings
-    print("\n🔄 Checking for Electron localStorage files...\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.checking_for_electron_localstorage_files')} {Style.RESET_ALL}")
     if system == "Windows":
         local_storage_paths = glob.glob(os.path.join(home, "AppData", "Roaming", "*cursor*", "Local Storage", "leveldb", "*"))
         local_storage_paths += glob.glob(os.path.join(home, "AppData", "Local", "*cursor*", "Local Storage", "leveldb", "*"))
@@ -442,7 +464,7 @@ def reset_cursor():
             remove_file(path)
 
     # Create new trial files with extended expiration
-    print("\n🔄 Creating new trial information with extended period...\n")
+    print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('totally_reset.creating_new_trial_information_with_extended_period')} {Style.RESET_ALL}")
     if system == "Windows":
         create_fake_trial_info(os.path.join(home, "AppData", "Local", "Cursor", "trial_info.json"), system, home)
         create_fake_trial_info(os.path.join(home, "AppData", "Roaming", "Cursor", "trial_info.json"), system, home)
@@ -451,37 +473,37 @@ def reset_cursor():
     elif system == "Linux":
         create_fake_trial_info(os.path.join(home, ".config", "Cursor", "trial_info.json"), system, home)
 
-    print("\n✅ Cursor AI has been fully reset and trial detection bypassed!")
-    print("   Please restart your system for changes to take effect.")
-    print("   You will need to reinstall Cursor AI and should now have a fresh trial period.")
+    print(f"\n{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.reset_log_1')}")
+    print(f"   {translator.get('totally_reset.reset_log_2')}")
+    print(f"   {translator.get('totally_reset.reset_log_3')}")
     
-    print("\n💡 For best results, consider also:")
-    print("   1. Use a different email address when registering for a new trial")
-    print("   2. If available, use a VPN to change your IP address")
-    print("   3. Clear your browser cookies and cache before visiting Cursor AI's website")
-    print("   4. If issues persist, try installing Cursor AI in a different location")
+    print(f"\n{Fore.GREEN}{EMOJI['INFO']} {translator.get('totally_reset.reset_log_4')} {Style.RESET_ALL}")
+    print(f"   {translator.get('totally_reset.reset_log_5')} {Style.RESET_ALL}")
+    print(f"   {translator.get('totally_reset.reset_log_6')} {Style.RESET_ALL}")
+    print(f"   {translator.get('totally_reset.reset_log_7')} {Style.RESET_ALL}")
+    print(f"   {translator.get('totally_reset.reset_log_8')} {Style.RESET_ALL}")
     
-    print("\n   If you encounter any issues, contact Prathmesh </> on Discord: prathmesh_pro\n")
+    print(f"\n{Fore.RED}{EMOJI['INFO']} {translator.get('totally_reset.reset_log_9')} {Style.RESET_ALL}")
 
 if __name__ == "__main__":
     try:
         reset_cursor()
     except KeyboardInterrupt:
-        print("\n\n🛑 Process interrupted by user. Exiting...\n")
+        print(f"\n\n{Fore.RED}{EMOJI['STOP']} {translator.get('totally_reset.keyboard_interrupt')} {Style.RESET_ALL}")
         sys.exit(1)
     except Exception as e:
-        print(f"\n❌ An unexpected error occurred: {str(e)}\n")
-        print("   Please report this issue to Prathmesh </> on Discord: prathmesh_pro")
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.unexpected_error', error=str(e))}{Style.RESET_ALL}")
+        print(f"   {translator.get('totally_reset.report_issue')}")
         sys.exit(1)
 
 def run(translator=None):
     """Entry point for the totally reset cursor functionality when called from the main menu."""
     try:
         reset_cursor()
-        input("\nPress Enter to return to main menu...")
+        input(f"\n\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.return_to_main_menu')} {Style.RESET_ALL}")
     except KeyboardInterrupt:
-        print("\n\n🛑 Process interrupted by user. Returning to main menu...\n")
+        print(f"\n\n{Fore.RED}{EMOJI['STOP']} {translator.get('totally_reset.process_interrupted')} {Style.RESET_ALL}")
     except Exception as e:
-        print(f"\n❌ An unexpected error occurred: {str(e)}\n")
-        print("   Please report this issue to Prathmesh </> on Discord: prathmesh_pro")
-        input("\nPress Enter to return to main menu...")
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.unexpected_error', error=str(e))}{Style.RESET_ALL}")
+        print(f"   {translator.get('totally_reset.report_issue')}")
+        input(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('totally_reset.press_enter_to_return_to_main_menu')} {Style.RESET_ALL}")
