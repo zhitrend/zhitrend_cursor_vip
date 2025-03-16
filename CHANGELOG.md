@@ -1,5 +1,63 @@
 # Change Log
 
+## v1.7.09
+## Changes  
+- Added new GitHub-based trial reset functionality ｜ 新增基於 GitHub 的試用重置功能  
+- Improved code organization by separating GitHub reset logic into its own module ｜ 改進代碼組織，將 GitHub 重置邏輯獨立為模組  
+- Enhanced authentication data extraction and handling ｜ 增強身份驗證數據提取與處理  
+- Added secure credential storage using keyring ｜ 使用 keyring 進行安全憑據存儲  
+- Improved error handling and user feedback ｜ 改進錯誤處理與用戶回饋  
+- Added automatic re-login after trial reset ｜ 新增試用重置後的自動重新登入功能  
+- Integrated JavaScript trial reset code for automatic account deletion ｜ 整合 JavaScript 試用重置代碼以自動刪除帳戶  
+
+## New Features  
+- GitHub authentication integration ｜ GitHub 身份驗證集成  
+- Secure credential management ｜ 安全憑據管理  
+- Automated trial reset process ｜ 自動化試用重置流程  
+- Session persistence ｜ 會話持久化  
+- Improved user experience with clear status messages ｜ 提升用戶體驗，提供清晰的狀態消息  
+- Automatic account deletion when usage limit is reached ｜ 使用超過限制時自動刪除帳戶  
+
+## Technical Details  
+- Uses DrissionPage for browser automation ｜ 使用 DrissionPage 進行瀏覽器自動化  
+- Implements secure credential storage with keyring ｜ 使用 keyring 實現安全憑據存儲  
+- Handles both cookie and localStorage token formats ｜ 支援處理 cookie 和 localStorage 令牌格式  
+- Supports automatic re-login after reset ｜ 支援重置後的自動重新登入  
+- Maintains session persistence across resets ｜ 保持重置後的會話持久性  
+- JavaScript trial reset code:  
+
+``` 
+function deleteAccount() {  
+    return new Promise((resolve, reject) => {  
+        fetch('https://www.cursor.com/api/dashboard/delete-account', {  
+            method: 'POST',  
+            headers: {  
+                'Content-Type': 'application/json'  
+            },  
+            credentials: 'include'  
+        })  
+        .then(response => {  
+            if (response.status === 200) {  
+                resolve('Account deleted successfully');  
+            } else {  
+                reject('Failed to delete account: ' + response.status);  
+            }  
+        })  
+        .catch(error => {  
+            reject('Error: ' + error);  
+        });  
+    });  
+}  
+```  
+
+## Testing  
+- Tested on Windows 10, macOS, and Linux ｜ 測試在 Windows 10、macOS 和 Linux 上  
+- Verified with multiple GitHub accounts ｜ 已使用多個 GitHub 帳戶驗證  
+- Confirmed successful trial reset and re-login ｜ 確認試用重置及重新登入成功  
+- Validated credential storage and retrieval ｜ 驗證憑據存儲與提取  
+- Tested automatic account deletion when usage limit is reached ｜ 測試使用達到限制時的自動帳戶刪除功能  
+- Verified successful re-authentication after account deletion ｜ 驗證帳戶刪除後的成功重新身份驗證
+
 ## v1.7.08
 1. Add: Google OAuth Authentication | 增加 Google OAuth 認證
 2. Add: GitHub OAuth Authentication | 增加 GitHub OAuth 認證
