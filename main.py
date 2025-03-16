@@ -10,12 +10,6 @@ import platform
 import requests
 import subprocess
 from config import get_config  
-import time
-from cursor_register import CursorRegistration
-from cursor_register_github import main as register_github
-from cursor_register_google import main as register_google
-from github_trial_reset import reset_trial as github_reset_trial
-from utils import MachineIDResetter
 
 # Only import windll on Windows systems
 if platform.system() == 'Windows':
@@ -375,23 +369,24 @@ def main():
                 print(f"{Fore.CYAN}{'═' * 50}{Style.RESET_ALL}")
                 return
             elif choice == "1":
-                resetter = MachineIDResetter()
-                resetter.reset()
-                print(f"{Fore.GREEN}Machine ID reset complete!{Fore.RESET}")
+                import reset_machine_manual
+                reset_machine_manual.run(translator)
+                print_menu()
             elif choice == "2":
-                if github_reset_trial():
-                    print(f"{Fore.GREEN}GitHub trial reset completed successfully!{Fore.RESET}")
-                else:
-                    print(f"{Fore.RED}GitHub trial reset failed.{Fore.RESET}")
+                import cursor_register
+                cursor_register.main(translator)
+                print_menu()
             elif choice == "3":
-                registration = CursorRegistration()
-                registration.register()
+                import cursor_register_google
+                cursor_register_google.main(translator)
                 print_menu()
             elif choice == "4":
-                register_github()
+                import cursor_register_github
+                cursor_register_github.main(translator)
                 print_menu()
             elif choice == "5":
-                register_google()
+                import cursor_register_manual
+                cursor_register_manual.main(translator)
                 print_menu()
             elif choice == "6":
                 import quit_cursor

@@ -14,7 +14,6 @@ import configparser
 from new_signup import get_user_documents_path
 import traceback
 from config import get_config
-from github_trial_reset import reset_trial as github_reset_trial
 
 # Initialize colorama
 init()
@@ -692,30 +691,19 @@ class MachineIDResetter:
             return False
 
 def run(translator=None):
-    """Main function to run the reset process"""
-    try:
-        print(f"\n{Fore.CYAN}{EMOJI['RESET']} {translator.get('reset.starting_reset') if translator else 'Starting reset process...'}{Style.RESET_ALL}")
-        
-        # First, try GitHub trial reset
-        print(f"\n{Fore.CYAN}{EMOJI['INFO']} Attempting GitHub trial reset...{Style.RESET_ALL}")
-        if github_reset_trial(translator):
-            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} GitHub trial reset completed successfully!{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.YELLOW}{EMOJI['INFO']} GitHub trial reset failed, falling back to manual reset...{Style.RESET_ALL}")
-        
-        # Then proceed with manual reset
-        resetter = MachineIDResetter(translator)
-        if resetter.reset():
-            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('reset.completed_successfully') if translator else 'Reset completed successfully!'}{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.failed') if translator else 'Reset failed!'}{Style.RESET_ALL}")
-            
-    except Exception as e:
-        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('reset.error_occurred', error=str(e)) if translator else f'An error occurred: {str(e)}'}{Style.RESET_ALL}")
-        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('reset.stack_trace')}: {traceback.format_exc()}{Style.RESET_ALL}")
+    config = get_config(translator)
+    if not config:
         return False
-        
-    return True
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{EMOJI['RESET']} {translator.get('reset.title')}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+
+    resetter = MachineIDResetter(translator)  # Correctly pass translator
+    resetter.reset_machine_ids()
+
+    print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    input(f"{EMOJI['INFO']} {translator.get('reset.press_enter')}...")
 
 if __name__ == "__main__":
-    run()
+    from main import translator as main_translator
+    run(main_translator)
