@@ -1,6 +1,14 @@
 # Change Log
 
-## v1.7.10 ( Pre - Release 版本 )
+## v1.7.11 ( Pre - Release 版本 )
+1. Add: Multi-language Support | 增加多語言支持
+2. Add: German Language | 增加德語
+3. Add: Dutch Language | 增加荷蘭語
+4. Add: French Language | 增加法語
+
+
+
+## v1.7.10
 1. Add: Totally Reset Cursor | 增加完全重置 Cursor
 2. Add: Multi-language Support for Totally Reset | 增加完全重置多語言支持
 

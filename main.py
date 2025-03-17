@@ -133,6 +133,13 @@ class Translator:
                 return 'en'
             elif system_locale.startswith('vi'):
                 return 'vi'
+            elif system_locale.startswith('nl'):
+                return 'nl'
+            elif system_locale.startswith('de'):
+                return 'de'
+            elif system_locale.startswith('fr'):
+                return 'fr'
+            
             
 
             # Try to get language from LANG environment variable as fallback
@@ -143,7 +150,12 @@ class Translator:
                 return 'zh_cn'
             elif 'vi' in env_lang:
                 return 'vi'
-            
+            elif 'nl' in env_lang:
+                return 'nl'
+            elif 'de' in env_lang:
+                return 'de'
+            elif 'fr' in env_lang:
+                return 'fr'
 
             return 'en'
         except:
