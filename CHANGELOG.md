@@ -5,7 +5,9 @@
 2. Add: German Language | 增加德語
 3. Add: Dutch Language | 增加荷蘭語
 4. Add: French Language | 增加法語
-
+5. Add: Auto Detect Max Use Count | 增加自動檢測最大使用次數
+6. Add: Detect & Auto Delete Account | 增加檢測 & 自動刪除賬號
+7. Add: Optimize Some Logic | 優化一些邏輯
 
 
 ## v1.7.10
