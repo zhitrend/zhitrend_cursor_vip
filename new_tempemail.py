@@ -6,6 +6,7 @@ from colorama import Fore, Style, init
 import requests
 import random
 import string
+from utils import get_random_wait_time
 
 # Initialize colorama
 init()
@@ -38,12 +39,37 @@ class NewTempEmail:
                 else:
                     print(f"{Fore.CYAN}ℹ️ 已加载 {len(domains)} 个被屏蔽的域名{Style.RESET_ALL}")
                 return domains
-            return []
+            return self._load_local_blocked_domains()
         except Exception as e:
             if self.translator:
                 print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.blocked_domains_error', error=str(e))}{Style.RESET_ALL}")
             else:
                 print(f"{Fore.YELLOW}⚠️ 获取被屏蔽域名列表失败: {str(e)}{Style.RESET_ALL}")
+            return self._load_local_blocked_domains()
+            
+    def _load_local_blocked_domains(self):
+        """Load blocked domains from local file as fallback"""
+        try:
+            local_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "block_domain.txt")
+            if os.path.exists(local_path):
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    domains = [line.strip() for line in f.readlines() if line.strip()]
+                if self.translator:
+                    print(f"{Fore.CYAN}ℹ️  {self.translator.get('email.local_blocked_domains_loaded', count=len(domains))}{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.CYAN}ℹ️ 已从本地加载 {len(domains)} 个被屏蔽的域名{Style.RESET_ALL}")
+                return domains
+            else:
+                if self.translator:
+                    print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.local_blocked_domains_not_found')}{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.YELLOW}⚠️ 本地被屏蔽域名文件不存在{Style.RESET_ALL}")
+                return []
+        except Exception as e:
+            if self.translator:
+                print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.local_blocked_domains_error', error=str(e))}{Style.RESET_ALL}")
+            else:
+                print(f"{Fore.YELLOW}⚠️ 读取本地被屏蔽域名文件失败: {str(e)}{Style.RESET_ALL}")
             return []
     
     def exclude_blocked_domains(self, domains):
@@ -296,48 +322,75 @@ class NewTempEmail:
                 print(f"{Fore.RED}❌ 检查验证邮件出错: {str(e)}{Style.RESET_ALL}")
             return False
 
-    def get_verification_code(self):
-        """get verification code"""
-        try:
-            # Use API to get email list
-            headers = {"Authorization": f"Bearer {self.token}"}
-            response = requests.get(f"{self.api_url}/messages", headers=headers)
-            
-            if response.status_code == 200:
-                messages = response.json()["hydra:member"]
-                for message in messages:
-                    if message["from"]["address"] == "no-reply@cursor.sh" and "Verify your email address" in message["subject"]:
-                        # Get email content
-                        message_id = message["id"]
-                        message_response = requests.get(f"{self.api_url}/messages/{message_id}", headers=headers)
-                        
-                        if message_response.status_code == 200:
-                            # Extract verification code from email content
-                            email_content = message_response.json()["text"]
-                            # Find 6-digit verification code
-                            import re
-                            code_match = re.search(r'\b\d{6}\b', email_content)
+    def get_verification_code(self, max_retries=3):
+        """get verification code with retry mechanism"""
+        for attempt in range(1, max_retries + 1):
+            try:
+                # Check if token is valid
+                if not self.token:
+                    if self.translator:
+                        print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.no_token_retry')}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.YELLOW}⚠️ 未获取到有效令牌，尝试重新创建邮箱... (尝试 {attempt}/{max_retries}){Style.RESET_ALL}")
+                    
+                    # Try to recreate email
+                    self.create_email()
+                    if not self.token:
+                        continue  # Skip to next attempt if still no token
+                
+                # Use API to get email list
+                headers = {"Authorization": f"Bearer {self.token}"}
+                response = requests.get(f"{self.api_url}/messages", headers=headers)
+                
+                if response.status_code == 200:
+                    messages = response.json()["hydra:member"]
+                    for message in messages:
+                        if message["from"]["address"] == "no-reply@cursor.sh" and "Verify your email address" in message["subject"]:
+                            # Get email content
+                            message_id = message["id"]
+                            message_response = requests.get(f"{self.api_url}/messages/{message_id}", headers=headers)
                             
-                            if code_match:
-                                code = code_match.group(0)
-                                if self.translator:
-                                    print(f"{Fore.GREEN}✅ {self.translator.get('email.verification_code_found')}: {code}{Style.RESET_ALL}")
-                                else:
-                                    print(f"{Fore.GREEN}✅ 获取验证码成功: {code}{Style.RESET_ALL}")
-                                return code
-            
-            if self.translator:
-                print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.verification_code_not_found')}{Style.RESET_ALL}")
-            else:
-                print(f"{Fore.YELLOW}⚠️ 未找到有效的验证码{Style.RESET_ALL}")
-            return None
-            
-        except Exception as e:
-            if self.translator:
-                print(f"{Fore.RED}❌ {self.translator.get('email.verification_code_error')}: {str(e)}{Style.RESET_ALL}")
-            else:
-                print(f"{Fore.RED}❌ 获取验证码出错: {str(e)}{Style.RESET_ALL}")
-            return None
+                            if message_response.status_code == 200:
+                                # Extract verification code from email content
+                                email_content = message_response.json()["text"]
+                                # Find 6-digit verification code
+                                import re
+                                code_match = re.search(r'\b\d{6}\b', email_content)
+                                
+                                if code_match:
+                                    code = code_match.group(0)
+                                    if self.translator:
+                                        print(f"{Fore.GREEN}✅ {self.translator.get('email.verification_code_found')}: {code}{Style.RESET_ALL}")
+                                    else:
+                                        print(f"{Fore.GREEN}✅ 获取验证码成功: {code}{Style.RESET_ALL}")
+                                    return code
+                
+                if attempt < max_retries:
+                    wait_time = 10 * attempt  # Increase wait time with each attempt
+                    if self.translator:
+                        print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.verification_code_retry', attempt=attempt, max=max_retries, wait=wait_time)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.YELLOW}⚠️ 未找到有效的验证码，将在 {wait_time} 秒后重试... (尝试 {attempt}/{max_retries}){Style.RESET_ALL}")
+                    time.sleep(wait_time)
+                else:
+                    if self.translator:
+                        print(f"{Fore.RED}❌ {self.translator.get('email.verification_code_not_found')}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.RED}❌ 未找到有效的验证码{Style.RESET_ALL}")
+            except Exception as e:
+                if attempt < max_retries:
+                    if self.translator:
+                        print(f"{Fore.YELLOW}⚠️ {self.translator.get('email.verification_code_error_retry', error=str(e), attempt=attempt, max=max_retries)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.YELLOW}⚠️ 获取验证码出错: {str(e)}，将重试... (尝试 {attempt}/{max_retries}){Style.RESET_ALL}")
+                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                else:
+                    if self.translator:
+                        print(f"{Fore.RED}❌ {self.translator.get('email.verification_code_error')}: {str(e)}{Style.RESET_ALL}")
+                    else:
+                        print(f"{Fore.RED}❌ 获取验证码出错: {str(e)}{Style.RESET_ALL}")
+        
+        return None
 
 def main(translator=None):
     temp_email = NewTempEmail(translator)
