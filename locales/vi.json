@@ -20,7 +20,10 @@
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",
-        "vi": "Tiếng Việt"
+        "vi": "Tiếng Việt",
+        "nl": "Dutch",
+        "de": "Germa",
+        "fr": "French"
     },
     "quit_cursor": {
         "start": "Bắt Đầu Thoát Cursor",

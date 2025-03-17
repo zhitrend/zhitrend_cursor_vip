@@ -22,7 +22,10 @@
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",
-        "vi": "Vietnamese"
+        "vi": "Vietnamese",
+        "nl": "Dutch",
+        "de": "German",
+        "fr": "French"
     },
     "quit_cursor": {
         "start": "开始退出 Cursor",
