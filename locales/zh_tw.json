@@ -204,7 +204,7 @@
     },
     "email": {
         "starting_browser": "啟動瀏覽器",
-        "visiting_site": "訪問 mail.tm",
+        "visiting_site": "訪問 郵箱網站",
         "create_success": "郵箱創建成功",
         "create_failed": "郵箱創建失敗",
         "create_error": "郵箱創建錯誤: {error}",
@@ -260,7 +260,8 @@
         "update_confirm": "是否要更新到最新版本? (Y/n)",
         "update_skipped": "跳過更新。",
         "invalid_choice": "選擇無效。請輸入 'Y' 或 'n'.",
-        "development_version": "開發版本 {current} > {latest}"
+        "development_version": "開發版本 {current} > {latest}",
+        "changelog_title": "更新日志"
     },
     "totally_reset": {
         "title": "完全重置 Cursor",

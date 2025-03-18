@@ -226,7 +226,7 @@
     },
     "email": {
         "starting_browser": "Đang Khởi Động Trình Duyệt",
-        "visiting_site": "Đang Truy Cập mail.tm",
+        "visiting_site": "Đang Truy Cập mail domains",
         "create_success": "Tạo Email Thành Công",
         "create_failed": "Tạo Email Thất Bại",
         "create_error": "Lỗi Tạo Email: {error}",
@@ -257,7 +257,8 @@
         "blocked_domains_loaded_timeout_error": "Lỗi Hết Thời Gian Tải Tên Miền Bị Chặn: {error}",
         "available_domains_loaded": "Đã Tải Tên Miền Khả Dụng: {count}",
         "domains_filtered": "Tên Miền Đã Lọc: {count}",
-        "trying_to_create_email": "Đang cố gắng tạo email: {email}"
+        "trying_to_create_email": "Đang cố gắng tạo email: {email}",
+        "domain_blocked": "Tên Miền Bị Chặn: {domain}"
     },
     "update": {
         "title": "Tắt Tự Động Cập Nhật Cursor",
@@ -282,7 +283,8 @@
         "update_confirm": "Bạn Có Muốn Cập Nhật Lên Phiên Bản Mới Nhất Không? (Y/n)",
         "update_skipped": "Bỏ Qua Cập Nhật.",
         "invalid_choice": "Lựa Chọn Không Hợp Lệ. Vui Lòng Nhập 'Y' Hoặc 'n'.",
-        "development_version": "Phiên Bản Phát Triển {current} > {latest}"
+        "development_version": "Phiên Bản Phát Triển {current} > {latest}",
+        "changelog_title": "Changelog"
     },
     "totally_reset": {
         "title": "Đặt lại hoàn toàn Cursor",

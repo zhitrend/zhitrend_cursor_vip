@@ -227,7 +227,7 @@
     },
     "email": {
         "starting_browser": "Browser starten",
-        "visiting_site": "Bezoek mail.tm",
+        "visiting_site": "Bezoek mail domains",
         "create_success": "E-mail succesvol aangemaakt",
         "create_failed": "E-mail aanmaken mislukt",
         "create_error": "E-mail aanmaakfout: {error}",
@@ -249,7 +249,8 @@
         "failed_to_get_available_domains": "Verkrijgen van beschikbare domeinen mislukt",
         "domains_excluded": "Uitgesloten domeinen: {domains}",
         "failed_to_create_account": "Account aanmaken mislukt",
-        "account_creation_error": "Account aanmaakfout: {error}"
+        "account_creation_error": "Account aanmaakfout: {error}",
+        "domain_blocked": "Domein geblokkeerd: {domain}"
     },
     "update": {
         "title": "Cursor automatische update uitschakelen",
@@ -274,7 +275,8 @@
         "update_confirm": "Wil je de nieuwste versie gebruiken? (Y/n)",
         "update_skipped": "Update overgeslagen.",
         "invalid_choice": "Ongeldige keuze. Voer 'Y' of 'n' in.",
-        "development_version": "Ontwikkelversie {current} > {latest}"
+        "development_version": "Ontwikkelversie {current} > {latest}",
+        "changelog_title": "Changelog"
     },
     "totally_reset": {
         "title": "Cursor volledig herstellen",

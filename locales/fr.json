@@ -227,7 +227,7 @@
     },
     "email": {
         "starting_browser": "Démarrage du Navigateur",
-        "visiting_site": "Visite de mail.tm",
+        "visiting_site": "Visite de mail domains",
         "create_success": "E-mail Créé avec Succès",
         "create_failed": "Échec de la Création de l'E-mail",
         "create_error": "Erreur de Création de l'E-mail : {error}",
@@ -249,7 +249,8 @@
         "failed_to_get_available_domains": "Échec de l'Obtention des Domaines Disponibles",
         "domains_excluded": "Domaines Exclus : {domains}",
         "failed_to_create_account": "Échec de la Création du Compte",
-        "account_creation_error": "Erreur de Création du Compte : {error}"
+        "account_creation_error": "Erreur de Création du Compte : {error}",
+        "domain_blocked": "Domaine Bloqué : {domain}"
     },
     "update": {
         "title": "Désactivation de la Mise à Jour Automatique de Cursor",
@@ -274,7 +275,8 @@
         "update_confirm": "Voulez-vous mettre à jour vers la version la plus récente? (O/n)",
         "update_skipped": "Mise à jour ignorée.",
         "invalid_choice": "Choix invalide. Veuillez entrer 'O' ou 'n'.",
-        "development_version": "Version de Développement {current} > {latest}"
+        "development_version": "Version de Développement {current} > {latest}",
+        "changelog_title": "Journal des modifications"
     },
     "totally_reset": {
         "title": "Réinitialiser Complètement Cursor",

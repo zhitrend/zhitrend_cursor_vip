@@ -224,7 +224,7 @@
     },
     "email": {
         "starting_browser": "启动浏览器",
-        "visiting_site": "访问 mail.tm",
+        "visiting_site": "访问 邮箱服务网站",
         "create_success": "邮箱创建成功",
         "create_failed": "邮箱创建失败",
         "create_error": "邮箱创建错误: {error}",
@@ -255,7 +255,8 @@
         "blocked_domains_loaded_timeout_error": "加载被屏蔽的域名超时错误: {error}",
         "available_domains_loaded": "获取到 {count} 个可用域名",
         "domains_filtered": "过滤后剩餘 {count} 個可用域名",
-        "trying_to_create_email": "尝试创建邮箱: {email}"
+        "trying_to_create_email": "尝试创建邮箱: {email}",
+        "domain_blocked": "域名被屏蔽: {domain}"
     },
     "update": {
         "title": "禁用 Cursor 自动更新",
@@ -280,7 +281,8 @@
         "update_confirm": "是否要更新到最新版本? (Y/n)",
         "update_skipped": "跳过更新。",
         "invalid_choice": "选择无效。请输入 'Y' 或 'n'.",
-        "development_version": "开发版本 {current} > {latest}"
+        "development_version": "开发版本 {current} > {latest}",
+        "changelog_title": "更新日志"
     },
     "totally_reset": {
         "title": "完全重置 Cursor",

@@ -317,6 +317,43 @@ def check_latest_version():
         if is_newer_version_available:
             print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('updater.new_version_available', current=version, latest=latest_version)}{Style.RESET_ALL}")
             
+            # get and show changelog
+            try:
+                changelog_url = "https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/CHANGELOG.md"
+                changelog_response = requests.get(changelog_url, timeout=10)
+                
+                if changelog_response.status_code == 200:
+                    changelog_content = changelog_response.text
+                    
+                    # get latest version changelog
+                    latest_version_pattern = f"## v{latest_version}"
+                    changelog_sections = changelog_content.split("## v")
+                    
+                    latest_changes = None
+                    for section in changelog_sections:
+                        if section.startswith(latest_version):
+                            latest_changes = section
+                            break
+                    
+                    if latest_changes:
+                        print(f"\n{Fore.CYAN}{'─' * 40}{Style.RESET_ALL}")
+                        print(f"{Fore.CYAN}{translator.get('updater.changelog_title')}:{Style.RESET_ALL}")
+                        
+                        # show changelog content (max 10 lines)
+                        changes_lines = latest_changes.strip().split('\n')
+                        for i, line in enumerate(changes_lines[1:11]):  # skip version number line, max 10 lines
+                            if line.strip():
+                                print(f"{Fore.WHITE}{line.strip()}{Style.RESET_ALL}")
+                        
+                        # if changelog more than 10 lines, show ellipsis
+                        if len(changes_lines) > 11:
+                            print(f"{Fore.WHITE}...{Style.RESET_ALL}")
+                        
+                        print(f"{Fore.CYAN}{'─' * 40}{Style.RESET_ALL}")
+            except Exception as changelog_error:
+                # get changelog failed
+                pass
+            
             # Ask user if they want to update
             while True:
                 choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('updater.update_confirm', choices='Y/n')}: {Style.RESET_ALL}").lower()

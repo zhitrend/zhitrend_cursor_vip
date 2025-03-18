@@ -227,7 +227,7 @@
     },
     "email": {
         "starting_browser": "Browser Starten",
-        "visiting_site": "Besuche mail.tm",
+        "visiting_site": "Besuche mail domains",
         "create_success": "E-Mail Erfolgreich Erstellt",
         "create_failed": "E-Mail Erstellen Fehlgeschlagen",
         "create_error": "E-Mail-Erstellungsfehler: {error}",
@@ -249,7 +249,8 @@
         "failed_to_get_available_domains": "Verfügbare Domains Erhalten Fehlgeschlagen",
         "domains_excluded": "Ausgeschlossene Domains: {domains}",
         "failed_to_create_account": "Konto Erstellen Fehlgeschlagen",
-        "account_creation_error": "Konto-Erstellungsfehler: {error}"
+        "account_creation_error": "Konto-Erstellungsfehler: {error}",
+        "domain_blocked": "Domain Blocked: {domain}"
     },
     "update": {
         "title": "Cursor Auto-Update Deaktivieren",
@@ -274,7 +275,8 @@
         "update_confirm": "Möchten Sie die neueste Version aktualisieren? (Y/n)",
         "update_skipped": "Update überspringen.",
         "invalid_choice": "Ungültige Auswahl. Bitte geben Sie 'Y' oder 'n' ein.",
-        "development_version": "Entwickler-Version {current} > {latest}"
+        "development_version": "Entwickler-Version {current} > {latest}",
+        "changelog_title": "Changelog"
     },
     "totally_reset": {
         "title": "Cursor Vollständig Zurücksetzen",

@@ -228,7 +228,7 @@
     },
     "email": {
         "starting_browser": "Starting Browser",
-        "visiting_site": "Visiting mail.tm",
+        "visiting_site": "Visiting mail domains",
         "create_success": "Email Created Successfully",
         "create_failed": "Failed to Create Email",
         "create_error": "Email Creation Error: {error}",
@@ -259,7 +259,8 @@
         "blocked_domains_loaded_timeout_error": "Blocked Domains Loaded Timeout Error: {error}",
         "available_domains_loaded": "Available Domains Loaded: {count}",
         "domains_filtered": "Domains Filtered: {count}",
-        "trying_to_create_email": "Trying to create email: {email}"
+        "trying_to_create_email": "Trying to create email: {email}",
+        "domain_blocked": "Domain Blocked: {domain}"
     },
     "update": {
         "title": "Disable Cursor Auto Update",
@@ -284,7 +285,8 @@
         "update_confirm": "Do you want to update to the latest version? (Y/n)",
         "update_skipped": "Skipping update.",
         "invalid_choice": "Invalid choice. Please enter 'Y' or 'n'.",
-        "development_version": "Development Version {current} > {latest}"
+        "development_version": "Development Version {current} > {latest}",
+        "changelog_title": "Changelog"
     },
     "totally_reset": {
         "title": "Totally Reset Cursor",

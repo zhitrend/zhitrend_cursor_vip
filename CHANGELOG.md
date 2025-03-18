@@ -1,6 +1,11 @@
 # Change Log
 
-## v1.7.11 ( Pre - Release 版本 )
+## v1.7.12
+1. Add: Changelog Show in Menu | 增加更新日志在菜單中
+2. Remake Create Mail Logic | 重做創建郵箱邏輯
+3. Fix: Some Issues | 修復一些問題
+
+## v1.7.11 ( Skip & Merge to v1.7.12 )
 1. Add: Multi-language Support | 增加多語言支持
 2. Add: German Language | 增加德語
 3. Add: Dutch Language | 增加荷蘭語
