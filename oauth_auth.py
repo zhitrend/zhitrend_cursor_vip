@@ -378,9 +378,12 @@ class OAuthHandler:
                                             
                                             # Delete current account
                                             if self._delete_current_account():
-                                                # Start new authentication
+                                                # Start new authentication based on auth type
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} Starting new authentication process...{Style.RESET_ALL}")
-                                                return self.handle_google_auth()
+                                                if auth_type == "google":
+                                                    return self.handle_google_auth()
+                                                else:  # github
+                                                    return self.handle_github_auth()
                                             else:
                                                 print(f"{Fore.RED}{EMOJI['ERROR']} Failed to delete expired account{Style.RESET_ALL}")
                                         
@@ -573,7 +576,7 @@ class OAuthHandler:
                                             print(f"{Fore.CYAN}{EMOJI['INFO']} Usage count: {usage_text}{Style.RESET_ALL}")
                                             
                                             # Check if account is expired
-                                            if usage_text.strip() == "150 / 150":  # Changed back to actual condition
+                                            if usage_text.strip() == "150 / 150":
                                                 print(f"{Fore.YELLOW}{EMOJI['INFO']} Account has reached maximum usage, deleting...{Style.RESET_ALL}")
                                                 
                                                 delete_js = """
@@ -610,8 +613,8 @@ class OAuthHandler:
                                                     print(f"{Fore.CYAN}{EMOJI['INFO']} Redirecting to authenticator.cursor.sh...{Style.RESET_ALL}")
                                                     
                                                     # Explicitly navigate to the authentication page
-                                                   #self.browser.get("https://authenticator.cursor.sh/sign-up")
-                                                  #  time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                                                    self.browser.get("https://authenticator.cursor.sh/sign-up")
+                                                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
                                                     
                                                     # Call handle_google_auth again to repeat the entire process
                                                     print(f"{Fore.CYAN}{EMOJI['INFO']} Starting new Google authentication...{Style.RESET_ALL}")
@@ -659,7 +662,7 @@ class OAuthHandler:
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} Usage count: {usage_text}{Style.RESET_ALL}")
                                                 
                                                 # Check if account is expired
-                                                if usage_text.strip() == "150 / 150":  # Changed back to actual condition
+                                                if usage_text.strip() == "150 / 150":
                                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} Account has reached maximum usage, deleting...{Style.RESET_ALL}")
                                                     
                                                     delete_js = """
@@ -786,6 +789,48 @@ class OAuthHandler:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} Failed to extract auth info: {str(e)}{Style.RESET_ALL}")
             return False, None
+
+    def _delete_current_account(self):
+        """Delete the current account using the API"""
+        try:
+            delete_js = """
+            function deleteAccount() {
+                return new Promise((resolve, reject) => {
+                    fetch('https://www.cursor.com/api/dashboard/delete-account', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (response.status === 200) {
+                            resolve('Account deleted successfully');
+                        } else {
+                            reject('Failed to delete account: ' + response.status);
+                        }
+                    })
+                    .catch(error => {
+                        reject('Error: ' + error);
+                    });
+                });
+            }
+            return deleteAccount();
+            """
+            
+            result = self.browser.run_js(delete_js)
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Delete account result: {result}{Style.RESET_ALL}")
+            
+            # Navigate back to auth page
+            print(f"{Fore.CYAN}{EMOJI['INFO']} Redirecting to authenticator.cursor.sh...{Style.RESET_ALL}")
+            self.browser.get("https://authenticator.cursor.sh/sign-up")
+            time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+            
+            return True
+            
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} Failed to delete account: {str(e)}{Style.RESET_ALL}")
+            return False
 
 def main(auth_type, translator=None):
     """Main function to handle OAuth authentication
