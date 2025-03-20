@@ -17,15 +17,15 @@
         "totally_reset": "完全重置 Cursor"
     },
     "languages": {
-        "en": "English",
-        "zh_cn": "简体中文",
+        "en": "英文",
+        "zh_cn": "簡體中文",
         "zh_tw": "繁體中文",
-        "vi": "Vietnamese",
-        "nl": "Dutch",
-        "de": "German",
-        "fr": "French",
-        "pt": "Portuguese",
-        "ru": "Russian"
+        "vi": "越南文",
+        "nl": "荷蘭文",
+        "de": "德文",
+        "fr": "法文",
+        "pt": "葡萄牙文",
+        "ru": "俄文"
     },
     "quit_cursor": {
         "start": "開始退出 Cursor",

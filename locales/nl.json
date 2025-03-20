@@ -20,13 +20,13 @@
     },
     "languages": {
         "en": "Engels",
-        "zh_cn": "简体中文",
-        "zh_tw": "繁體中文",
+        "zh_cn": "Vereenvoudigd Chinees",
+        "zh_tw": "Traditioneel Chinees",
         "vi": "Vietnamees",
         "nl": "Nederlands",
         "de": "Duits",
         "fr": "Frans",
-        "pt": "Brazilian Portuguese",
+        "pt": "Portugees",
         "ru": "Russisch"
     },
     "quit_cursor": {
