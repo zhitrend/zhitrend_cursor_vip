@@ -139,6 +139,8 @@ class Translator:
                 return 'de'
             elif system_locale.startswith('fr'):
                 return 'fr'
+            elif system_locale.startswith('pt'):
+                return 'pt'
             
             
 
@@ -156,6 +158,8 @@ class Translator:
                 return 'de'
             elif 'fr' in env_lang:
                 return 'fr'
+            elif 'pt' in env_lang:
+                return 'pt'
 
             return 'en'
         except:

@@ -23,7 +23,8 @@
         "vi": "Vietnamese",
         "nl": "Dutch",
         "de": "German",
-        "fr": "French"
+        "fr": "French",
+        "pt": "Brazilian Portuguese"
     },
     "quit_cursor": {
         "start": "開始退出 Cursor",
