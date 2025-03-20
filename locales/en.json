@@ -25,7 +25,9 @@
         "vi": "Vietnamese",
         "nl": "Dutch",
         "de": "German",
-        "fr": "French"
+        "fr": "French",
+        "pt": "Portuguese",
+        "ru": "Russian"
     },
     "quit_cursor": {
         "start": "Start Quitting Cursor",

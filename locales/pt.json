@@ -20,13 +20,14 @@
     },
     "languages": {
         "en": "Inglês",
-        "zh_cn": "Chinês Simplificado",
-        "zh_tw": "Chinês Tradicional",
+        "zh_cn": "简体中文",
+        "zh_tw": "繁體中文",
         "vi": "Vietnamita",
         "nl": "Holandês",
         "de": "Alemão",
         "fr": "Francês",
-        "pt": "Português do Brasil"
+        "pt": "Português do Brasil",
+        "ru": "Russo"
     },
     "quit_cursor": {
         "start": "Iniciando fechamento do Cursor",

@@ -20,11 +20,12 @@
         "en": "English",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",
-        "vi": "Tiếng Việt",
+        "vi": "Vietnamese",
         "nl": "Dutch",
-        "de": "Germa",
+        "de": "German",
         "fr": "French",
-        "pt": "Brazilian Portuguese"
+        "pt": "Brazilian Portuguese",
+        "ru": "Russian"
     },
     "quit_cursor": {
         "start": "Bắt Đầu Thoát Cursor",

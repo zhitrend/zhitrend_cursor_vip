@@ -26,7 +26,8 @@
         "nl": "Dutch",
         "de": "German",
         "fr": "French",
-        "pt": "Brazilian Portuguese"
+        "pt": "Portuguese",
+        "ru": "Russian"
     },
     "quit_cursor": {
         "start": "开始退出 Cursor",

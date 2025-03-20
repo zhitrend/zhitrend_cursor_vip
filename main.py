@@ -108,6 +108,7 @@ class Translator:
                 0x0404: 'zh_tw',   # Traditional Chinese
                 0x0804: 'zh_cn',   # Simplified Chinese
                 0x0422: 'vi',      # Vietnamese
+                0x0419: 'ru',      # Russian
             }
             
             return language_map.get(layout_id, 'en')
@@ -141,9 +142,9 @@ class Translator:
                 return 'fr'
             elif system_locale.startswith('pt'):
                 return 'pt'
+            elif system_locale.startswith('ru'):
+                return 'ru'
             
-            
-
             # Try to get language from LANG environment variable as fallback
             env_lang = os.getenv('LANG', '').lower()
             if 'tw' in env_lang or 'hk' in env_lang:
@@ -160,6 +161,8 @@ class Translator:
                 return 'fr'
             elif 'pt' in env_lang:
                 return 'pt'
+            elif 'ru' in env_lang:
+                return 'ru'
 
             return 'en'
         except:

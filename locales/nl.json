@@ -19,14 +19,15 @@
         "totally_reset": "Cursor volledig resetten"
     },
     "languages": {
-        "en": "English",
+        "en": "Engels",
         "zh_cn": "简体中文",
         "zh_tw": "繁體中文",
-        "vi": "Tiếng Việt",
+        "vi": "Vietnamees",
         "nl": "Nederlands",
-        "de": "Deutsch",
-        "fr": "Français",
-        "pt": "Brazilian Portuguese"
+        "de": "Duits",
+        "fr": "Frans",
+        "pt": "Brazilian Portuguese",
+        "ru": "Russisch"
     },
     "quit_cursor": {
         "start": "Start met afsluiten van Cursor",
