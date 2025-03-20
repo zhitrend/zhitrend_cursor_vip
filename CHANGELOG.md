@@ -1,5 +1,25 @@
 # Change Log
 
+## v1.7.13
+1. Added _delete_current_account method to handle account deletion via API ｜ 新增 _delete_current_account 方法，透過 API 處理帳號刪除  
+
+2. Updated account reset logic to use the appropriate auth method based on auth_type ｜ 更新帳號重置邏輯，根據 auth_type 選擇適當的驗證方式  
+
+3. Maintained existing Google OAuth reset functionality ｜ 維持現有的 Google OAuth 重置功能  
+
+4. Added proper error handling for account deletion failures ｜ 新增帳號刪除失敗時的錯誤處理  
+
+5. Ensures GitHub authentication maintains its flow when resetting accounts ｜ 確保 GitHub 認證在帳號重置時保持正常流程    
+
+6. The _delete_current_account method makes a POST request to https://www.cursor.com/api/dashboard/delete-account ｜  
+   _delete_current_account 方法會發送 POST 請求至 https://www.cursor.com/api/dashboard/delete-account  
+
+7. After successful deletion, redirects back to the authentication page ｜ 刪除成功後，會導回驗證頁面  
+
+8. Uses Promise-based JavaScript for reliable API communication ｜ 使用 Promise-based JavaScript，確保 API 通訊穩定  
+
+9. Includes proper error handling and logging ｜ 包含適當的錯誤處理與日誌記錄
+
 ## v1.7.12
 1. Add: Changelog Show in Menu | 增加更新日志在菜單中
 2. Remake Create Mail Logic | 重做創建郵箱邏輯
