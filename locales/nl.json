@@ -25,7 +25,8 @@
         "vi": "Tiếng Việt",
         "nl": "Nederlands",
         "de": "Deutsch",
-        "fr": "Français"
+        "fr": "Français",
+        "pt": "Brazilian Portuguese"
     },
     "quit_cursor": {
         "start": "Start met afsluiten van Cursor",
