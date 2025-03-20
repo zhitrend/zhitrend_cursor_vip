@@ -20,6 +20,9 @@
 
 9. Includes proper error handling and logging ｜ 包含適當的錯誤處理與日誌記錄
 
+10. Add Brazilian Portuguese language ｜ 新增巴西葡萄牙語
+
+
 ## v1.7.12
 1. Add: Changelog Show in Menu | 增加更新日志在菜單中
 2. Remake Create Mail Logic | 重做創建郵箱邏輯
