@@ -21,8 +21,6 @@
 6. These changes align with Linux filesystem conventions and fix issues with Chrome/Chromium integration ｜  
    這些變更符合 Linux 文件系統的規範，並修復了與 Chrome/Chromium 整合的問題。  
 
-**#337**  
-
 7. This PR adds retry logic to handle the 'Can't verify the user is human' error during registration ｜  
    此 PR 新增了重試機制，以處理註冊時的「無法驗證用戶是否為人類」錯誤。  
 
