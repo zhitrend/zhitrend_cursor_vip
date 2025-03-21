@@ -1,141 +1,124 @@
 import os
-import shutil
-import platform
 import time
 import uuid
-import subprocess
+import json
+import random
+import string
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
-def delete_directory(path):
-    """Deletes a directory and all its contents."""
-    if os.path.exists(path):
-        try:
-            shutil.rmtree(path)
-            print(f"✅ Removed: {path}")
-        except Exception as e:
-            print(f"❌ Failed to remove: {path} -> {e}")
-    else:
-        print(f"🔍 Not found: {path}")
+def generate_temp_email():
+    """Generates a temporary email and returns the email and inbox ID."""
+    response = requests.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+    email = response.json()[0]
+    print(f"✅ Generated temp email: {email}")
+    return email
 
-def delete_file(path):
-    """Deletes a file if it exists."""
-    if os.path.isfile(path):
-        try:
-            os.remove(path)
-            print(f"✅ Removed file: {path}")
-        except Exception as e:
-            print(f"❌ Failed to remove file: {path} -> {e}")
-    else:
-        print(f"🔍 Not found: {path}")
+def extract_inbox(email):
+    """Extracts the inbox for the temp email."""
+    domain = email.split('@')[1]
+    login = email.split('@')[0]
+    inbox_url = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
+    time.sleep(10)  # Allow email to arrive
+    messages = requests.get(inbox_url).json()
+    if messages:
+        return messages[0]['id']
+    return None
+
+def get_verification_link(email, message_id):
+    """Retrieves the verification link from the email inbox."""
+    domain = email.split('@')[1]
+    login = email.split('@')[0]
+    msg_url = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={message_id}"
+    message = requests.get(msg_url).json()
+    for line in message['body'].splitlines():
+        if "https://github.com/" in line:
+            print(f"✅ Verification link found: {line}")
+            return line.strip()
+    return None
 
 def reset_machine_id():
-    """Resets the machine ID to a new UUID."""
+    """Resets the machine ID to bypass Cursor AI's free trial detection."""
     new_id = str(uuid.uuid4())
-    if platform.system() == "Windows":
-        try:
-            subprocess.run(
-                ["reg", "add", "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography", "/v", "MachineGuid", "/d", new_id, "/f"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
-            print(f"✅ MachineGuid reset to: {new_id}")
-        except subprocess.CalledProcessError as e:
-            print(f"❌ Failed to reset MachineGuid: {e}")
-    elif platform.system() == "Linux":
-        machine_id_paths = ["/etc/machine-id", "/var/lib/dbus/machine-id"]
-        for path in machine_id_paths:
-            if os.path.exists(path):
-                try:
-                    with open(path, 'w') as f:
-                        f.write(new_id)
-                    print(f"✅ Reset machine ID at: {path}")
-                except Exception as e:
-                    print(f"❌ Failed to reset machine ID at {path}: {e}")
-    elif platform.system() == "Darwin":  # macOS
-        # macOS typically doesn't use a machine-id file like Linux
-        print("ℹ️ macOS does not use a machine-id file. Skipping machine ID reset.")
-    else:
-        print("❌ Unsupported operating system for machine ID reset.")
+    if os.name == 'nt':  # Windows
+        os.system(f'reg add "HKLM\SOFTWARE\Microsoft\Cryptography" /v MachineGuid /d {new_id} /f')
+    else:  # Linux/macOS
+        os.system(f'echo {new_id} | sudo tee /etc/machine-id')
+    print(f"✅ Machine ID reset: {new_id}")
 
-def reset_cursor():
-    print("\n🚀 Resetting Cursor AI...\n")
+def register_github(email):
+    """Automates GitHub registration with temp email."""
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
 
-    # Platform-specific paths
-    paths = []
-    if platform.system() == "Linux":
-        paths = [
-            os.path.expanduser("~/.cursor"),
-            os.path.expanduser("~/.local/share/cursor"),
-            os.path.expanduser("~/.config/cursor"),
-            os.path.expanduser("~/.cache/cursor"),
-            "/usr/local/bin/cursor",
-            "/opt/cursor",
-            "/usr/bin/cursor",
-            os.path.expanduser("~/.cursor/machine-id.db"),
-            os.path.expanduser("~/.local/share/Cursor"),
-            os.path.expanduser("~/.config/Cursor"),
-            os.path.expanduser("~/.cache/Cursor")
-        ]
-    elif platform.system() == "Darwin":  # macOS
-        paths = [
-            os.path.expanduser("~/Library/Application Support/Cursor"),
-            os.path.expanduser("~/Library/Caches/Cursor"),
-            "/Applications/Cursor.app",
-            os.path.expanduser("~/Library/Preferences/com.cursor.app.plist"),
-        ]
-    elif platform.system() == "Windows":
-        paths = [
-            os.path.expanduser("~\\AppData\\Local\\Cursor"),
-            os.path.expanduser("~\\AppData\\Roaming\\Cursor"),
-            os.path.expanduser("~\\.cursor"),
-            os.path.expanduser("~\\.config\\Cursor"),
-            os.path.expanduser("~\\.cache\\Cursor"),
-            "C:\\Program Files\\Cursor",
-            "C:\\Program Files (x86)\\Cursor",
-            "C:\\Users\\%USERNAME%\\AppData\\Local\\Cursor",
-            "C:\\Users\\%USERNAME%\\AppData\\Roaming\\Cursor",
-        ]
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get("https://github.com/join")
 
-    # Remove directories
-    for path in paths:
-        delete_directory(path)
+    # Fill in the registration form
+    username = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
-    # Remove common files related to Cursor
-    files = [
-        os.path.expanduser("~/.cursor/machine-id.db"),
-        os.path.expanduser("~/.local/share/cursor.db"),
-        os.path.expanduser("~/.config/cursor/preferences.json"),
-        os.path.expanduser("~/.cache/cursor.log"),
-    ]
+    driver.find_element(By.ID, "user_login").send_keys(username)
+    driver.find_element(By.ID, "user_email").send_keys(email)
+    driver.find_element(By.ID, "user_password").send_keys(password)
+    driver.find_element(By.ID, "signup_button").click()
 
-    for file in files:
-        delete_file(file)
+    time.sleep(5)
+    driver.quit()
 
-    # Extra cleanup (wildcard search)
-    print("\n🔍 Deep scanning for hidden Cursor files...")
-    base_dirs = ["/tmp", "/var/tmp", os.path.expanduser("~")]  # Linux and macOS
-    if platform.system() == "Windows":
-        base_dirs = ["C:\\Temp", "C:\\Windows\\Temp", os.path.expanduser("~")]  # Windows
+    print(f"✅ GitHub account created: {username} | {email}")
+    return username, password
 
-    for base in base_dirs:
-        for root, dirs, files in os.walk(base):
-            for dir in dirs:
-                if "cursor" in dir.lower():
-                    delete_directory(os.path.join(root, dir))
-            for file in files:
-                if "cursor" in file.lower():
-                    delete_file(os.path.join(root, file))
-
-    # Reset machine ID
-    reset_machine_id()
-
-    print("\n✅ Cursor AI has been completely reset!")
+def register_cursor_with_github(driver):
+    """Logs into Cursor AI using GitHub authentication."""
+    driver.get("https://cursor.sh")
+    driver.find_element(By.LINK_TEXT, "Sign in with GitHub").click()
+    time.sleep(5)
+    print("✅ Registered Cursor with GitHub")
 
 def main():
-    start_time = time.time()
-    reset_cursor()
-    end_time = time.time()
-    print(f"\n⏱️ Completed in {end_time - start_time:.2f} seconds.")
+    print("\n🚀 Automating GitHub + Cursor AI Registration...\n")
+    
+    email = generate_temp_email()
+    github_username, github_password = register_github(email)
+
+    inbox_id = extract_inbox(email)
+    if inbox_id:
+        verify_link = get_verification_link(email, inbox_id)
+        if verify_link:
+            options = Options()
+            options.add_argument('--headless')
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+            driver.get(verify_link)
+            print("✅ Verified GitHub Email")
+            driver.quit()
+        else:
+            print("❌ Verification link not found")
+    
+    # Automate Cursor AI registration with GitHub
+    options = Options()
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    register_cursor_with_github(driver)
+
+    # Reset Machine ID
+    reset_machine_id()
+    
+    # Save credentials
+    with open("github_cursor_accounts.txt", "a") as f:
+        f.write(json.dumps({
+            "email": email,
+            "github_username": github_username,
+            "github_password": github_password
+        }) + "\n")
+    
+    print("✅ All steps completed!")
 
 if __name__ == '__main__':
     main()
