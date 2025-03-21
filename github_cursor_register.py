@@ -7,7 +7,6 @@ import string
 import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
@@ -19,15 +18,19 @@ def generate_temp_email():
     print(f"✅ Generated temp email: {email}")
     return email
 
-def extract_inbox(email):
-    """Extracts the inbox for the temp email."""
+def extract_inbox(email, retries=5):
+    """Extracts the inbox for the temp email with retries."""
     domain = email.split('@')[1]
     login = email.split('@')[0]
     inbox_url = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
-    time.sleep(10)  # Allow email to arrive
-    messages = requests.get(inbox_url).json()
-    if messages:
-        return messages[0]['id']
+    
+    for attempt in range(retries):
+        time.sleep(10)  # Allow email to arrive
+        messages = requests.get(inbox_url).json()
+        if messages:
+            print(f"✅ Inbox found on attempt {attempt + 1}")
+            return messages[0]['id']
+        print(f"🔄 Retry {attempt + 1}/{retries}: No email yet...")
     return None
 
 def get_verification_link(email, message_id):
@@ -62,14 +65,14 @@ def register_github(email):
     driver.get("https://github.com/join")
 
     # Fill in the registration form
-    username = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-    password = ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+    username = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+    password = ''.join(random.choices(string.ascii_letters + string.digits, k=15))
 
     driver.find_element(By.ID, "user_login").send_keys(username)
     driver.find_element(By.ID, "user_email").send_keys(email)
     driver.find_element(By.ID, "user_password").send_keys(password)
     driver.find_element(By.ID, "signup_button").click()
-
+    
     time.sleep(5)
     driver.quit()
 
@@ -79,9 +82,21 @@ def register_github(email):
 def register_cursor_with_github(driver):
     """Logs into Cursor AI using GitHub authentication."""
     driver.get("https://cursor.sh")
+    time.sleep(5)
     driver.find_element(By.LINK_TEXT, "Sign in with GitHub").click()
     time.sleep(5)
     print("✅ Registered Cursor with GitHub")
+
+def save_credentials(email, github_username, github_password):
+    """Saves the credentials in a log file."""
+    with open("github_cursor_accounts.txt", "a") as f:
+        f.write(json.dumps({
+            "email": email,
+            "github_username": github_username,
+            "github_password": github_password,
+            "timestamp": time.strftime('%Y-%m-%d %H:%M:%S')
+        }) + "\n")
+    print("✅ Credentials saved")
 
 def main():
     print("\n🚀 Automating GitHub + Cursor AI Registration...\n")
@@ -101,6 +116,8 @@ def main():
             driver.quit()
         else:
             print("❌ Verification link not found")
+    else:
+        print("❌ Email verification failed")
     
     # Automate Cursor AI registration with GitHub
     options = Options()
@@ -111,13 +128,7 @@ def main():
     reset_machine_id()
     
     # Save credentials
-    with open("github_cursor_accounts.txt", "a") as f:
-        f.write(json.dumps({
-            "email": email,
-            "github_username": github_username,
-            "github_password": github_password
-        }) + "\n")
-    
+    save_credentials(email, github_username, github_password)
     print("✅ All steps completed!")
 
 if __name__ == '__main__':
