@@ -121,6 +121,7 @@ storage_path = /Users/username/Library/Application Support/Cursor/User/globalSto
 sqlite_path = /Users/username/Library/Application Support/Cursor/User/globalStorage/state.vscdb
 # Machine ID Path | 機器ID路徑
 machine_id_path = /Users/username/Library/Application Support/Cursor/machineId
+# For Linux users: ~/.config/cursor/machineid
 
 [Timing]
 # Min Random Time | 最小隨機時間
