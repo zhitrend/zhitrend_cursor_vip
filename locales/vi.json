@@ -17,14 +17,15 @@
         "totally_reset": "Đặt lại hoàn toàn Cursor"
     },
     "languages": {
-        "en": "English",
-        "zh_cn": "简体中文",
-        "zh_tw": "繁體中文",
+        "en": "Tiếng Anh",
+        "zh_cn": "Tiếng Trung Giản Thể",
+        "zh_tw": "Tiếng Trung Phồn Thể",
         "vi": "Tiếng Việt",
-        "nl": "Dutch",
-        "de": "Germa",
-        "fr": "French",
-        "pt": "Brazilian Portuguese"
+        "nl": "Tiếng Hà Lan",
+        "de": "Tiếng Đức",
+        "fr": "Tiếng Pháp",
+        "pt": "Tiếng Bồ Đào Nha",
+        "ru": "Tiếng Nga"
     },
     "quit_cursor": {
         "start": "Bắt Đầu Thoát Cursor",

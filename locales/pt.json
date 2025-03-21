@@ -26,7 +26,8 @@
         "nl": "Holandês",
         "de": "Alemão",
         "fr": "Francês",
-        "pt": "Português do Brasil"
+        "pt": "Português do Brasil",
+        "ru": "Russo"
     },
     "quit_cursor": {
         "start": "Iniciando fechamento do Cursor",
