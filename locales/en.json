@@ -172,7 +172,9 @@
         "password_submitted": "Password Submitted",
         "total_usage": "Total Usage: {usage}",
         "setting_on_password": "Setting Password",
-        "getting_code": "Getting Verification Code, Will Try in 60s"
+        "getting_code": "Getting Verification Code, Will Try in 60s",
+        "human_verify_error": "Can't verify the user is human. Retrying...",
+        "max_retries_reached": "Maximum retry attempts reached. Registration failed."
     },
     "auth": {
         "title": "Cursor Auth Manager",
