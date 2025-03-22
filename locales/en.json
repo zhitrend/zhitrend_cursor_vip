@@ -388,7 +388,15 @@
         "removing_electron_localstorage_files": "Removing Electron localStorage files",
         "electron_localstorage_files_removed": "Electron localStorage files removed",
         "electron_localstorage_files_removal_error": "Error removing Electron localStorage files: {error}",
-        "removing_electron_localstorage_files_completed": "Electron localStorage files removal completed"
+        "removing_electron_localstorage_files_completed": "Electron localStorage files removal completed",
+        "warning_title": "WARNING",
+        "warning_1": "This action will delete all Cursor AI settings,",
+        "warning_2": "configurations, and cached data. This action cannot be undone.",
+        "warning_3": "Your code files will NOT be affected, and the tool is designed",
+        "warning_4": "to only target Cursor AI editor files and trial detection mechanisms.",
+        "warning_5": "Other applications on your system will not be affected.",
+        "warning_6": "You will need to set up Cursor AI again after running this tool.",
+        "warning_7": "Use at your own risk"
     },
     "github_register": {
         "title": "GitHub + Cursor AI Registration Automation",

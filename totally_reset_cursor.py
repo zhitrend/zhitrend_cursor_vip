@@ -4,30 +4,41 @@ import platform
 import time
 import uuid
 import subprocess
+from colorama import Fore, Style, init
 
-def delete_directory(path):
+init()
+
+EMOJI = {
+    "SUCCESS": "✅",
+    "ERROR": "❌",
+    "INFO": "ℹ️",
+    "RESET": "🔄",
+    "MENU": "📋",
+}
+
+def delete_directory(path, translator=None):
     """Deletes a directory and all its contents."""
     if os.path.exists(path):
         try:
             shutil.rmtree(path)
-            print(f"✅ Removed: {path}")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.removed', path=path)}{Style.RESET_ALL}")
         except Exception as e:
-            print(f"❌ Failed to remove: {path} -> {e}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.failed_to_remove', path=path, error=e)}{Style.RESET_ALL}")
     else:
-        print(f"🔍 Not found: {path}")
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('totally_reset.not_found', path=path)}{Style.RESET_ALL}")
 
-def delete_file(path):
+def delete_file(path, translator=None):
     """Deletes a file if it exists."""
     if os.path.isfile(path):
         try:
             os.remove(path)
-            print(f"✅ Removed file: {path}")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.removed', path=path)}{Style.RESET_ALL}")
         except Exception as e:
-            print(f"❌ Failed to remove file: {path} -> {e}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.failed_to_remove', path=path, error=e)}{Style.RESET_ALL}")
     else:
-        print(f"🔍 Not found: {path}")
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('totally_reset.not_found', path=path)}{Style.RESET_ALL}")
 
-def reset_machine_id():
+def reset_machine_id(translator=None):
     """Resets the machine ID to a new UUID."""
     new_id = str(uuid.uuid4())
     if platform.system() == "Windows":
@@ -38,9 +49,9 @@ def reset_machine_id():
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
-            print(f"✅ MachineGuid reset to: {new_id}")
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.machine_guid_reset', new_id=new_id)}{Style.RESET_ALL}")
         except subprocess.CalledProcessError as e:
-            print(f"❌ Failed to reset MachineGuid: {e}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.failed_to_reset_machine_guid', error=e)}{Style.RESET_ALL}")
     elif platform.system() == "Linux":
         machine_id_paths = ["/etc/machine-id", "/var/lib/dbus/machine-id"]
         for path in machine_id_paths:
@@ -48,44 +59,51 @@ def reset_machine_id():
                 try:
                     with open(path, 'w') as f:
                         f.write(new_id)
-                    print(f"✅ Reset machine ID at: {path}")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.machine_id_reset', path=path)}{Style.RESET_ALL}")
                 except Exception as e:
-                    print(f"❌ Failed to reset machine ID at {path}: {e}")
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.failed_to_reset_machine_id', path=path, error=e)}{Style.RESET_ALL}")
     elif platform.system() == "Darwin":  # macOS
         print("ℹ️ macOS does not use a machine-id file. Skipping machine ID reset.")
     else:
-        print("❌ Unsupported operating system for machine ID reset.")
+        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('totally_reset.unsupported_os')}{Style.RESET_ALL}")
 
-def display_features_and_warnings():
+def display_features_and_warnings(translator=None):
     """Displays features and warnings before proceeding."""
-    print("\n🚀 Cursor AI Reset Script")
+    print(f"\n{Fore.GREEN}{EMOJI['MENU']} {translator.get('totally_reset.title')}")
     print("=====================================")
-    print("Features:")
-    print("  - Removes Cursor AI configuration directories and files.")
-    print("  - Cleans up cache, preferences, and application data.")
-    print("  - Performs a deep scan for hidden Cursor-related files.")
-    print("  - Resets the machine ID to a new UUID (where applicable).")
-    print("  - Supports Windows, Linux, and macOS.")
-    print("\n⚠️ Warnings:")
-    print("  - This action is IRREVERSIBLE. All Cursor AI data will be deleted.")
-    print("  - Requires administrative privileges for some operations (e.g., machine ID reset on Windows/Linux).")
-    print("  - May disrupt Cursor AI functionality until reinstalled or reconfigured.")
-    print("  - Backup any important Cursor data before proceeding.")
+    print(f"{translator.get('totally_reset.features')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_1')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_2')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_3')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_4')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_5')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_6')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_7')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_8')}")
+    print(f"{Fore.GREEN}{translator.get('totally_reset.feature_9')}")
+    print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('totally_reset.warnings')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_1')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_2')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_3')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_4')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_5')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_6')}")
+    print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_7')}")
     print("=====================================\n")
 
-def get_user_confirmation():
+def get_user_confirmation(translator=None):
     """Prompts the user for confirmation to proceed."""
     while True:
-        response = input("Do you want to proceed with resetting Cursor AI? (yes/no): ").lower().strip()
+        response = input(f"{Fore.YELLOW} {translator.get('totally_reset.confirm_title')}: ").lower().strip()
         if response in ['yes', 'y']:
             return True
         elif response in ['no', 'n']:
             return False
         else:
-            print("Please enter 'yes' or 'no'.")
+            print(f"{Fore.RED}{translator.get('totally_reset.invalid_choice')}{Style.RESET_ALL}")
 
-def reset_cursor():
-    print("\n🚀 Resetting Cursor AI...\n")
+def reset_cursor(translator=None):
+    print(f"\n{Fore.GREEN}{EMOJI['RESET']} {translator.get('totally_reset.resetting_cursor')}\n")
 
     # Platform-specific paths
     paths = []
@@ -139,7 +157,7 @@ def reset_cursor():
         delete_file(file)
 
     # Extra cleanup (wildcard search)
-    print("\n🔍 Deep scanning for hidden Cursor files...")
+    print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('totally_reset.deep_scanning')}")
     base_dirs = ["/tmp", "/var/tmp", os.path.expanduser("~")]  # Linux and macOS
     if platform.system() == "Windows":
         base_dirs = ["C:\\Temp", "C:\\Windows\\Temp", os.path.expanduser("~")]  # Windows
@@ -156,21 +174,21 @@ def reset_cursor():
     # Reset machine ID
     reset_machine_id()
 
-    print("\n✅ Cursor AI has been completely reset!")
+    print(f"\n{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.cursor_reset')}")
 
-def main():
+def main(translator=None):
     start_time = time.time()
     
     # Display features and warnings
-    display_features_and_warnings()
+    display_features_and_warnings(translator)
     
     # Get user confirmation
-    if get_user_confirmation():
-        reset_cursor()
+    if get_user_confirmation(translator):
+        reset_cursor(translator)
         end_time = time.time()
-        print(f"\n⏱️ Completed in {end_time - start_time:.2f} seconds.")
+        print(f"\n{Fore.GREEN}⏱️ {translator.get('reset.completed_in', time=f'{end_time - start_time:.2f} seconds')}{Style.RESET_ALL}")
     else:
-        print("\n❌ Operation cancelled by user.")
+        print(f"\n{Fore.RED}❌ {translator.get('reset.operation_cancelled')}{Style.RESET_ALL}")
 
 if __name__ == '__main__':
-    main()
+    main(translator=None)

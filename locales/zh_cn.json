@@ -382,7 +382,15 @@
         "removing_electron_localstorage_files": "正在移除 Electron localStorage 文件",
         "electron_localstorage_files_removed": "Electron localStorage 文件已移除",
         "electron_localstorage_files_removal_error": "移除 Electron localStorage 文件时出错：{error}",
-        "removing_electron_localstorage_files_completed": "Electron localStorage 文件移除完成"
+        "removing_electron_localstorage_files_completed": "Electron localStorage 文件移除完成",
+        "warning_title": "警告",
+        "warning_1": "此操作将删除所有 Cursor AI 设置、",
+        "warning_2": "配置和缓存数据。此操作无法撤销。",
+        "warning_3": "您的代码文件 **不会** 受到影响，工具设计为",
+        "warning_4": "仅针对 Cursor AI 编辑器文件和试用检测机制。",
+        "warning_5": "系统中的其他应用程序不会受到影响。",
+        "warning_6": "运行此工具后，您需要重新设置 Cursor AI。",
+        "warning_7": "请自行承担风险"
     },
     "github_register": {
         "title": "GitHub + Cursor AI 注册自动化",

@@ -498,7 +498,7 @@ def main():
                 print_menu()
             elif choice == "10":
                 import totally_reset_cursor
-                totally_reset_cursor.run(translator)
+                totally_reset_cursor.main(translator)
                 print_menu()
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")
