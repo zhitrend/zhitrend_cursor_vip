@@ -404,7 +404,12 @@
         "failed_to_delete_directory": "Failed to delete directory: {path}",
         "failed_to_delete_file_or_directory": "Failed to delete file or directory: {path}",
         "deep_scanning": "Performing deep scan for additional trial/license files",
-        "resetting_cursor": "Resetting Cursor AI Editor... Please wait."
+        "resetting_cursor": "Resetting Cursor AI Editor... Please wait.",
+        "completed_in": "Completed in {time} seconds",
+        "cursor_reset_completed": "Cursor AI Editor has been fully reset and trial detection bypassed!",
+        "cursor_reset_failed": "Cursor AI Editor reset failed: {error}",
+        "cursor_reset_cancelled": "Cursor AI Editor reset cancelled. Exiting without making any changes.",
+        "operation_cancelled": "Operation cancelled. Exiting without making any changes."
     },
     "github_register": {
         "title": "GitHub + Cursor AI Registration Automation",

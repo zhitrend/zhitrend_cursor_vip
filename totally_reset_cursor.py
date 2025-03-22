@@ -175,7 +175,7 @@ def reset_cursor(translator=None):
     # Reset machine ID
     reset_machine_id(translator)
 
-    print(f"\n{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.cursor_reset')}")
+    print(f"\n{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.cursor_reset_completed')}")
 
 def main(translator=None):
     start_time = time.time()
@@ -187,9 +187,9 @@ def main(translator=None):
     if get_user_confirmation(translator):
         reset_cursor(translator)
         end_time = time.time()
-        print(f"\n{Fore.GREEN}⏱️ {translator.get('reset.completed_in', time=f'{end_time - start_time:.2f} seconds')}{Style.RESET_ALL}")
+        print(f"\n{Fore.GREEN}⏱️ {translator.get('totally_reset.completed_in', time=f'{end_time - start_time:.2f} seconds')}{Style.RESET_ALL}")
     else:
-        print(f"\n{Fore.RED}❌ {translator.get('reset.operation_cancelled')}{Style.RESET_ALL}")
+        print(f"\n{Fore.RED}❌ {translator.get('totally_reset.operation_cancelled')}{Style.RESET_ALL}")
 
 if __name__ == '__main__':
     from main import translator

@@ -377,8 +377,12 @@
         "failed_to_delete_directory": "無法刪除目錄：{path}",
         "failed_to_delete_file_or_directory": "無法刪除檔案或目錄：{path}",
         "deep_scanning": "正在進行深度掃描以查找其他試用/授權檔案",
-        "resetting_cursor": "正在重置 Cursor AI 編輯器... 請稍候。"
-        
+        "resetting_cursor": "正在重置 Cursor AI 編輯器... 請稍候。",
+        "completed_in": "完成時間：{time} 秒",
+        "cursor_reset_completed": "Cursor AI 編輯器已完全重置且繞過試用偵測！",
+        "cursor_reset_failed": "Cursor AI 編輯器重置失敗：{error}",
+        "cursor_reset_cancelled": "Cursor AI 編輯器重置已取消，未進行任何更改。",
+        "operation_cancelled": "操作已取消，未進行任何更改。"
     },
     "github_register": {
         "title": "GitHub + Cursor AI 注册自动化",
