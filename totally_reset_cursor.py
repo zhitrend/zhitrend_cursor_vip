@@ -82,7 +82,7 @@ def display_features_and_warnings(translator=None):
     print(f"{Fore.GREEN}{translator.get('totally_reset.feature_7')}")
     print(f"{Fore.GREEN}{translator.get('totally_reset.feature_8')}")
     print(f"{Fore.GREEN}{translator.get('totally_reset.feature_9')}")
-    print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('totally_reset.warnings')}")
+    print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('totally_reset.warning_title')}")
     print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_1')}")
     print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_2')}")
     print(f"{Fore.YELLOW}{translator.get('totally_reset.warning_3')}")
