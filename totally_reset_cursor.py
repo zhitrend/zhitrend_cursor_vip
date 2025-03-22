@@ -52,10 +52,37 @@ def reset_machine_id():
                 except Exception as e:
                     print(f"❌ Failed to reset machine ID at {path}: {e}")
     elif platform.system() == "Darwin":  # macOS
-        # macOS typically doesn't use a machine-id file like Linux
         print("ℹ️ macOS does not use a machine-id file. Skipping machine ID reset.")
     else:
         print("❌ Unsupported operating system for machine ID reset.")
+
+def display_features_and_warnings():
+    """Displays features and warnings before proceeding."""
+    print("\n🚀 Cursor AI Reset Script")
+    print("=====================================")
+    print("Features:")
+    print("  - Removes Cursor AI configuration directories and files.")
+    print("  - Cleans up cache, preferences, and application data.")
+    print("  - Performs a deep scan for hidden Cursor-related files.")
+    print("  - Resets the machine ID to a new UUID (where applicable).")
+    print("  - Supports Windows, Linux, and macOS.")
+    print("\n⚠️ Warnings:")
+    print("  - This action is IRREVERSIBLE. All Cursor AI data will be deleted.")
+    print("  - Requires administrative privileges for some operations (e.g., machine ID reset on Windows/Linux).")
+    print("  - May disrupt Cursor AI functionality until reinstalled or reconfigured.")
+    print("  - Backup any important Cursor data before proceeding.")
+    print("=====================================\n")
+
+def get_user_confirmation():
+    """Prompts the user for confirmation to proceed."""
+    while True:
+        response = input("Do you want to proceed with resetting Cursor AI? (yes/no): ").lower().strip()
+        if response in ['yes', 'y']:
+            return True
+        elif response in ['no', 'n']:
+            return False
+        else:
+            print("Please enter 'yes' or 'no'.")
 
 def reset_cursor():
     print("\n🚀 Resetting Cursor AI...\n")
@@ -133,9 +160,17 @@ def reset_cursor():
 
 def main():
     start_time = time.time()
-    reset_cursor()
-    end_time = time.time()
-    print(f"\n⏱️ Completed in {end_time - start_time:.2f} seconds.")
+    
+    # Display features and warnings
+    display_features_and_warnings()
+    
+    # Get user confirmation
+    if get_user_confirmation():
+        reset_cursor()
+        end_time = time.time()
+        print(f"\n⏱️ Completed in {end_time - start_time:.2f} seconds.")
+    else:
+        print("\n❌ Operation cancelled by user.")
 
 if __name__ == '__main__':
     main()
