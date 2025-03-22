@@ -5,6 +5,9 @@
 2. Fix: Some Issues | 修復一些問題
 3. Add: Contributors | 增加貢獻者
 4. Fix: Total Reset Cursor | 修復完全重置 Cursor
+5. Add: Display Features and Warnings | 增加顯示功能與警告
+6. Fix: Totally Reset Cursor | 修復完全重置 Cursor
+7. Remake: Logo.py Center | 重做 Logo.py 居中
 
 ## v1.7.15
 1. Fix: Cant Verify the User is Human | 修復無法驗證用戶是否為人類
