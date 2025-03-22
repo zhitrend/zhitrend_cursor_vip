@@ -176,7 +176,7 @@ max_timeout = 160
 
 
 <a href="https://github.com/yeongpin/cursor-free-vip/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=yeongpin/cursor-free-vip" />
+  <img src="https://contrib.rocks/image?repo=yeongpin/cursor-free-vip&preview=true&max=&columns=" />
 </a>
 <br /><br />
 
