@@ -26,7 +26,7 @@ CURSOR_LOGO = f"""
 {Fore.YELLOW}
                 Pro Version Activator v{version}
 {Fore.GREEN}
-                Author: Pin Studios | yeongpin
+                Pin Studios & Basai Corp | yeongpin & Prathmesh
 
       Github: https://github.com/yeongpin/cursor-free-vip
 {Fore.RED}

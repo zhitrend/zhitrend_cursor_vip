@@ -477,8 +477,8 @@ def main():
                 print_menu()
             elif choice == "6":
                 import github_cursor_register
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.coming_soon')}{Style.RESET_ALL}")
-                # github_cursor_register.main(translator)
+                # print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.coming_soon')}{Style.RESET_ALL}")
+                github_cursor_register.main(translator)
                 print_menu()
             elif choice == "7":
                 import quit_cursor
