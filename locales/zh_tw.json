@@ -30,7 +30,9 @@
         "de": "德文",
         "fr": "法文",
         "pt": "葡萄牙文",
-        "ru": "俄文"
+        "ru": "俄文",
+        "tr": "土耳其文",
+        "bg": "保加利亞文"
     },
     "quit_cursor": {
         "start": "開始退出 Cursor",
@@ -378,6 +380,14 @@
         "confirm": "您确定要继续吗？",
         "invalid_choice": "无效选择。请输入 'yes' 或 'no'",
         "cancelled": "操作已取消",
-        "program_terminated": "程序已由用户终止"
+        "program_terminated": "程序已由用户终止",
+        "starting_automation": "開始自動化...",
+        "github_username": "GitHub 用戶名",
+        "github_password": "GitHub 密碼",
+        "email_address": "郵箱地址",
+        "credentials_saved": "這些憑證已保存到 github_cursor_accounts.txt",
+        "completed_successfully": "GitHub + Cursor 註冊成功",
+        "registration_encountered_issues": "GitHub + Cursor 註冊遇到問題",
+        "check_browser_windows_for_manual_intervention_or_try_again_later": "檢查瀏覽器視窗進行手動干預或稍後再試"
     }
 } 

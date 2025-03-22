@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.7.16 (Pre-Release)
+1. Add bulgarian language | 增加保加利亚语
+2. Fix: Some Issues | 修復一些問題
+3. Add: Contributors | 增加貢獻者
+4. Fix: Total Reset Cursor | 修復完全重置 Cursor
+
 ## v1.7.15
 1. Fix: Cant Verify the User is Human | 修復無法驗證用戶是否為人類
 2. Added temporary email & GitHub + Cursor AI registration automation | 增加临时邮箱 & GitHub + Cursor AI 注册自动化

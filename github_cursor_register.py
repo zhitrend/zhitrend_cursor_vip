@@ -667,7 +667,7 @@ def get_user_confirmation(translator=None):
 
 def main(translator=None):
     """Main function to run the GitHub Cursor registration process"""
-    logging.info("Starting GitHub + Cursor AI Registration Automation")
+    logging.info(f"{Fore.CYAN} {translator.get('github_register.starting_automation')}{Style.RESET_ALL}")
     
     # Display features and warnings
     display_features_and_warnings(translator)
@@ -682,14 +682,14 @@ def main(translator=None):
     
     # Display final message
     if success:
-        print(f"\n{Fore.GREEN}{EMOJI['DONE']} GitHub + Cursor registration completed successfully!{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}{EMOJI['INFO']} GitHub Username: {registration.github_username}{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}{EMOJI['INFO']} GitHub Password: {registration.github_password}{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}{EMOJI['INFO']} Email: {registration.email_address}{Style.RESET_ALL}")
-        print(f"\n{Fore.CYAN}{EMOJI['INFO']} These credentials have been saved to github_cursor_accounts.txt{Style.RESET_ALL}")
+        print(f"\n{Fore.GREEN}{EMOJI['DONE']} {translator.get('github_register.completed_successfully')}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('github_register.github_username')}: {registration.github_username}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('github_register.github_password')}: {registration.github_password}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('github_register.email')}: {registration.email_address}{Style.RESET_ALL}")
+        print(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('github_register.credentials_saved')}{Style.RESET_ALL}")
     else:
-        print(f"\n{Fore.RED}{EMOJI['ERROR']} GitHub + Cursor registration encountered issues.{Style.RESET_ALL}")
-        print(f"{Fore.YELLOW}{EMOJI['INFO']} Check the browser windows for manual intervention or try again later.{Style.RESET_ALL}")
+        print(f"\n{Fore.RED}{EMOJI['ERROR']} {translator.get('github_register.registration_encountered_issues')}{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('github_register.check_browser_windows_for_manual_intervention_or_try_again_later')}{Style.RESET_ALL}")
     
     # Wait for user acknowledgment
     if translator:

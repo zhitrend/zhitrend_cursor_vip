@@ -32,7 +32,9 @@
         "de": "German",
         "fr": "French",
         "pt": "Portuguese",
-        "ru": "Russian"
+        "ru": "Russian",
+        "tr": "Turkish",
+        "bg": "Bulgarian"
     },
     "quit_cursor": {
         "start": "Start Quitting Cursor",
@@ -405,6 +407,14 @@
         "confirm": "Are you sure you want to proceed?",
         "invalid_choice": "Invalid choice. Please enter 'yes' or 'no'",
         "cancelled": "Operation cancelled",
-        "program_terminated": "Program terminated by user"
+        "program_terminated": "Program terminated by user",
+        "starting_automation": "Starting automation...",
+        "github_username": "GitHub Username",
+        "github_password": "GitHub Password",
+        "email_address": "Email Address",
+        "credentials_saved": "These credentials have been saved to github_cursor_accounts.txt",
+        "completed_successfully": "GitHub + Cursor registration completed successfully!",
+        "registration_encountered_issues": "GitHub + Cursor registration encountered issues.",
+        "check_browser_windows_for_manual_intervention_or_try_again_later": "Check browser windows for manual intervention or try again later."
     }   
 }   

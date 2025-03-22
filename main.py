@@ -110,6 +110,7 @@ class Translator:
                 0x0422: 'vi',      # Vietnamese
                 0x0419: 'ru',      # Russian
                 0x0415: 'tr',      # Turkish
+                0x0402: 'bg',      # Bulgarian
             }
             
             return language_map.get(layout_id, 'en')
@@ -147,7 +148,8 @@ class Translator:
                 return 'ru'
             elif system_locale.startswith('tr'):
                 return 'tr'
-            
+            elif system_locale.startswith('bg'):
+                return 'bg'
             # Try to get language from LANG environment variable as fallback
             env_lang = os.getenv('LANG', '').lower()
             if 'tw' in env_lang or 'hk' in env_lang:
@@ -168,6 +170,8 @@ class Translator:
                 return 'ru'
             elif 'tr' in env_lang:
                 return 'tr'
+            elif 'bg' in env_lang:
+                return 'bg'
 
             return 'en'
         except:
@@ -477,8 +481,8 @@ def main():
                 print_menu()
             elif choice == "6":
                 import github_cursor_register
-                # print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.coming_soon')}{Style.RESET_ALL}")
-                github_cursor_register.main(translator)
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.coming_soon')}{Style.RESET_ALL}")
+                # github_cursor_register.main(translator)
                 print_menu()
             elif choice == "7":
                 import quit_cursor
