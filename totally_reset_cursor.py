@@ -144,7 +144,7 @@ def reset_cursor(translator=None):
 
     # Remove directories
     for path in paths:
-        delete_directory(path)
+        delete_directory(path, translator)
 
     # Remove common files related to Cursor
     files = [
@@ -155,7 +155,7 @@ def reset_cursor(translator=None):
     ]
 
     for file in files:
-        delete_file(file)
+        delete_file(file, translator)
 
     # Extra cleanup (wildcard search)
     print(f"\n{Fore.YELLOW}{EMOJI['INFO']} {translator.get('totally_reset.deep_scanning')}")
@@ -167,13 +167,13 @@ def reset_cursor(translator=None):
         for root, dirs, files in os.walk(base):
             for dir in dirs:
                 if "cursor" in dir.lower():
-                    delete_directory(os.path.join(root, dir))
+                    delete_directory(os.path.join(root, dir), translator)
             for file in files:
                 if "cursor" in file.lower():
-                    delete_file(os.path.join(root, file))
+                    delete_file(os.path.join(root, file), translator)
 
     # Reset machine ID
-    reset_machine_id()
+    reset_machine_id(translator)
 
     print(f"\n{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('totally_reset.cursor_reset')}")
 
@@ -192,4 +192,5 @@ def main(translator=None):
         print(f"\n{Fore.RED}❌ {translator.get('reset.operation_cancelled')}{Style.RESET_ALL}")
 
 if __name__ == '__main__':
-    main(translator=None)
+    from main import translator
+    main(translator)

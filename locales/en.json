@@ -396,7 +396,15 @@
         "warning_4": "to only target Cursor AI editor files and trial detection mechanisms.",
         "warning_5": "Other applications on your system will not be affected.",
         "warning_6": "You will need to set up Cursor AI again after running this tool.",
-        "warning_7": "Use at your own risk"
+        "warning_7": "Use at your own risk",
+        "removed": "Removed: {path}",
+        "failed_to_reset_machine_guid": "Failed to reset machine GUID",
+        "failed_to_remove": "Failed to remove: {path}",
+        "failed_to_delete_file": "Failed to delete file: {path}",
+        "failed_to_delete_directory": "Failed to delete directory: {path}",
+        "failed_to_delete_file_or_directory": "Failed to delete file or directory: {path}",
+        "deep_scanning": "Performing deep scan for additional trial/license files",
+        "resetting_cursor": "Resetting Cursor AI Editor... Please wait."
     },
     "github_register": {
         "title": "GitHub + Cursor AI Registration Automation",

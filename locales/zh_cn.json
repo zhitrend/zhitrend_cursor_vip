@@ -390,7 +390,15 @@
         "warning_4": "仅针对 Cursor AI 编辑器文件和试用检测机制。",
         "warning_5": "系统中的其他应用程序不会受到影响。",
         "warning_6": "运行此工具后，您需要重新设置 Cursor AI。",
-        "warning_7": "请自行承担风险"
+        "warning_7": "请自行承担风险",
+        "removed": "已删除：{path}",
+        "failed_to_reset_machine_guid": "无法重置机器 GUID",
+        "failed_to_remove": "无法删除：{path}",
+        "failed_to_delete_file": "无法删除文件：{path}",
+        "failed_to_delete_directory": "无法删除目录：{path}",
+        "failed_to_delete_file_or_directory": "无法删除文件或目录：{path}",
+        "deep_scanning": "正在进行深度扫描以查找其他试用/授权文件",
+        "resetting_cursor": "正在重置 Cursor AI 编辑器... 请稍候。"
     },
     "github_register": {
         "title": "GitHub + Cursor AI 注册自动化",
