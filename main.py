@@ -109,6 +109,7 @@ class Translator:
                 0x0804: 'zh_cn',   # Simplified Chinese
                 0x0422: 'vi',      # Vietnamese
                 0x0419: 'ru',      # Russian
+                0x0415: 'tr',      # Turkish
             }
             
             return language_map.get(layout_id, 'en')
@@ -144,6 +145,8 @@ class Translator:
                 return 'pt'
             elif system_locale.startswith('ru'):
                 return 'ru'
+            elif system_locale.startswith('tr'):
+                return 'tr'
             
             # Try to get language from LANG environment variable as fallback
             env_lang = os.getenv('LANG', '').lower()
@@ -163,6 +166,8 @@ class Translator:
                 return 'pt'
             elif 'ru' in env_lang:
                 return 'ru'
+            elif 'tr' in env_lang:
+                return 'tr'
 
             return 'en'
         except:
@@ -237,16 +242,17 @@ def print_menu():
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
     print(f"{Fore.GREEN}0{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.exit')}")
     print(f"{Fore.GREEN}1{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.reset')}")
-    print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['SUCCESS']} {translator.get('menu.register')}")
+    print(f"{Fore.GREEN}2{Style.RESET_ALL}. {EMOJI['SUCCESS']} {translator.get('menu.register')} ({Fore.RED}{translator.get('menu.outdate')}{Style.RESET_ALL})")
     print(f"{Fore.GREEN}3{Style.RESET_ALL}. 🌟 {translator.get('menu.register_google')}")
     print(f"{Fore.YELLOW}   ┗━━ 🔥 {translator.get('menu.lifetime_access_enabled')} 🔥{Style.RESET_ALL}")
     print(f"{Fore.GREEN}4{Style.RESET_ALL}. ⭐ {translator.get('menu.register_github')}")
     print(f"{Fore.YELLOW}   ┗━━ 🚀 {translator.get('menu.lifetime_access_enabled')} 🚀{Style.RESET_ALL}")
     print(f"{Fore.GREEN}5{Style.RESET_ALL}. {EMOJI['SUCCESS']} {translator.get('menu.register_manual')}")
-    print(f"{Fore.GREEN}6{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.quit')}")
-    print(f"{Fore.GREEN}7{Style.RESET_ALL}. {EMOJI['LANG']} {translator.get('menu.select_language')}")
-    print(f"{Fore.GREEN}8{Style.RESET_ALL}. {EMOJI['UPDATE']} {translator.get('menu.disable_auto_update')}")
-    print(f"{Fore.GREEN}9{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.totally_reset')}")
+    print(f"{Fore.GREEN}6{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.temp_github_register')}")
+    print(f"{Fore.GREEN}7{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.quit')}")
+    print(f"{Fore.GREEN}8{Style.RESET_ALL}. {EMOJI['LANG']} {translator.get('menu.select_language')}")
+    print(f"{Fore.GREEN}9{Style.RESET_ALL}. {EMOJI['UPDATE']} {translator.get('menu.disable_auto_update')}")
+    print(f"{Fore.GREEN}10{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.totally_reset')}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
 
 def select_language():
@@ -424,11 +430,11 @@ def check_latest_version():
 def main():
     # Check for admin privileges if running as executable on Windows only
     if platform.system() == 'Windows' and is_frozen() and not is_admin():
-        print(f"{Fore.YELLOW}{EMOJI['ADMIN']} Running as executable, administrator privileges required.{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}{EMOJI['ADMIN']} {translator.get('menu.admin_required')}{Style.RESET_ALL}")
         if run_as_admin():
             sys.exit(0)  # Exit after requesting admin privileges
         else:
-            print(f"{Fore.YELLOW}{EMOJI['INFO']} Continuing without administrator privileges.{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.admin_required_continue')}{Style.RESET_ALL}")
     
     print_logo()
     
@@ -470,18 +476,23 @@ def main():
                 cursor_register_manual.main(translator)
                 print_menu()
             elif choice == "6":
+                import github_cursor_register
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.coming_soon')}{Style.RESET_ALL}")
+                # github_cursor_register.main(translator)
+                print_menu()
+            elif choice == "7":
                 import quit_cursor
                 quit_cursor.quit_cursor(translator)
                 print_menu()
-            elif choice == "7":
+            elif choice == "8":
                 if select_language():
                     print_menu()
                 continue
-            elif choice == "8":
+            elif choice == "9":
                 import disable_auto_update
                 disable_auto_update.run(translator)
                 print_menu()
-            elif choice == "9":
+            elif choice == "10":
                 import totally_reset_cursor
                 totally_reset_cursor.run(translator)
                 print_menu()

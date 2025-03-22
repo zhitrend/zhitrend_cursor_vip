@@ -16,7 +16,10 @@
         "press_enter": "Çıkmak için Enter'a Basın",
         "disable_auto_update": "Cursor Otomatik Güncellemeyi Devre Dışı Bırak",
         "lifetime_access_enabled": "ÖMÜR BOYU ERİŞİM ETKİNLEŞTİRİLDİ",
-        "totally_reset": "Cursor'ı Tamamen Sıfırla"
+        "totally_reset": "Cursor'ı Tamamen Sıfırla",
+        "outdate": "güncel değil",
+        "temp_github_register": "Geçici GitHub Kaydı",
+        "coming_soon": "Yakında"
     },
     "languages": {
         "en": "English",
@@ -290,7 +293,7 @@
         "update_skipped": "Güncelleme atlanıyor.",
         "invalid_choice": "Geçersiz seçim. Lütfen 'Y' veya 'n' girin.",
         "development_version": "Geliştirme Sürümü {current} > {latest}",
-        "changelog_title": "Değişiklik Günlüğü"
+        "changelog_title": "Değişiklik günlüğü"
     },
     "totally_reset": {
         "title": "Cursor'ı Tamamen Sıfırla",

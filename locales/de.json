@@ -16,7 +16,12 @@
         "press_enter": "Drücken Sie Enter zum Beenden",
         "disable_auto_update": "Cursor Auto-Update Deaktivieren",
         "lifetime_access_enabled": "LEBENSLANGER ZUGRIFF AKTIVIERT",
-        "totally_reset": "Cursor Vollständig Zurücksetzen"
+        "totally_reset": "Cursor Vollständig Zurücksetzen",
+        "outdate": "Veraltet",
+        "temp_github_register": "Temporäre GitHub-Registrierung",
+        "admin_required": "Ausführen als ausführbare Datei, Administratorrechte erforderlich.",
+        "admin_required_continue": "Mit der aktuellen Version fortfahren...",
+        "coming_soon": "Bald verfügbar"
     },
     "languages": {
         "en": "Englisch",

@@ -16,7 +16,12 @@
         "press_enter": "Press Enter to Exit",
         "disable_auto_update": "Disable Cursor Auto-Update",
         "lifetime_access_enabled": "LIFETIME ACCESS ENABLED",
-        "totally_reset": "Totally Reset Cursor"
+        "totally_reset": "Totally Reset Cursor",
+        "outdate": "Outdated",
+        "temp_github_register": "Temporary GitHub Register",
+        "admin_required": "Running as executable, administrator privileges required.",
+        "admin_required_continue": "Continuing without administrator privileges.",
+        "coming_soon": "Coming Soon"
     },
     "languages": {
         "en": "English",
@@ -382,5 +387,24 @@
         "electron_localstorage_files_removed": "Electron localStorage files removed",
         "electron_localstorage_files_removal_error": "Error removing Electron localStorage files: {error}",
         "removing_electron_localstorage_files_completed": "Electron localStorage files removal completed"
-    }
-}
+    },
+    "github_register": {
+        "title": "GitHub + Cursor AI Registration Automation",
+        "features_header": "Features",
+        "feature1": "Generates a temporary email using 1secmail.",
+        "feature2": "Registers a new GitHub account with random credentials.",
+        "feature3": "Verifies the GitHub email automatically.",
+        "feature4": "Logs into Cursor AI using GitHub authentication.",
+        "feature5": "Resets the machine ID to bypass trial detection.",
+        "feature6": "Saves all credentials to a file.",
+        "warnings_header": "Warnings",
+        "warning1": "This script automates account creation, which may violate GitHub/Cursor terms of service.",
+        "warning2": "Requires internet access and administrative privileges.",
+        "warning3": "CAPTCHA or additional verification may interrupt automation.",
+        "warning4": "Use responsibly and at your own risk.",
+        "confirm": "Are you sure you want to proceed?",
+        "invalid_choice": "Invalid choice. Please enter 'yes' or 'no'",
+        "cancelled": "Operation cancelled",
+        "program_terminated": "Program terminated by user"
+    }   
+}   

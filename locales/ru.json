@@ -16,7 +16,10 @@
         "press_enter": "Нажмите Enter для выхода",
         "disable_auto_update": "Отключить автоматическое обновление Cursor",
         "lifetime_access_enabled": "ВКЛЮЧЕН ПОЖИЗНЕННЫЙ ДОСТУП",
-        "totally_reset": "Полностью сбросить Cursor"
+        "totally_reset": "Полностью сбросить Cursor",
+        "outdate": "Устаревший",
+        "temp_github_register": "Временная регистрация GitHub",
+        "coming_soon": "Скоро"
     },
     "languages": {
         "en": "Английский",
@@ -287,7 +290,7 @@
         "update_skipped": "Обновление пропущено.",
         "invalid_choice": "Неверный выбор. Пожалуйста, введите 'Y' или 'n'.",
         "development_version": "Версия разработки {current} > {latest}",
-        "changelog_title": "Журнал изменений"
+        "changelog_title": "Список изменений"
     },
     "totally_reset": {
         "title": "Полный сброс Cursor",

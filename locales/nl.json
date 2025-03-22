@@ -16,7 +16,10 @@
         "press_enter": "Druk op Enter om door te gaan.",
         "disable_auto_update": "Cursor automatische updates uitschakelen",
         "lifetime_access_enabled": "Levenslange toegang ingeschakeld",
-        "totally_reset": "Cursor volledig resetten"
+        "totally_reset": "Cursor volledig resetten",
+        "outdate": "Verouderd",
+        "temp_github_register": "Tijdelijke GitHub-registratie",
+        "coming_soon": "Binnenkort"
     },
     "languages": {
         "en": "Engels",
@@ -278,7 +281,7 @@
         "update_skipped": "Update overgeslagen.",
         "invalid_choice": "Ongeldige keuze. Voer 'Y' of 'n' in.",
         "development_version": "Ontwikkelversie {current} > {latest}",
-        "changelog_title": "Changelog"
+        "changelog_title": "Wijzigingslogboek"
     },
     "totally_reset": {
         "title": "Cursor volledig herstellen",

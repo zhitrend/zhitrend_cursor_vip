@@ -16,7 +16,10 @@
         "press_enter": "Pressione Enter para Sair",
         "disable_auto_update": "Desativar Atualização Automática do Cursor",
         "lifetime_access_enabled": "ACESSO VITALÍCIO HABILITADO",
-        "totally_reset": "Redefinir Cursor Completamente"
+        "totally_reset": "Redefinir Cursor Completamente",
+        "outdate": "Obsoleto",
+        "temp_github_register": "Registro temporário do GitHub",
+        "coming_soon": "Em breve"
     },
     "languages": {
         "en": "Inglês",
@@ -287,7 +290,7 @@
         "update_skipped": "Atualização ignorada.",
         "invalid_choice": "Escolha inválida. Por favor, digite 'Y' ou 'n'.",
         "development_version": "Versão de desenvolvimento {current} > {latest}",
-        "changelog_title": "Registro de mudanças"
+        "changelog_title": "Registro de alterações"
     },
     "totally_reset": {
         "title": "Redefinir Cursor Completamente",

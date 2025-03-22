@@ -12,16 +12,32 @@ from config import get_config
 # Add global variable at the beginning of the file
 _translator = None
 
+# Add global variable to track our Chrome processes
+_chrome_process_ids = []
+
 def cleanup_chrome_processes(translator=None):
-    """Clean all Chrome related processes"""
-    print("\nCleaning Chrome processes...")
+    """Clean only Chrome processes launched by this script"""
+    global _chrome_process_ids
+    
+    if not _chrome_process_ids:
+        print("\nNo Chrome processes to clean...")
+        return
+        
+    print("\nCleaning Chrome processes launched by this script...")
     try:
         if os.name == 'nt':
-            os.system('taskkill /F /IM chrome.exe /T 2>nul')
-            os.system('taskkill /F /IM chromedriver.exe /T 2>nul')
+            for pid in _chrome_process_ids:
+                try:
+                    os.system(f'taskkill /F /PID {pid} /T 2>nul')
+                except:
+                    pass
         else:
-            os.system('pkill -f chrome')
-            os.system('pkill -f chromedriver')
+            for pid in _chrome_process_ids:
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                except:
+                    pass
+        _chrome_process_ids = []  # Reset the list after cleanup
     except Exception as e:
         if translator:
             print(f"{Fore.RED}❌ {translator.get('register.cleanup_error', error=str(e))}{Style.RESET_ALL}")
@@ -39,7 +55,7 @@ def signal_handler(signum, frame):
     os._exit(0)
 
 def simulate_human_input(page, url, config, translator=None):
-    """Visit URL with human-like behavior"""
+    """Visit URL"""
     if translator:
         print(f"{Fore.CYAN}🚀 {translator.get('register.visiting_url')}: {url}{Style.RESET_ALL}")
     
@@ -47,194 +63,53 @@ def simulate_human_input(page, url, config, translator=None):
     page.get('about:blank')
     time.sleep(get_random_wait_time(config, 'page_load_wait'))
     
-    # Add random mouse movements before visiting target page
-    try:
-        page.run_js("""
-        function simulateMouseMovement() {
-            const points = [];
-            const numPoints = Math.floor(Math.random() * 10) + 5;
-            for (let i = 0; i < numPoints; i++) {
-                points.push({
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight
-                });
-            }
-            points.forEach((point, i) => {
-                setTimeout(() => {
-                    const event = new MouseEvent('mousemove', {
-                        view: window,
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: point.x,
-                        clientY: point.y
-                    });
-                    document.dispatchEvent(event);
-                }, i * (Math.random() * 200 + 50));
-            });
-        }
-        simulateMouseMovement();
-        """)
-    except:
-        pass  # Ignore if JavaScript execution fails
-    
     # Visit target page
     page.get(url)
     time.sleep(get_random_wait_time(config, 'page_load_wait'))
-    
-    # Add some random scrolling
-    try:
-        page.run_js("""
-        function simulateHumanScroll() {
-            const maxScroll = Math.max(
-                document.body.scrollHeight,
-                document.documentElement.scrollHeight,
-                document.body.offsetHeight,
-                document.documentElement.offsetHeight,
-                document.body.clientHeight,
-                document.documentElement.clientHeight
-            );
-            const scrollPoints = [];
-            const numPoints = Math.floor(Math.random() * 3) + 2;
-            for (let i = 0; i < numPoints; i++) {
-                scrollPoints.push(Math.floor(Math.random() * maxScroll));
-            }
-            scrollPoints.sort((a, b) => a - b);
-            scrollPoints.forEach((point, i) => {
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: point,
-                        behavior: 'smooth'
-                    });
-                }, i * (Math.random() * 1000 + 500));
-            });
-        }
-        simulateHumanScroll();
-        """)
-    except:
-        pass  # Ignore if JavaScript execution fails
-
-def simulate_human_typing(element, text, config):
-    """Simulate human-like typing with random delays between keystrokes"""
-    for char in text:
-        element.input(char)
-        # Random delay between keystrokes (30-100ms)
-        time.sleep(random.uniform(0.03, 0.1))
-    time.sleep(get_random_wait_time(config, 'input_wait'))
 
 def fill_signup_form(page, first_name, last_name, email, config, translator=None):
-    """Fill signup form with human-like behavior"""
-    max_retries = 5
-    retry_count = 0
-    
-    while retry_count < max_retries:
-        try:
-            if translator:
-                print(f"{Fore.CYAN}📧 {translator.get('register.filling_form')} (Attempt {retry_count + 1}/{max_retries}){Style.RESET_ALL}")
-            else:
-                print(f"\n正在填写注册表单... (Attempt {retry_count + 1}/{max_retries})")
-            
-            # Add random initial delay
-            time.sleep(random.uniform(0.5, 1.5))
-            
-            # Fill first name with human-like typing
-            first_name_input = page.ele("@name=first_name")
-            if first_name_input:
-                simulate_human_typing(first_name_input, first_name, config)
-                # Add random pause between fields
-                time.sleep(random.uniform(0.3, 0.8))
-            
-            # Fill last name with human-like typing
-            last_name_input = page.ele("@name=last_name")
-            if last_name_input:
-                simulate_human_typing(last_name_input, last_name, config)
-                # Add random pause between fields
-                time.sleep(random.uniform(0.3, 0.8))
-            
-            # Fill email with human-like typing
-            email_input = page.ele("@name=email")
-            if email_input:
-                simulate_human_typing(email_input, email, config)
-                # Add random pause before submitting
-                time.sleep(random.uniform(0.5, 1.2))
-            
-            # Move mouse to submit button with human-like movement
-            submit_button = page.ele("@type=submit")
-            if submit_button:
-                try:
-                    # Simulate mouse movement to button
-                    page.run_js("""
-                    function moveToButton(button) {
-                        const rect = button.getBoundingClientRect();
-                        const centerX = rect.left + rect.width / 2;
-                        const centerY = rect.top + rect.height / 2;
-                        
-                        // Create a curved path to the button
-                        const startX = Math.random() * window.innerWidth;
-                        const startY = Math.random() * window.innerHeight;
-                        const controlX = (startX + centerX) / 2 + (Math.random() - 0.5) * 100;
-                        const controlY = (startY + centerY) / 2 + (Math.random() - 0.5) * 100;
-                        
-                        const steps = 20;
-                        for (let i = 0; i <= steps; i++) {
-                            const t = i / steps;
-                            const x = Math.pow(1-t, 2) * startX + 2 * (1-t) * t * controlX + Math.pow(t, 2) * centerX;
-                            const y = Math.pow(1-t, 2) * startY + 2 * (1-t) * t * controlY + Math.pow(t, 2) * centerY;
-                            
-                            setTimeout(() => {
-                                const event = new MouseEvent('mousemove', {
-                                    view: window,
-                                    bubbles: true,
-                                    cancelable: true,
-                                    clientX: x,
-                                    clientY: y
-                                });
-                                document.dispatchEvent(event);
-                            }, i * (Math.random() * 20 + 10));
-                        }
-                    }
-                    moveToButton(document.querySelector('button[type="submit"]'));
-                    """)
-                    time.sleep(random.uniform(0.3, 0.6))
-                except:
-                    pass  # Ignore if JavaScript execution fails
-                
-                submit_button.click()
-                time.sleep(get_random_wait_time(config, 'submit_wait'))
-            
-            # Check for human verification error
-            error_message = page.ele("text:Can't verify the user is human")
-            if error_message:
-                if translator:
-                    print(f"{Fore.YELLOW}⚠️ {translator.get('register.human_verify_error')} (Attempt {retry_count + 1}/{max_retries}){Style.RESET_ALL}")
-                else:
-                    print(f"Can't verify the user is human. Retrying... (Attempt {retry_count + 1}/{max_retries})")
-                retry_count += 1
-                # Add longer random delay between retries
-                time.sleep(random.uniform(2, 4))
-                continue
-                
-            if translator:
-                print(f"{Fore.GREEN}✅ {translator.get('register.form_success')}{Style.RESET_ALL}")
-            else:
-                print("Form filled successfully")
-            return True
-            
-        except Exception as e:
-            if translator:
-                print(f"{Fore.RED}❌ {translator.get('register.form_error', error=str(e))}{Style.RESET_ALL}")
-            else:
-                print(f"Error filling form: {e}")
-            retry_count += 1
-            if retry_count < max_retries:
-                time.sleep(get_random_wait_time(config, 'verification_retry_wait'))
-                continue
-            return False
-    
-    if retry_count >= max_retries:
+    """Fill signup form"""
+    try:
         if translator:
-            print(f"{Fore.RED}❌ {translator.get('register.max_retries_reached')}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}📧 {translator.get('register.filling_form')}{Style.RESET_ALL}")
         else:
-            print("Maximum retry attempts reached. Registration failed.")
+            print("\n正在填写注册表单...")
+        
+        # Fill first name
+        first_name_input = page.ele("@name=first_name")
+        if first_name_input:
+            first_name_input.input(first_name)
+            time.sleep(get_random_wait_time(config, 'input_wait'))
+        
+        # Fill last name
+        last_name_input = page.ele("@name=last_name")
+        if last_name_input:
+            last_name_input.input(last_name)
+            time.sleep(get_random_wait_time(config, 'input_wait'))
+        
+        # Fill email
+        email_input = page.ele("@name=email")
+        if email_input:
+            email_input.input(email)
+            time.sleep(get_random_wait_time(config, 'input_wait'))
+        
+        # Click submit button
+        submit_button = page.ele("@type=submit")
+        if submit_button:
+            submit_button.click()
+            time.sleep(get_random_wait_time(config, 'submit_wait'))
+            
+        if translator:
+            print(f"{Fore.GREEN}✅ {translator.get('register.form_success')}{Style.RESET_ALL}")
+        else:
+            print("Form filled successfully")
+        return True
+        
+    except Exception as e:
+        if translator:
+            print(f"{Fore.RED}❌ {translator.get('register.form_error', error=str(e))}{Style.RESET_ALL}")
+        else:
+            print(f"Error filling form: {e}")
         return False
 
 def get_default_chrome_path():
@@ -304,7 +179,9 @@ def get_random_wait_time(config, timing_type='page_load_wait'):
         return random.uniform(0.1, 0.8)  # Return default value when error
 
 def setup_driver(translator=None):
-    """Setup browser driver with randomized fingerprint"""
+    """Setup browser driver"""
+    global _chrome_process_ids
+    
     try:
         # Get config
         config = get_config(translator)
@@ -326,42 +203,10 @@ def setup_driver(translator=None):
         # Use incognito mode
         co.set_argument("--incognito")
 
-        # Randomize browser fingerprint
-        # Random screen resolution
-        resolutions = [
-            "1920,1080", "1366,768", "1536,864", "1440,900", 
-            "1280,720", "1600,900", "1024,768", "1680,1050"
-        ]
-        window_size = random.choice(resolutions)
-        co.set_argument(f"--window-size={window_size}")
-        
-        # Random user agent
-        user_agents = [
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-        ]
-        co.set_argument(f"--user-agent={random.choice(user_agents)}")
-        
-        # Random color depth
-        color_depths = ["24", "30", "48"]
-        co.set_argument(f"--color-depth={random.choice(color_depths)}")
-        
-        # Additional fingerprint randomization
-        co.set_argument("--disable-blink-features=AutomationControlled")  # Hide automation
-        co.set_argument("--disable-features=IsolateOrigins,site-per-process")
-        
-        # Random platform
-        platforms = ["Win32", "Win64", "MacIntel", "Linux x86_64"]
-        co.set_argument(f"--platform={random.choice(platforms)}")
-        
-        # Random language
-        languages = ["en-US", "en-GB", "fr-FR", "de-DE", "es-ES", "it-IT"]
-        co.set_argument(f"--lang={random.choice(languages)}")
-        
         # Set random port
         co.set_argument("--no-sandbox")
+        
+        # Set random port
         co.auto_port()
         
         # Use headless mode (must be set to False, simulate human operation)
@@ -384,64 +229,35 @@ def setup_driver(translator=None):
         else:
             print("Starting browser...")
         
+        # Record Chrome processes before launching
+        before_pids = []
+        try:
+            import psutil
+            before_pids = [p.pid for p in psutil.process_iter() if 'chrome' in p.name().lower()]
+        except:
+            pass
+            
+        # Launch browser
         page = ChromiumPage(co)
         
-        # Additional JavaScript-based fingerprint randomization
-        try:
-            page.run_js("""
-            // Override navigator properties
-            const originalNavigator = window.navigator;
-            const navigatorProxy = new Proxy(originalNavigator, {
-                get: function(target, key) {
-                    switch (key) {
-                        case 'webdriver':
-                            return undefined;
-                        case 'plugins':
-                            return [
-                                { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer' },
-                                { name: 'Chrome PDF Viewer', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai' },
-                                { name: 'Native Client', filename: 'internal-nacl-plugin' }
-                            ];
-                        case 'languages':
-                            return ['en-US', 'en'];
-                        default:
-                            return target[key];
-                    }
-                }
-            });
-            
-            // Override permissions
-            const originalPermissions = window.Permissions;
-            window.Permissions = new Proxy(originalPermissions, {
-                get: function(target, key) {
-                    if (key === 'prototype') {
-                        return {
-                            query: async () => ({ state: 'prompt' })
-                        };
-                    }
-                    return target[key];
-                }
-            });
-            
-            // Random canvas fingerprint
-            const originalGetContext = HTMLCanvasElement.prototype.getContext;
-            HTMLCanvasElement.prototype.getContext = function() {
-                const context = originalGetContext.apply(this, arguments);
-                if (context && arguments[0] === '2d') {
-                    const originalFillText = context.fillText;
-                    context.fillText = function() {
-                        const noise = Math.random() * 0.1;
-                        context.rotate(noise);
-                        originalFillText.apply(this, arguments);
-                        context.rotate(-noise);
-                    };
-                }
-                return context;
-            };
-            """)
-        except:
-            pass  # Ignore if JavaScript execution fails
+        # Wait a moment for Chrome to fully launch
+        time.sleep(1)
         
+        # Record Chrome processes after launching and find new ones
+        try:
+            import psutil
+            after_pids = [p.pid for p in psutil.process_iter() if 'chrome' in p.name().lower()]
+            # Find new Chrome processes
+            new_pids = [pid for pid in after_pids if pid not in before_pids]
+            _chrome_process_ids.extend(new_pids)
+            
+            if _chrome_process_ids:
+                print(f"Tracking {len(_chrome_process_ids)} Chrome processes")
+            else:
+                print(f"{Fore.YELLOW}Warning: No new Chrome processes detected to track{Style.RESET_ALL}")
+        except Exception as e:
+            print(f"Warning: Could not track Chrome processes: {e}")
+            
         return config, page
 
     except Exception as e:
@@ -793,7 +609,9 @@ def handle_sign_in(browser_tab, email, password, translator=None):
 def main(email=None, password=None, first_name=None, last_name=None, email_tab=None, controller=None, translator=None):
     """Main function, can receive account information, email tab, and translator"""
     global _translator
+    global _chrome_process_ids
     _translator = translator  # Save to global variable
+    _chrome_process_ids = []  # Reset the process IDs list
     
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)

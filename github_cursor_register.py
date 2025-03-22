@@ -188,16 +188,45 @@ def get_user_confirmation():
         else:
             print("Please enter 'yes' or 'no'.")
 
-def main():
+def main(translator=None):
     logging.info("Starting GitHub + Cursor AI Registration Automation")
     
-    # Display features and warnings
-    display_features_and_warnings()
-    
-    if not get_user_confirmation():
-        logging.info("Operation cancelled by user.")
-        print("❌ Operation cancelled.")
-        return
+    # 如果没有提供translator，使用默认英文提示
+    if translator is None:
+        # Display features and warnings in English
+        display_features_and_warnings()
+        
+        if not get_user_confirmation():
+            logging.info("Operation cancelled by user.")
+            print("❌ Operation cancelled.")
+            return
+    else:
+        # 使用translator显示多语言提示
+        print(f"\n🚀 {translator.get('github_register.title')}")
+        print("=====================================")
+        print(f"{translator.get('github_register.features_header')}:")
+        print(f"  - {translator.get('github_register.feature1')}")
+        print(f"  - {translator.get('github_register.feature2')}")
+        print(f"  - {translator.get('github_register.feature3')}")
+        print(f"  - {translator.get('github_register.feature4')}")
+        print(f"  - {translator.get('github_register.feature5')}")
+        print(f"  - {translator.get('github_register.feature6')}")
+        print(f"\n⚠️ {translator.get('github_register.warnings_header')}:")
+        print(f"  - {translator.get('github_register.warning1')}")
+        print(f"  - {translator.get('github_register.warning2')}")
+        print(f"  - {translator.get('github_register.warning3')}")
+        print(f"  - {translator.get('github_register.warning4')}")
+        print("=====================================\n")
+        
+        while True:
+            response = input(f"{translator.get('github_register.confirm')} (yes/no): ").lower().strip()
+            if response in ['yes', 'y']:
+                break
+            elif response in ['no', 'n']:
+                print(f"❌ {translator.get('github_register.cancelled')}")
+                return
+            else:
+                print(f"{translator.get('github_register.invalid_choice')}")
 
     try:
         # Step 1: Generate temp email

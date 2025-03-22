@@ -1,5 +1,21 @@
 # Change Log
 
+## v1.7.15
+1. Fix: Cant Verify the User is Human | 修復無法驗證用戶是否為人類
+2. Added temporary email & GitHub + Cursor AI registration automation | 增加临时邮箱 & GitHub + Cursor AI 注册自动化
+3. Added Turkish language support | 增加土耳其语支持
+4. Removed outdated temporary option in Option 2 | 移除选项2中的过期临时添加项
+5. Enhanced machine ID reset (Linux, Windows, macOS), bypasses Cursor free trial detection | 机器 ID 重置支持 Linux/Windows/macOS，绕过 Cursor 免费试用检测
+6. Expanded Cursor AI file detection, deep removal of leftover trial files | 扩展 Cursor AI 文件检测，深度清理残留试用文件
+7. Optimized logging, replaced print with logging module, added verification steps | 日志优化，统一采用 logging 模块，增加验证步骤提示
+8. Added retry mechanism for email verification | 增加邮箱验证重试机制
+9. Automated GitHub OAuth login for Cursor AI | 自动 GitHub OAuth 登录 Cursor AI
+10. Saved registered GitHub accounts and timestamps | 保存 GitHub 账户和注册时间戳
+11. Added user confirmation before execution | 添加用户确认步骤，防止误操作
+12. Displayed feature list & warnings before actions | 显示功能与风险警告
+13. Improved Selenium flow and error handling | 增强 Selenium 流程与错误处理
+14. Added Chrome process tracking and cleanup | 增加 Chrome 进程跟踪和清理
+
 ## v1.7.14
 1. Added a Russian locale to program, fixed a typo in readme.md. Also translated other files ｜  
    為程式新增了俄語語系，修正了 readme.md 的拼寫錯誤，並翻譯了其他文件。  

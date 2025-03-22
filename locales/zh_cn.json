@@ -16,7 +16,12 @@
         "press_enter": "按回车键退出",
         "disable_auto_update": "禁用 Cursor 自动更新",
         "lifetime_access_enabled": "永久订阅",
-        "totally_reset": "完全重置 Cursor"
+        "totally_reset": "完全重置 Cursor",
+        "outdate": "过时",
+        "temp_github_register": "临时GitHub注册",
+        "admin_required": "运行可执行文件，需要管理员权限",
+        "admin_required_continue": "继续使用当前版本...",
+        "coming_soon": "即将推出"
     },
     "languages": {
         "en": "英语",
@@ -376,5 +381,24 @@
         "electron_localstorage_files_removed": "Electron localStorage 文件已移除",
         "electron_localstorage_files_removal_error": "移除 Electron localStorage 文件时出错：{error}",
         "removing_electron_localstorage_files_completed": "Electron localStorage 文件移除完成"
+    },
+    "github_register": {
+        "title": "GitHub + Cursor AI 注册自动化",
+        "features_header": "功能",
+        "feature1": "使用 1secmail 生成临时邮箱",
+        "feature2": "使用随机凭证注册新的 GitHub 账户",
+        "feature3": "自动验证 GitHub 邮箱",
+        "feature4": "使用 GitHub 认证登录 Cursor AI",
+        "feature5": "重置机器 ID 以绕过试用检测",
+        "feature6": "保存所有凭证到文件",
+        "warnings_header": "警告",
+        "warning1": "此脚本自动化账户创建，可能违反 GitHub/Cursor 服务条款",
+        "warning2": "需要互联网访问和管理员权限",
+        "warning3": "CAPTCHA 或额外验证可能会中断自动化",
+        "warning4": "请负责任地使用，风险自负",
+        "confirm": "您确定要继续吗？",
+        "invalid_choice": "无效选择。请输入 'yes' 或 'no'",
+        "cancelled": "操作已取消",
+        "program_terminated": "程序已由用户终止"
     }
 } 

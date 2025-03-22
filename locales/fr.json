@@ -16,7 +16,10 @@
         "press_enter": "Appuyez sur Entrée pour quitter",
         "disable_auto_update": "Désactiver la Mise à Jour Automatique de Cursor",
         "lifetime_access_enabled": "ACCÈS À VIE ACTIVÉ",
-        "totally_reset": "Réinitialisation Complète de Cursor"
+        "totally_reset": "Réinitialisation Complète de Cursor",
+        "outdate": "Obsolete",
+        "temp_github_register": "Inscription GitHub temporaire",
+        "coming_soon": "Bientôt"
     },
     "languages": {
         "en": "Anglais",
