@@ -14,6 +14,7 @@ EMOJI = {
     "INFO": "ℹ️",
     "RESET": "🔄",
     "MENU": "📋",
+    "WARNING": "⚠️"
 }
 
 def delete_directory(path, translator=None):
@@ -71,7 +72,7 @@ def display_features_and_warnings(translator=None):
     """Displays features and warnings before proceeding."""
     print(f"\n{Fore.GREEN}{EMOJI['MENU']} {translator.get('totally_reset.title')}")
     print("=====================================")
-    print(f"{translator.get('totally_reset.features')}")
+    print(f"{translator.get('totally_reset.feature_title')}")
     print(f"{Fore.GREEN}{translator.get('totally_reset.feature_1')}")
     print(f"{Fore.GREEN}{translator.get('totally_reset.feature_2')}")
     print(f"{Fore.GREEN}{translator.get('totally_reset.feature_3')}")
@@ -94,7 +95,7 @@ def display_features_and_warnings(translator=None):
 def get_user_confirmation(translator=None):
     """Prompts the user for confirmation to proceed."""
     while True:
-        response = input(f"{Fore.YELLOW} {translator.get('totally_reset.confirm_title')}: ").lower().strip()
+        response = input(f"{Fore.YELLOW} {translator.get('totally_reset.confirm_title')} {translator.get('totally_reset.invalid_choice')}: ").lower().strip()
         if response in ['yes', 'y']:
             return True
         elif response in ['no', 'n']:
