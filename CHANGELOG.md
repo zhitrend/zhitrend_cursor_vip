@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.7.18 (Pre-Release)
+1. Fix: No Write Permission | 修復沒有寫入權限
+2. Fix: Some Issues | 修復一些問題
+
 ## v1.7.17
 1. Fix: Remove 10 options Totally Reset Cursor | 修復完全重置 Cursor 選項
 
