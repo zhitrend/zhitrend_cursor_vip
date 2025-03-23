@@ -19,7 +19,8 @@
         "temp_github_register": "臨時GitHub註冊",
         "admin_required": "運行可執行文件，需要管理員權限",
         "admin_required_continue": "繼續使用當前版本...",
-        "coming_soon": "即將推出"
+        "coming_soon": "即將推出",
+        "fixed_soon": "即將修復"
     },
     "languages": {
         "en": "英文",

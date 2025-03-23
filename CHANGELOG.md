@@ -1,6 +1,9 @@
 # Change Log
 
-## v1.7.16 (Pre-Release)
+## v1.7.17
+1. Fix: Remove 10 options Totally Reset Cursor | 修復完全重置 Cursor 選項
+
+## v1.7.16
 1. Add bulgarian language | 增加保加利亚语
 2. Fix: Some Issues | 修復一些問題
 3. Add: Contributors | 增加貢獻者

@@ -21,7 +21,8 @@
         "temp_github_register": "临时GitHub注册",
         "admin_required": "运行可执行文件，需要管理员权限",
         "admin_required_continue": "继续使用当前版本...",
-        "coming_soon": "即将推出"
+        "coming_soon": "即将推出",
+        "fixed_soon": "即将修复"
     },
     "languages": {
         "en": "英语",

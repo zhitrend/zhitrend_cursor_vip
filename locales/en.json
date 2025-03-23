@@ -21,7 +21,8 @@
         "temp_github_register": "Temporary GitHub Register",
         "admin_required": "Running as executable, administrator privileges required.",
         "admin_required_continue": "Continuing without administrator privileges.",
-        "coming_soon": "Coming Soon"
+        "coming_soon": "Coming Soon",
+        "fixed_soon": "Fixed Soon"
     },
     "languages": {
         "en": "English",
