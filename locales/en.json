@@ -104,7 +104,8 @@
         "check_version_failed": "Check Version Failed: {error}",
         "stack_trace": "Stack Trace",
         "version_too_low": "Cursor Version Too Low: {version} < 0.45.0",
-        "no_write_permission": "No Write Permission: {path}"
+        "no_write_permission": "No Write Permission: {path}",
+        "path_not_found": "Path Not Found: {path}"
     },
     "register": {
         "title": "Cursor Registration Tool",
