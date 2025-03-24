@@ -37,10 +37,41 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
     config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
     config_file = os.path.join(config_dir, "config.ini")
     
+    # Create config directory if it doesn't exist
+    if not os.path.exists(config_dir):
+        os.makedirs(config_dir)
+    
+    # Default paths for different systems
+    default_paths = {
+        "Darwin": "/Applications/Cursor.app/Contents/Resources/app",
+        "Windows": os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app"),
+        "Linux": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app", os.path.expanduser("~/.local/share/cursor/resources/app")]
+    }
+    
+    # If config doesn't exist, create it with default paths
     if not os.path.exists(config_file):
-        raise OSError(translator.get('reset.config_not_found') if translator else "找不到配置文件")
+        for section in ['MacPaths', 'WindowsPaths', 'LinuxPaths']:
+            if not config.has_section(section):
+                config.add_section(section)
         
-    config.read(config_file, encoding='utf-8')  # Specify encoding
+        if system == "Darwin":
+            config.set('MacPaths', 'cursor_path', default_paths["Darwin"])
+        elif system == "Windows":
+            config.set('WindowsPaths', 'cursor_path', default_paths["Windows"])
+        elif system == "Linux":
+            # For Linux, try to find the first existing path
+            for path in default_paths["Linux"]:
+                if os.path.exists(path):
+                    config.set('LinuxPaths', 'cursor_path', path)
+                    break
+            else:
+                # If no path exists, use the first one as default
+                config.set('LinuxPaths', 'cursor_path', default_paths["Linux"][0])
+        
+        with open(config_file, 'w', encoding='utf-8') as f:
+            config.write(f)
+    else:
+        config.read(config_file, encoding='utf-8')
     
     # Get path based on system
     if system == "Darwin":
@@ -51,15 +82,26 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
         section = 'LinuxPaths'
     else:
         raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
-        
+    
     if not config.has_section(section) or not config.has_option(section, 'cursor_path'):
         raise OSError(translator.get('reset.path_not_configured') if translator else "未配置 Cursor 路徑")
-        
+    
     base_path = config.get(section, 'cursor_path')
+    
+    # For Linux, try to find the first existing path if the configured one doesn't exist
+    if system == "Linux" and not os.path.exists(base_path):
+        for path in default_paths["Linux"]:
+            if os.path.exists(path):
+                base_path = path
+                # Update config with the found path
+                config.set(section, 'cursor_path', path)
+                with open(config_file, 'w', encoding='utf-8') as f:
+                    config.write(f)
+                break
     
     if not os.path.exists(base_path):
         raise OSError(translator.get('reset.path_not_found', path=base_path) if translator else f"找不到 Cursor 路徑: {base_path}")
-        
+    
     pkg_path = os.path.join(base_path, "package.json")
     main_path = os.path.join(base_path, "out/main.js")
     
