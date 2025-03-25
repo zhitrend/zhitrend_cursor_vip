@@ -1,6 +1,6 @@
 # Change Log
 
-## v1.7.18 (Pre-Release)
+## v1.7.18
 1. Fix: No Write Permission | 修復沒有寫入權限
 2. Fix: Improve Linux path detection and config handling ｜ 修正 linux 路徑和config寫入讀取
 3. Fix: Locale path_no_exist missing ｜ 修正 path_no_exist 語言遺失
