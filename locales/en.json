@@ -293,7 +293,8 @@
         "update_yml_not_found": "update.yml file not found",
         "clear_update_yml_failed": "Failed to clear update.yml file: {error}",
         "unsupported_os": "Unsupported OS: {system}",
-        "remove_directory_failed": "Failed to remove directory: {error}"
+        "remove_directory_failed": "Failed to remove directory: {error}",
+        "create_block_file_failed": "Failed to create block file: {error}"
     },
     "updater": {
         "checking": "Checking for updates...",

@@ -50,7 +50,7 @@ def setup_config(translator=None):
                 'machine_id_path': os.path.join(appdata, "Cursor", "machineId"),
                 'cursor_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app"),
                 'updater_path': os.path.join(localappdata, "cursor-updater"),
-                'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app", "update.yml")
+                'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "update.yml")
             }
         elif sys.platform == "darwin":
             default_config['MacPaths'] = {
