@@ -101,7 +101,9 @@
         "package_not_found": "package.json未找到: {path}",
         "check_version_failed": "檢查版本失敗: {error}",
         "stack_trace": "堆疊跟踪",
-        "version_too_low": "Cursor版本太低: {version} < 0.45.0"
+        "version_too_low": "Cursor版本太低: {version} < 0.45.0",
+        "no_write_permission": "沒有寫入權限: {path}",
+        "path_not_found": "路徑未找到: {path}"
     },
 
     "register": {

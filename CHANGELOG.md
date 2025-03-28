@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.7.18
+1. Fix: No Write Permission | 修復沒有寫入權限
+2. Fix: Improve Linux path detection and config handling ｜ 修正 linux 路徑和config寫入讀取
+3. Fix: Locale path_no_exist missing ｜ 修正 path_no_exist 語言遺失
+4. Fix: Some Issues | 修復一些問題
+
 ## v1.7.17
 1. Fix: Remove 10 options Totally Reset Cursor | 修復完全重置 Cursor 選項
 
