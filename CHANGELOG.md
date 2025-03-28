@@ -1,6 +1,6 @@
 # Change Log
 
-## v1.7.19
+## v1.8.01
 1. Add: Cursor Account Info | 增加 Cursor 賬號信息
 2. Fix: Disable Auto Update | 修復禁用自動更新
 3. Add: 0.48.x Version Support | 增加 0.48.x 版本支持
