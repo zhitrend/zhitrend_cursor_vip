@@ -242,6 +242,12 @@ translator = Translator()
 
 def print_menu():
     """Print menu options"""
+    try:
+        import cursor_acc_info
+        cursor_acc_info.display_account_info(translator)
+    except Exception as e:
+        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('menu.account_info_error', error=str(e))}{Style.RESET_ALL}")
+    
     print(f"\n{Fore.CYAN}{EMOJI['MENU']} {translator.get('menu.title')}:{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}{'─' * 40}{Style.RESET_ALL}")
     print(f"{Fore.GREEN}0{Style.RESET_ALL}. {EMOJI['ERROR']} {translator.get('menu.exit')}")

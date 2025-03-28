@@ -282,7 +282,14 @@
         "removing_directory": "删除目录",
         "directory_removed": "目录已删除",
         "creating_block_file": "创建阻止文件",
-        "block_file_created": "阻止文件已创建"
+        "block_file_created": "阻止文件已创建",
+        "clearing_update_yml": "清空 update.yml 文件",
+        "update_yml_cleared": "update.yml 文件已清空",
+        "update_yml_not_found": "update.yml 文件未找到",
+        "clear_update_yml_failed": "清空 update.yml 文件失败: {error}",
+        "unsupported_os": "不支持的操作系统: {system}",
+        "remove_directory_failed": "删除目录失败: {error}",
+        "create_block_file_failed": "创建阻止文件失败: {error}"
     },
     "updater": {
         "checking": "检查更新...",
@@ -435,5 +442,37 @@
         "completed_successfully": "GitHub + Cursor 注册成功",
         "registration_encountered_issues": "GitHub + Cursor 注册遇到问题",
         "check_browser_windows_for_manual_intervention_or_try_again_later": "检查浏览器窗口进行手动干预或稍后再试"
+    },
+    "account_info": {
+        "subscription": "订阅",
+        "trial_remaining": "剩余试用",
+        "days": "天",
+        "subscription_not_found": "订阅信息未找到",
+        "email_not_found": "邮箱未找到",
+        "failed_to_get_account": "获取账户信息失败",
+        "config_not_found": "配置未找到。",
+        "failed_to_get_usage": "获取使用信息失败",
+        "failed_to_get_subscription": "获取订阅信息失败",
+        "failed_to_get_email": "获取邮箱地址失败",
+        "failed_to_get_token": "获取 token 失败",
+        "failed_to_get_account_info": "获取账户信息失败",
+        "title": "账户信息",
+        "email": "邮箱",
+        "token": "Token",
+        "usage": "使用量",
+        "subscription_type": "订阅类型",
+        "remaining_trial": "剩余试用",
+        "days_remaining": "剩余天数",
+        "premium": "高级",
+        "pro": "专业",
+        "pro_trial": "专业试用",
+        "team": "团队",
+        "enterprise": "企业",
+        "free": "免费",
+        "active": "活跃",
+        "inactive": "非活跃",
+        "premium_usage": "高级使用量",
+        "basic_usage": "基础使用量"
     }
+
 } 

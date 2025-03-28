@@ -261,7 +261,14 @@
         "removing_directory": "刪除目錄",
         "directory_removed": "目錄已刪除",
         "creating_block_file": "創建阻止文件",
-        "block_file_created": "阻止文件已創建"
+        "block_file_created": "阻止文件已創建",
+        "clearing_update_yml": "清空 update.yml 文件",
+        "update_yml_cleared": "update.yml 文件已清空",
+        "update_yml_not_found": "update.yml 文件未找到",
+        "clear_update_yml_failed": "清空 update.yml 文件失败: {error}",
+        "unsupported_os": "不支持的操作系统: {system}",
+        "remove_directory_failed": "刪除目錄失败: {error}",
+        "create_block_file_failed": "創建阻止文件失败: {error}"
     },
     "updater": {
         "checking": "檢查更新...",
@@ -414,5 +421,36 @@
         "completed_successfully": "GitHub + Cursor 註冊成功",
         "registration_encountered_issues": "GitHub + Cursor 註冊遇到問題",
         "check_browser_windows_for_manual_intervention_or_try_again_later": "檢查瀏覽器視窗進行手動干預或稍後再試"
+    },
+    "account_info": {
+        "subscription": "訂閱",
+        "trial_remaining": "剩餘試用",
+        "days": "天",
+        "subscription_not_found": "訂閱信息未找到",
+        "email_not_found": "郵箱未找到",
+        "failed_to_get_account": "獲取帳戶信息失敗",
+        "config_not_found": "配置未找到。",
+        "failed_to_get_usage": "獲取使用信息失敗",
+        "failed_to_get_subscription": "獲取訂閱信息失敗",
+        "failed_to_get_email": "獲取郵箱地址失敗",
+        "failed_to_get_token": "獲取 token 失敗",
+        "failed_to_get_account_info": "獲取帳戶信息失敗",
+        "title": "帳戶信息",
+        "email": "郵箱",
+        "token": "Token",
+        "usage": "使用量",
+        "subscription_type": "訂閱類型",
+        "remaining_trial": "剩餘試用",
+        "days_remaining": "剩餘天數",
+        "premium": "高級",
+        "pro": "專業",
+        "pro_trial": "專業試用",
+        "team": "團隊",
+        "enterprise": "企業",
+        "free": "免費",
+        "active": "活躍",
+        "inactive": "非活躍",
+        "premium_usage": "高級使用量",
+        "basic_usage": "基礎使用量"
     }
 } 

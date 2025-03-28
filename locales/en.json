@@ -287,7 +287,14 @@
         "removing_directory": "Removing Directory",
         "directory_removed": "Directory Removed",
         "creating_block_file": "Creating Block File",
-        "block_file_created": "Block File Created"
+        "block_file_created": "Block File Created",
+        "clearing_update_yml": "Clearing update.yml file",
+        "update_yml_cleared": "update.yml file cleared",
+        "update_yml_not_found": "update.yml file not found",
+        "clear_update_yml_failed": "Failed to clear update.yml file: {error}",
+        "unsupported_os": "Unsupported OS: {system}",
+        "remove_directory_failed": "Failed to remove directory: {error}",
+        "create_block_file_failed": "Failed to create block file: {error}"
     },
     "updater": {
         "checking": "Checking for updates...",
@@ -440,5 +447,36 @@
         "completed_successfully": "GitHub + Cursor registration completed successfully!",
         "registration_encountered_issues": "GitHub + Cursor registration encountered issues.",
         "check_browser_windows_for_manual_intervention_or_try_again_later": "Check browser windows for manual intervention or try again later."
-    }   
+    },
+    "account_info": {
+        "subscription": "Subscription",
+        "trial_remaining": "Remaining Pro Trial",
+        "days": "days",
+        "subscription_not_found": "Subscription information not found",
+        "email_not_found": "Email not found",
+        "failed_to_get_account": "Failed to get account information",
+        "config_not_found": "Configuration not found.",
+        "failed_to_get_usage": "Failed to get usage information",
+        "failed_to_get_subscription": "Failed to get subscription information",
+        "failed_to_get_email": "Failed to get email address",
+        "failed_to_get_token": "Failed to get token",
+        "failed_to_get_account_info": "Failed to get account information",
+        "title": "Account Information",
+        "email": "Email",
+        "token": "Token",
+        "usage": "Usage",
+        "subscription_type": "Subscription Type",
+        "remaining_trial": "Remaining Trial",
+        "days_remaining": "Days Remaining",
+        "premium": "Premium",
+        "pro": "Pro",
+        "pro_trial": "Pro Trial",
+        "team": "Team",
+        "enterprise": "Enterprise",
+        "free": "Free",
+        "active": "Active",
+        "inactive": "Inactive",
+        "premium_usage": "Premium Usage",
+        "basic_usage": "Basic Usage"
+    }
 }   
