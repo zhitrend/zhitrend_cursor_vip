@@ -4,7 +4,10 @@
 1. Add: Cursor Account Info | 增加 Cursor 賬號信息
 2. Fix: Disable Auto Update | 修復禁用自動更新
 3. Add: 0.48.x Version Support | 增加 0.48.x 版本支持
-4. Fix: Some Issues | 修復一些問題
+4. Revert: Totally Reser Cursor to Beta | 恢復完全重置 Cursor 到 Beta
+5. Reopen: Totally Reset Cursor | 重新開啟完全重置 Cursor
+6. Fix: Logo.py Center | 修復 Logo.py 居中
+7. Fix: Some Issues | 修復一些問題
 
 ## v1.7.18
 1. Fix: No Write Permission | 修復沒有寫入權限

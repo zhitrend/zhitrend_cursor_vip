@@ -20,7 +20,7 @@ init()
 # get terminal width
 def get_terminal_width():
     try:
-        columns, _ = shutil.get_terminal_size()
+        columns, _ = shutil.get_terminal_size()/2
         return columns
     except:
         return 80  # default width
@@ -34,7 +34,7 @@ def center_multiline_text(text, handle_chinese=False):
     for line in lines:
         # calculate actual display width (remove ANSI color codes)
         clean_line = line
-        for color in [Fore.CYAN, Fore.YELLOW, Fore.GREEN, Fore.RED, Style.RESET_ALL]:
+        for color in [Fore.CYAN, Fore.YELLOW, Fore.GREEN, Fore.RED, Fore.BLUE, Style.RESET_ALL]:
             clean_line = clean_line.replace(color, '')
         
         # remove all ANSI escape sequences to get the actual length
