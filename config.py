@@ -49,7 +49,8 @@ def setup_config(translator=None):
                 'sqlite_path': os.path.join(appdata, "Cursor", "User", "globalStorage", "state.vscdb"),
                 'machine_id_path': os.path.join(appdata, "Cursor", "machineId"),
                 'cursor_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app"),
-                'updater_path': os.path.join(localappdata, "cursor-updater")
+                'updater_path': os.path.join(localappdata, "cursor-updater"),
+                'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app", "update.yml")
             }
         elif sys.platform == "darwin":
             default_config['MacPaths'] = {
@@ -57,7 +58,8 @@ def setup_config(translator=None):
                 'sqlite_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/state.vscdb")),
                 'machine_id_path': os.path.expanduser("~/Library/Application Support/Cursor/machineId"),
                 'cursor_path': "/Applications/Cursor.app/Contents/Resources/app",
-                'updater_path': os.path.expanduser("~/Library/Application Support/cursor-updater")
+                'updater_path': os.path.expanduser("~/Library/Application Support/cursor-updater"),
+                'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
             }
         elif sys.platform == "linux":
             sudo_user = os.environ.get('SUDO_USER')
@@ -68,7 +70,8 @@ def setup_config(translator=None):
                 'sqlite_path': os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/state.vscdb")),
                 'machine_id_path': os.path.expanduser("~/.config/cursor/machineid"),
                 'cursor_path': get_linux_cursor_path(),
-                'updater_path': os.path.expanduser("~/.config/cursor-updater")
+                'updater_path': os.path.expanduser("~/.config/cursor-updater"),
+                'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
             }
 
         # Read existing configuration and merge
