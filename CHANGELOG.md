@@ -7,7 +7,8 @@
 4. Revert: Totally Reser Cursor to Beta | 恢復完全重置 Cursor 到 Beta
 5. Reopen: Totally Reset Cursor | 重新開啟完全重置 Cursor
 6. Fix: Logo.py Center | 修復 Logo.py 居中
-7. Fix: Some Issues | 修復一些問題
+7. Fix: Linux Chrome Not Open Correct | 修復 Linux Chrome 未正確打開
+8. Fix: Some Issues | 修復一些問題
 
 ## v1.7.18
 1. Fix: No Write Permission | 修復沒有寫入權限
