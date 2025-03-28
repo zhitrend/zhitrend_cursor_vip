@@ -105,7 +105,8 @@
         "stack_trace": "堆栈跟踪",
         "version_too_low": "Cursor版本太低: {version} < 0.45.0",
         "no_write_permission": "没有写入权限: {path}",
-        "path_not_found": "路径未找到: {path}"
+        "path_not_found": "路径未找到: {path}",
+        "modify_file_failed": "修改文件失败: {error}"
     },
     "register": {
         "title": "Cursor 注册工具",

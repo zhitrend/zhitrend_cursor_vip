@@ -663,13 +663,10 @@ class MachineIDResetter:
             self.update_system_ids(new_ids)
 
 
-            ### Remove In v1.7.02
             # Modify workbench.desktop.main.js
-            
             workbench_path = get_workbench_cursor_path(self.translator)
             modify_workbench_js(workbench_path, self.translator)
 
-            ### Remove In v1.7.02
             # Check Cursor version and perform corresponding actions
             
             greater_than_0_45 = check_cursor_version(self.translator)

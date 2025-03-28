@@ -103,7 +103,8 @@
         "stack_trace": "堆疊跟踪",
         "version_too_low": "Cursor版本太低: {version} < 0.45.0",
         "no_write_permission": "沒有寫入權限: {path}",
-        "path_not_found": "路徑未找到: {path}"
+        "path_not_found": "路徑未找到: {path}",
+        "modify_file_failed": "修改文件失敗: {error}"
     },
 
     "register": {

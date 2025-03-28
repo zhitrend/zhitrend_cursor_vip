@@ -105,7 +105,8 @@
         "stack_trace": "Stack Trace",
         "version_too_low": "Cursor Version Too Low: {version} < 0.45.0",
         "no_write_permission": "No Write Permission: {path}",
-        "path_not_found": "Path Not Found: {path}"
+        "path_not_found": "Path Not Found: {path}",
+        "modify_file_failed": "Modify File Failed: {error}"
     },
     "register": {
         "title": "Cursor Registration Tool",
