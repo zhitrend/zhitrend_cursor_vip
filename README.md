@@ -15,8 +15,15 @@
 </p>
 <h4>Support Latest 0.47.x Version | 支持最新 0.47.x 版本</h4>
 
-This is a tool to automatically register, support Windows and macOS systems, complete Auth verification, and reset
-Cursor's configuration.
+This tool register accounts with custom emails, support Google and GitHub account registrations, temporary GitHub account registration, kills all Cursor's running processes,reset and wipe Cursor data and hardware info.
+
+Supports Windows, macOS and Linux.
+
+For optimal performance, run with privileges and always stay up to date.
+
+Always clean your browser cache and cookies. If possible, user a VPN to create new accounts.
+
+
 
 這是一個自動化工具，自動註冊，支持 Windows 和 macOS 系統，完成 Auth 驗證，重置 Cursor 的配置。
 
