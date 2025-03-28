@@ -238,6 +238,8 @@ def format_subscription_type(subscription_data: Dict) -> str:
         if subscription_status == "active":
             if membership_type == "pro":
                 return "Pro"
+            elif membership_type == "free_trial":
+                return "Free Trial"
             elif membership_type == "pro_trial":
                 return "Pro Trial"
             elif membership_type == "team":
@@ -262,6 +264,8 @@ def format_subscription_type(subscription_data: Dict) -> str:
                 return "Pro"
             elif "pro_trial" in plan.lower():
                 return "Pro Trial"
+            elif "free_trial" in plan.lower():
+                return "Free Trial"
             elif "team" in plan.lower():
                 return "Team"
             elif "enterprise" in plan.lower():
