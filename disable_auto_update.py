@@ -91,7 +91,8 @@ class AutoUpdateDisabler:
             
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('update.remove_directory_failed', error=str(e)) if self.translator else f'删除目录失败: {e}'}{Style.RESET_ALL}")
-            return False
+            # 即使删除失败，也返回 True，继续执行下一步
+            return True
     
     def _clear_update_yml_file(self):
         """Clear update.yml file"""
@@ -169,9 +170,8 @@ class AutoUpdateDisabler:
             if not self._kill_cursor_processes():
                 return False
                 
-            # 2. Delete directory
-            if not self._remove_updater_directory():
-                return False
+            # 2. Delete directory - 即使失败也继续执行
+            self._remove_updater_directory()
                 
             # 3. Clear update.yml file
             if not self._clear_update_yml_file():

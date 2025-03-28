@@ -266,7 +266,8 @@
         "update_yml_cleared": "update.yml 文件已清空",
         "update_yml_not_found": "update.yml 文件未找到",
         "clear_update_yml_failed": "清空 update.yml 文件失败: {error}",
-        "unsupported_os": "不支持的操作系统: {system}"
+        "unsupported_os": "不支持的操作系统: {system}",
+        "remove_directory_failed": "刪除目錄失败: {error}"
     },
     "updater": {
         "checking": "檢查更新...",
