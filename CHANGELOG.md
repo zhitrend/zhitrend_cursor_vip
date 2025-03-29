@@ -7,7 +7,9 @@
 4. Optimize Row & Colume Options | 優化行與列選項
 5. Add: Update Windows Machine ID | 增加更新 Windows 機器 ID
 6. Fix: Too Many Free Trial On Some Machine | 修復某些機器上太多免費試用
-7. Fix: Some Issues | 修復一些問題
+7. Add: New Temp Email | 增加新臨時郵箱
+8. Fix: Linux Chrome Not Open Correct | 修復 Linux Chrome 未正確打開
+9. Fix: Some Issues | 修復一些問題
 
 ## v1.8.01
 1. Add: Cursor Account Info | 增加 Cursor 賬號信息
