@@ -613,7 +613,7 @@ class MachineIDResetter:
         try:
             import winreg
             # 1. Generate new GUID
-            new_guid = str(uuid.uuid4()).upper()
+            new_guid = "{" + str(uuid.uuid4()).upper() + "}"
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.new_machine_id')}: {new_guid}{Style.RESET_ALL}")
             
             # 2. Open the registry key
