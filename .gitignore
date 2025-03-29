@@ -15,6 +15,7 @@ build.sh
 ENV/
 test.py
 new_tempemail_smail.py
+new_tempemail_api.py
 
 install.bat
 run.bat
