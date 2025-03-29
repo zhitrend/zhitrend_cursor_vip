@@ -107,7 +107,9 @@ class NewTempEmail:
             # 创建浏览器选项
             co = ChromiumOptions()
             co.set_argument("--headless=new")
-            co.set_argument("--no-sandbox")           
+
+            if sys.platform == "linux":
+                co.set_argument("--no-sandbox")           
             
             
             co.auto_port()  # 自动设置端口
