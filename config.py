@@ -93,25 +93,34 @@ def setup_config(translator=None):
             if not os.path.exists(actual_home):
                 actual_home = os.path.expanduser("~")
             
-            # Define Linux paths
-            storage_path = os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/storage.json"))
-            storage_dir = os.path.dirname(storage_path)
+            # Define base config directory
+            config_base = os.path.join(actual_home, ".config")
+            
+            # Try both "Cursor" and "cursor" directory names
+            cursor_dir = None
+            for dir_name in ["Cursor", "cursor"]:
+                test_dir = os.path.join(config_base, dir_name)
+                if os.path.exists(test_dir):
+                    cursor_dir = test_dir
+                    break
+            
+            if not cursor_dir:
+                print(f"{Fore.YELLOW}{EMOJI['WARNING']} Neither Cursor nor cursor directory found in {config_base}{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
+            
+            # Define Linux paths using the found cursor directory
+            storage_path = os.path.abspath(os.path.join(cursor_dir, "User/globalStorage/storage.json")) if cursor_dir else ""
+            storage_dir = os.path.dirname(storage_path) if storage_path else ""
             
             # Verify paths and permissions
             try:
-                # Check if Cursor config directory exists
-                cursor_config_dir = os.path.join(actual_home, ".config/cursor")
-                if not os.path.exists(cursor_config_dir):
-                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Cursor config directory not found: {cursor_config_dir}{Style.RESET_ALL}")
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
-                
                 # Check storage directory
-                if not os.path.exists(storage_dir):
+                if storage_dir and not os.path.exists(storage_dir):
                     print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage directory not found: {storage_dir}{Style.RESET_ALL}")
                     print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
                 
                 # Check storage.json with more detailed verification
-                if os.path.exists(storage_path):
+                if storage_path and os.path.exists(storage_path):
                     # Get file stats
                     try:
                         stat = os.stat(storage_path)
@@ -141,20 +150,21 @@ def setup_config(translator=None):
                     except Exception as e:
                         print(f"{Fore.RED}{EMOJI['ERROR']} Error reading storage file: {str(e)}{Style.RESET_ALL}")
                         print(f"{Fore.YELLOW}{EMOJI['INFO']} The file might be corrupted. Please reinstall Cursor{Style.RESET_ALL}")
-                else:
+                elif storage_path:
                     print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage file not found: {storage_path}{Style.RESET_ALL}")
                     print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
                 
             except (OSError, IOError) as e:
                 print(f"{Fore.RED}{EMOJI['ERROR']} Error checking Linux paths: {str(e)}{Style.RESET_ALL}")
             
+            # Define all paths using the found cursor directory
             default_config['LinuxPaths'] = {
                 'storage_path': storage_path,
-                'sqlite_path': os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/state.vscdb")),
-                'machine_id_path': os.path.join(actual_home, ".config/cursor/machineid"),
+                'sqlite_path': os.path.abspath(os.path.join(cursor_dir, "User/globalStorage/state.vscdb")) if cursor_dir else "",
+                'machine_id_path': os.path.join(cursor_dir, "machineid") if cursor_dir else "",
                 'cursor_path': get_linux_cursor_path(),
-                'updater_path': os.path.join(actual_home, ".config/cursor-updater"),
-                'update_yml_path': os.path.join(actual_home, ".config/cursor/resources/app-update.yml")
+                'updater_path': os.path.join(config_base, "cursor-updater"),
+                'update_yml_path': os.path.join(cursor_dir, "resources/app-update.yml") if cursor_dir else ""
             }
 
         # Read existing configuration and merge
