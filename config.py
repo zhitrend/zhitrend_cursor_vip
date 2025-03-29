@@ -68,6 +68,9 @@ def setup_config(translator=None):
                 'updater_path': os.path.join(localappdata, "cursor-updater"),
                 'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app-update.yml")
             }
+            # Create storage directory
+            os.makedirs(os.path.dirname(default_config['WindowsPaths']['storage_path']), exist_ok=True)
+            
         elif sys.platform == "darwin":
             default_config['MacPaths'] = {
                 'storage_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/storage.json")),
@@ -77,17 +80,81 @@ def setup_config(translator=None):
                 'updater_path': os.path.expanduser("~/Library/Application Support/cursor-updater"),
                 'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
             }
+            # Create storage directory
+            os.makedirs(os.path.dirname(default_config['MacPaths']['storage_path']), exist_ok=True)
+            
         elif sys.platform == "linux":
-            sudo_user = os.environ.get('SUDO_USER')
-            actual_home = f"/home/{sudo_user}" if sudo_user else os.path.expanduser("~")
+            # Get the actual user's home directory, handling both sudo and normal cases
+            current_user = os.getenv('USER') or os.getenv('USERNAME') or os.getenv('SUDO_USER')
+            if not current_user:
+                current_user = os.path.expanduser('~').split('/')[-1]
+            
+            actual_home = f"/home/{current_user}"
+            if not os.path.exists(actual_home):
+                actual_home = os.path.expanduser("~")
+            
+            # Define Linux paths
+            storage_path = os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/storage.json"))
+            storage_dir = os.path.dirname(storage_path)
+            
+            # Verify paths and permissions
+            try:
+                # Check if Cursor config directory exists
+                cursor_config_dir = os.path.join(actual_home, ".config/cursor")
+                if not os.path.exists(cursor_config_dir):
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Cursor config directory not found: {cursor_config_dir}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
+                
+                # Check storage directory
+                if not os.path.exists(storage_dir):
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage directory not found: {storage_dir}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
+                
+                # Check storage.json with more detailed verification
+                if os.path.exists(storage_path):
+                    # Get file stats
+                    try:
+                        stat = os.stat(storage_path)
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} Storage file found: {storage_path}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File size: {stat.st_size} bytes{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File permissions: {oct(stat.st_mode & 0o777)}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File owner: {stat.st_uid}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File group: {stat.st_gid}{Style.RESET_ALL}")
+                    except Exception as e:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Error getting file stats: {str(e)}{Style.RESET_ALL}")
+                    
+                    # Check if file is readable and writable
+                    if not os.access(storage_path, os.R_OK | os.W_OK):
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Permission denied: {storage_path}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} Try running: chown {current_user}:{current_user} {storage_path}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} And: chmod 644 {storage_path}{Style.RESET_ALL}")
+                    
+                    # Try to read the file to verify it's not corrupted
+                    try:
+                        with open(storage_path, 'r') as f:
+                            content = f.read()
+                            if not content.strip():
+                                print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage file is empty: {storage_path}{Style.RESET_ALL}")
+                                print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
+                            else:
+                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Storage file is valid and contains data{Style.RESET_ALL}")
+                    except Exception as e:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Error reading storage file: {str(e)}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} The file might be corrupted. Please reinstall Cursor{Style.RESET_ALL}")
+                else:
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage file not found: {storage_path}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
+                
+            except (OSError, IOError) as e:
+                print(f"{Fore.RED}{EMOJI['ERROR']} Error checking Linux paths: {str(e)}{Style.RESET_ALL}")
             
             default_config['LinuxPaths'] = {
-                'storage_path': os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/storage.json")),
+                'storage_path': storage_path,
                 'sqlite_path': os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/state.vscdb")),
-                'machine_id_path': os.path.expanduser("~/.config/cursor/machineid"),
+                'machine_id_path': os.path.join(actual_home, ".config/cursor/machineid"),
                 'cursor_path': get_linux_cursor_path(),
-                'updater_path': os.path.expanduser("~/.config/cursor-updater"),
-                'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
+                'updater_path': os.path.join(actual_home, ".config/cursor-updater"),
+                'update_yml_path': os.path.join(actual_home, ".config/cursor/resources/app-update.yml")
             }
 
         # Read existing configuration and merge
