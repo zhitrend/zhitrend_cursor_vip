@@ -1,15 +1,17 @@
 # Change Log
 
 ## v1.8.02
-1. Fix: Disable Auto Update | 修復禁用自動更新
+1. Add: New Temp Email | 增加新臨時郵箱
 2. Add: Config Options | 增加配置選項
-3. Add: Contributors Options | 增加貢獻者選項
-4. Optimize Row & Colume Options | 優化行與列選項
-5. Add: Update Windows Machine ID | 增加更新 Windows 機器 ID
-6. Fix: Too Many Free Trial On Some Machine | 修復某些機器上太多免費試用
-7. Add: New Temp Email | 增加新臨時郵箱
-8. Fix: Linux Chrome Not Open Correct | 修復 Linux Chrome 未正確打開
-9. Fix: Some Issues | 修復一些問題
+3. Add: Update Windows Machine ID | 增加更新 Windows 機器 ID
+4. Add: Contributors Options | 增加貢獻者選項
+5. Add: Check update enable Options In config | 增加在 config 中檢查更新選項
+6. Add: Show account info enabled options in config | 增加在 config 中顯示賬號信息選項
+7. Optimize Row & Colume Options | 優化行與列選項
+8. Fix: Too Many Free Trial On Some Machine | 修復某些機器上太多免費試用
+9. Fix: Disable Auto Update | 修復禁用自動更新
+10. Fix: Linux Chrome Not Open Correct | 修復 Linux Chrome 未正確打開
+11. Fix: Some Issues | 修復一些問題
 
 ## v1.8.01
 1. Add: Cursor Account Info | 增加 Cursor 賬號信息
