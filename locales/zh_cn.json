@@ -22,7 +22,9 @@
         "admin_required": "运行可执行文件，需要管理员权限",
         "admin_required_continue": "继续使用当前版本...",
         "coming_soon": "即将推出",
-        "fixed_soon": "即将修复"
+        "fixed_soon": "即将修复",
+        "contribute": "贡献项目",
+        "config": "显示配置"
     },
     "languages": {
         "en": "英语",
@@ -106,7 +108,10 @@
         "version_too_low": "Cursor版本太低: {version} < 0.45.0",
         "no_write_permission": "没有写入权限: {path}",
         "path_not_found": "路径未找到: {path}",
-        "modify_file_failed": "修改文件失败: {error}"
+        "modify_file_failed": "修改文件失败: {error}",
+        "windows_machine_id_updated": "Windows机器ID更新成功",
+        "update_windows_machine_id_failed": "更新Windows机器ID失败: {error}",
+        "update_windows_machine_guid_failed": "更新Windows机器GUID失败: {error}"
     },
     "register": {
         "title": "Cursor 注册工具",
@@ -303,7 +308,8 @@
         "update_skipped": "跳过更新。",
         "invalid_choice": "选择无效。请输入 'Y' 或 'n'.",
         "development_version": "开发版本 {current} > {latest}",
-        "changelog_title": "更新日志"
+        "changelog_title": "更新日志",
+        "rate_limit_exceeded": "GitHub API 速率限制超过。跳过更新检查。"
     },
     "totally_reset": {
         "title": "完全重置 Cursor",
@@ -473,7 +479,15 @@
         "active": "活跃",
         "inactive": "非活跃",
         "premium_usage": "高级使用量",
-        "basic_usage": "基础使用量"
+        "basic_usage": "基础使用量",
+        "usage_not_found": "使用量未找到",
+        "lifetime_access_enabled": "永久访问已启用"
+    },
+    "config": {
+        "config_not_available": "配置未找到。",
+        "configuration": "配置",
+        "enabled": "已启用",
+        "disabled": "已禁用",
+        "config_directory": "配置目录"
     }
-
 } 

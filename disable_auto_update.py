@@ -5,6 +5,8 @@ import shutil
 from colorama import Fore, Style, init
 import subprocess
 from config import get_config
+import re
+import tempfile
 
 # Initialize colorama
 init()
@@ -53,6 +55,45 @@ class AutoUpdateDisabler:
                 "Linux": os.path.expanduser("~/.config/cursor/resources/app-update.yml")
             }
             self.update_yml_path = self.update_yml_paths.get(self.system)
+
+    def _change_main_js(self):
+        """Change main.js"""
+        try:
+            main_path = get_config(self.translator).get('main_js_path', fallback=os.path.expanduser("~/.config/cursor/resources/app/main.js"))
+            original_stat = os.stat(main_path)
+            original_mode = original_stat.st_mode
+            original_uid = original_stat.st_uid
+            original_gid = original_stat.st_gid
+
+            with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmp_file:
+                with open(main_path, "r", encoding="utf-8") as main_file:
+                    content = main_file.read()
+                
+                patterns = {
+                    r"https://api2.cursor.sh/aiserver.v1.AuthService/DownloadUpdate": r"",
+                }
+                
+                for pattern, replacement in patterns.items():
+                    content = re.sub(pattern, replacement, content)
+
+                tmp_file.write(content)
+                tmp_path = tmp_file.name
+
+            shutil.copy2(main_path, main_path + ".old")
+            shutil.move(tmp_path, main_path)
+
+            os.chmod(main_path, original_mode)
+            if os.name != "nt":
+                os.chown(main_path, original_uid, original_gid)
+
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.file_modified')}{Style.RESET_ALL}")
+            return True
+
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.modify_file_failed', error=str(e))}{Style.RESET_ALL}")
+            if "tmp_path" in locals():
+                os.unlink(tmp_path)
+            return False
 
     def _kill_cursor_processes(self):
         """End all Cursor processes"""
@@ -179,6 +220,10 @@ class AutoUpdateDisabler:
                 
             # 4. Create blocking file
             if not self._create_blocking_file():
+                return False
+                
+            # 5. Change main.js
+            if not self._change_main_js():
                 return False
                 
             print(f"{Fore.GREEN}{EMOJI['CHECK']} {self.translator.get('update.disable_success') if self.translator else '自动更新已禁用'}{Style.RESET_ALL}")

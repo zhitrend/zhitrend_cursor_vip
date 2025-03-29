@@ -1,5 +1,14 @@
 # Change Log
 
+## v1.8.02
+1. Fix: Disable Auto Update | 修復禁用自動更新
+2. Add: Config Options | 增加配置選項
+3. Add: Contributors Options | 增加貢獻者選項
+4. Optimize Row & Colume Options | 優化行與列選項
+5. Add: Update Windows Machine ID | 增加更新 Windows 機器 ID
+6. Fix: Too Many Free Trial On Some Machine | 修復某些機器上太多免費試用
+7. Fix: Some Issues | 修復一些問題
+
 ## v1.8.01
 1. Add: Cursor Account Info | 增加 Cursor 賬號信息
 2. Fix: Disable Auto Update | 修復禁用自動更新

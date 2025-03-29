@@ -25,7 +25,8 @@ EMOJI = {
     "SUCCESS": "✅",
     "ERROR": "❌",
     "INFO": "ℹ️",
-    "RESET": "🔄",
+    "RESET": "��",
+    "WARNING": "⚠️",
 }
 
 def get_cursor_paths(translator=None) -> Tuple[str, str]:
@@ -576,6 +577,7 @@ class MachineIDResetter:
             
             if sys.platform.startswith("win"):
                 self._update_windows_machine_guid()
+                self._update_windows_machine_id()
             elif sys.platform == "darwin":
                 self._update_macos_platform_uuid(new_ids)
                 
@@ -605,6 +607,45 @@ class MachineIDResetter:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.update_windows_machine_guid_failed', error=str(e))}{Style.RESET_ALL}")
             raise
+    
+    def _update_windows_machine_id(self):
+        """Update Windows MachineId in SQMClient registry"""
+        try:
+            import winreg
+            # 1. Generate new GUID
+            new_guid = str(uuid.uuid4()).upper()
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.new_machine_id')}: {new_guid}{Style.RESET_ALL}")
+            
+            # 2. Open the registry key
+            try:
+                key = winreg.OpenKey(
+                    winreg.HKEY_LOCAL_MACHINE,
+                    r"SOFTWARE\Microsoft\SQMClient",
+                    0,
+                    winreg.KEY_WRITE | winreg.KEY_WOW64_64KEY
+                )
+            except FileNotFoundError:
+                # If the key does not exist, create it
+                key = winreg.CreateKey(
+                    winreg.HKEY_LOCAL_MACHINE,
+                    r"SOFTWARE\Microsoft\SQMClient"
+                )
+            
+            # 3. Set MachineId value
+            winreg.SetValueEx(key, "MachineId", 0, winreg.REG_SZ, new_guid)
+            winreg.CloseKey(key)
+            
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.windows_machine_id_updated')}{Style.RESET_ALL}")
+            return True
+            
+        except PermissionError:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.permission_denied')}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('reset.run_as_admin')}{Style.RESET_ALL}")
+            return False
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.update_windows_machine_id_failed', error=str(e))}{Style.RESET_ALL}")
+            return False
+                    
 
     def _update_macos_platform_uuid(self, new_ids):
         """Update macOS Platform UUID"""

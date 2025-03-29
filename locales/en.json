@@ -22,7 +22,9 @@
         "admin_required": "Running as executable, administrator privileges required.",
         "admin_required_continue": "Continuing without administrator privileges.",
         "coming_soon": "Coming Soon",
-        "fixed_soon": "Fixed Soon"
+        "fixed_soon": "Fixed Soon",
+        "contribute": "Contribute to the Project",
+        "config": "Show Config"
     },
     "languages": {
         "en": "English",
@@ -106,7 +108,10 @@
         "version_too_low": "Cursor Version Too Low: {version} < 0.45.0",
         "no_write_permission": "No Write Permission: {path}",
         "path_not_found": "Path Not Found: {path}",
-        "modify_file_failed": "Modify File Failed: {error}"
+        "modify_file_failed": "Modify File Failed: {error}",
+        "windows_machine_id_updated": "Windows Machine ID Updated Successfully",
+        "update_windows_machine_id_failed": "Update Windows Machine ID Failed: {error}",
+        "update_windows_machine_guid_failed": "Update Windows Machine GUID Failed: {error}"
     },
     "register": {
         "title": "Cursor Registration Tool",
@@ -308,7 +313,8 @@
         "update_skipped": "Skipping update.",
         "invalid_choice": "Invalid choice. Please enter 'Y' or 'n'.",
         "development_version": "Development Version {current} > {latest}",
-        "changelog_title": "Changelog"
+        "changelog_title": "Changelog",
+        "rate_limit_exceeded": "GitHub API rate limit exceeded. Skipping update check."
     },
     "totally_reset": {
         "title": "Totally Reset Cursor",
@@ -478,6 +484,15 @@
         "active": "Active",
         "inactive": "Inactive",
         "premium_usage": "Premium Usage",
-        "basic_usage": "Basic Usage"
+        "basic_usage": "Basic Usage",
+        "usage_not_found": "Usage not found",
+        "lifetime_access_enabled": "Lifetime Access Enabled"
+    },
+    "config": {
+        "config_not_available": "Configuration not available",
+        "configuration": "Configuration",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "config_directory": "Config Directory"
     }
 }   

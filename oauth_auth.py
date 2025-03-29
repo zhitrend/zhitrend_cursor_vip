@@ -25,9 +25,10 @@ EMOJI = {
 }
 
 class OAuthHandler:
-    def __init__(self, translator=None):
+    def __init__(self, translator=None, auth_type=None):
         self.translator = translator
         self.config = get_config(translator)
+        self.auth_type = auth_type  # make sure the auth_type is not None
         os.environ['BROWSER_HEADLESS'] = 'False'
         self.browser = None
         
@@ -380,7 +381,7 @@ class OAuthHandler:
                                             if self._delete_current_account():
                                                 # Start new authentication based on auth type
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} Starting new authentication process...{Style.RESET_ALL}")
-                                                if auth_type == "google":
+                                                if self.auth_type == "google":
                                                     return self.handle_google_auth()
                                                 else:  # github
                                                     return self.handle_github_auth()
@@ -839,7 +840,7 @@ def main(auth_type, translator=None):
         auth_type (str): Type of authentication ('google' or 'github')
         translator: Translator instance for internationalization
     """
-    handler = OAuthHandler(translator)
+    handler = OAuthHandler(translator, auth_type)
     
     if auth_type.lower() == 'google':
         print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('oauth.google_start')}{Style.RESET_ALL}")

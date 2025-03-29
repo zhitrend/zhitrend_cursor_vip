@@ -94,7 +94,7 @@ CURSOR_OTHER_INFO = center_multiline_text(OTHER_INFO_TEXT, handle_chinese=True)
 def print_logo():
     print(CURSOR_LOGO)
     print(CURSOR_DESCRIPTION)
-    print(CURSOR_CONTRIBUTORS)
+    # print(CURSOR_CONTRIBUTORS)
     print(CURSOR_OTHER_INFO)
 
 if __name__ == "__main__":

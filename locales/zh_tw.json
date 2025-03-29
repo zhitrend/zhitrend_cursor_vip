@@ -20,7 +20,9 @@
         "admin_required": "運行可執行文件，需要管理員權限",
         "admin_required_continue": "繼續使用當前版本...",
         "coming_soon": "即將推出",
-        "fixed_soon": "即將修復"
+        "fixed_soon": "即將修復",
+        "contribute": "貢獻項目",
+        "config": "顯示配置"
     },
     "languages": {
         "en": "英文",
@@ -104,7 +106,10 @@
         "version_too_low": "Cursor版本太低: {version} < 0.45.0",
         "no_write_permission": "沒有寫入權限: {path}",
         "path_not_found": "路徑未找到: {path}",
-        "modify_file_failed": "修改文件失敗: {error}"
+        "modify_file_failed": "修改文件失敗: {error}",
+        "windows_machine_id_updated": "Windows機器ID更新成功",
+        "update_windows_machine_id_failed": "更新Windows機器ID失敗: {error}",
+        "update_windows_machine_guid_failed": "更新Windows機器GUID失敗: {error}"
     },
 
     "register": {
@@ -282,7 +287,8 @@
         "update_skipped": "跳過更新。",
         "invalid_choice": "選擇無效。請輸入 'Y' 或 'n'.",
         "development_version": "開發版本 {current} > {latest}",
-        "changelog_title": "更新日誌"
+        "changelog_title": "更新日誌",
+        "rate_limit_exceeded": "GitHub API 速率限制超過。跳過更新檢查。"
     },
     "totally_reset": {
         "title": "完全重置 Cursor",
@@ -452,6 +458,15 @@
         "active": "活躍",
         "inactive": "非活躍",
         "premium_usage": "高級使用量",
-        "basic_usage": "基礎使用量"
+        "basic_usage": "基礎使用量",
+        "usage_not_found": "使用量未找到",
+        "lifetime_access_enabled": "永久訪問已啟用"
+    },
+    "config": {
+        "config_not_available": "配置未找到。",
+        "configuration": "配置",
+        "enabled": "已啟用",
+        "disabled": "已禁用",
+        "config_directory": "配置目錄"
     }
 } 

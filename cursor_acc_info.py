@@ -64,12 +64,12 @@ class UsageManager:
             response.raise_for_status()
             data = response.json()
             
-            # 获取 GPT-4 使用量和限制
+            # get Premium usage and limit
             gpt4_data = data.get("gpt-4", {})
             premium_usage = gpt4_data.get("numRequestsTotal", 0)
             max_premium_usage = gpt4_data.get("maxRequestUsage", 999)
             
-            # 获取 GPT-3.5 使用量，但将限制设为 "No Limit"
+            # get Basic usage, but set limit to "No Limit"
             gpt35_data = data.get("gpt-3.5-turbo", {})
             basic_usage = gpt35_data.get("numRequestsTotal", 0)
             
@@ -77,10 +77,15 @@ class UsageManager:
                 'premium_usage': premium_usage, 
                 'max_premium_usage': max_premium_usage, 
                 'basic_usage': basic_usage, 
-                'max_basic_usage': "No Limit"  # 将 GPT-3.5 的限制设为 "No Limit"
+                'max_basic_usage': "No Limit"  # set Basic limit to "No Limit"
             }
         except requests.RequestException as e:
-            logger.error(f"获取使用量失败: {str(e)}")
+            # only log error
+            logger.error(f"Get usage info failed: {str(e)}")
+            return None
+        except Exception as e:
+            # catch all other exceptions
+            logger.error(f"Get usage info failed: {str(e)}")
             return None
 
     @staticmethod
@@ -95,7 +100,7 @@ class UsageManager:
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
-            logger.error(f"获取订阅信息失败: {str(e)}")
+            logger.error(f"Get subscription info failed: {str(e)}")
             return None
 
 def get_token_from_config():
@@ -126,7 +131,7 @@ def get_token_from_config():
                 'session_path': os.path.expanduser("~/.config/Cursor/Session Storage")
             }
     except Exception as e:
-        logger.error(f"获取配置路径失败: {str(e)}")
+        logger.error(f"Get config path failed: {str(e)}")
     
     return None
 
@@ -339,9 +344,9 @@ def get_email_from_sqlite(sqlite_path):
 
 def display_account_info(translator=None):
     """display account info"""
-    print(f"\n{Fore.CYAN}{'─' * 40}{Style.RESET_ALL}")
+    print(f"\n{Fore.CYAN}{'─' * 70}{Style.RESET_ALL}")
     print(f"{Fore.CYAN}{EMOJI['USER']} {translator.get('account_info.title') if translator else 'Cursor Account Information'}{Style.RESET_ALL}")
-    print(f"{Fore.CYAN}{'─' * 40}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{'─' * 70}{Style.RESET_ALL}")
     
     # get token
     token = get_token()
@@ -363,7 +368,11 @@ def display_account_info(translator=None):
         email = get_email_from_sqlite(paths['sqlite_path'])
     
     # get subscription info
-    subscription_info = UsageManager.get_stripe_profile(token)
+    try:
+        subscription_info = UsageManager.get_stripe_profile(token)
+    except Exception as e:
+        logger.error(f"Get subscription info failed: {str(e)}")
+        subscription_info = None
     
     # if not found in storage and sqlite, try from subscription info
     if not email and subscription_info:
@@ -371,32 +380,43 @@ def display_account_info(translator=None):
         if 'customer' in subscription_info and 'email' in subscription_info['customer']:
             email = subscription_info['customer']['email']
     
-    # get usage info
-    usage_info = UsageManager.get_usage(token)
+    # get usage info - silently handle errors
+    try:
+        usage_info = UsageManager.get_usage(token)
+    except Exception as e:
+        logger.error(f"Get usage info failed: {str(e)}")
+        usage_info = None
     
-    # display account info
+    # Prepare left and right info
+    left_info = []
+    right_info = []
+    
+    # Left side shows account info
     if email:
-        print(f"{Fore.GREEN}{EMOJI['USER']} {translator.get('account_info.email') if translator else 'Email'}: {Fore.WHITE}{email}{Style.RESET_ALL}")
+        left_info.append(f"{Fore.GREEN}{EMOJI['USER']} {translator.get('account_info.email') if translator else 'Email'}: {Fore.WHITE}{email}{Style.RESET_ALL}")
     else:
-        print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('account_info.email_not_found') if translator else 'Email not found'}{Style.RESET_ALL}")
+        left_info.append(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('account_info.email_not_found') if translator else 'Email not found'}{Style.RESET_ALL}")
     
-    # display subscription type
+    # Add an empty line
+    # left_info.append("")
+    
+    # Show subscription type
     if subscription_info:
         subscription_type = format_subscription_type(subscription_info)
-        print(f"{Fore.GREEN}{EMOJI['SUBSCRIPTION']} {translator.get('account_info.subscription') if translator else 'Subscription'}: {Fore.WHITE}{subscription_type}{Style.RESET_ALL}")
+        left_info.append(f"{Fore.GREEN}{EMOJI['SUBSCRIPTION']} {translator.get('account_info.subscription') if translator else 'Subscription'}: {Fore.WHITE}{subscription_type}{Style.RESET_ALL}")
         
-        # display remaining trial days
+        # Show remaining trial days
         days_remaining = subscription_info.get("daysRemainingOnTrial")
         if days_remaining is not None and days_remaining > 0:
-            print(f"{Fore.GREEN}{EMOJI['TIME']} {translator.get('account_info.trial_remaining') if translator else 'Remaining Pro Trial'}: {Fore.WHITE}{days_remaining} {translator.get('account_info.days') if translator else 'days'}{Style.RESET_ALL}")
+            left_info.append(f"{Fore.GREEN}{EMOJI['TIME']} {translator.get('account_info.trial_remaining') if translator else 'Remaining Pro Trial'}: {Fore.WHITE}{days_remaining} {translator.get('account_info.days') if translator else 'days'}{Style.RESET_ALL}")
     else:
-        print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('account_info.subscription_not_found') if translator else 'Subscription information not found'}{Style.RESET_ALL}")
+        left_info.append(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('account_info.subscription_not_found') if translator else 'Subscription information not found'}{Style.RESET_ALL}")
     
-    # display usage info
+    # Right side shows usage info - only if available
     if usage_info:
-        print(f"\n{Fore.GREEN}{EMOJI['USAGE']} {translator.get('account_info.usage') if translator else 'Usage Statistics'}:{Style.RESET_ALL}")
+        right_info.append(f"{Fore.GREEN}{EMOJI['USAGE']} {translator.get('account_info.usage') if translator else 'Usage Statistics'}:{Style.RESET_ALL}")
         
-        # GPT-4 usage
+        # Premium usage
         premium_usage = usage_info.get('premium_usage', 0)
         max_premium_usage = usage_info.get('max_premium_usage', "No Limit")
         
@@ -425,7 +445,7 @@ def display_account_info(translator=None):
             
             premium_display = f"{premium_usage}/{max_premium_usage} ({premium_percentage:.1f}%)"
         
-        print(f"{Fore.YELLOW}{EMOJI['PREMIUM']} {translator.get('account_info.premium_usage') if translator else 'Fast Response'}: {premium_color}{premium_display}{Style.RESET_ALL}")
+        right_info.append(f"{Fore.YELLOW}{EMOJI['PREMIUM']} {translator.get('account_info.premium_usage') if translator else 'Fast Response'}: {premium_color}{premium_display}{Style.RESET_ALL}")
         
         # Slow Response
         basic_usage = usage_info.get('basic_usage', 0)
@@ -456,11 +476,70 @@ def display_account_info(translator=None):
             
             basic_display = f"{basic_usage}/{max_basic_usage} ({basic_percentage:.1f}%)"
         
-        print(f"{Fore.BLUE}{EMOJI['BASIC']} {translator.get('account_info.basic_usage') if translator else 'Slow Response'}: {basic_color}{basic_display}{Style.RESET_ALL}")
+        right_info.append(f"{Fore.BLUE}{EMOJI['BASIC']} {translator.get('account_info.basic_usage') if translator else 'Slow Response'}: {basic_color}{basic_display}{Style.RESET_ALL}")
     else:
-        print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('account_info.usage_not_found') if translator else 'Usage information not found'}{Style.RESET_ALL}")
+        # if get usage info failed, only log in log, not show in interface
+        # you can choose to not show any usage info, or show a simple prompt
+        # right_info.append(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('account_info.usage_unavailable') if translator else 'Usage information unavailable'}{Style.RESET_ALL}")
+        pass  # not show any usage info
     
-    print(f"{Fore.CYAN}{'─' * 40}{Style.RESET_ALL}")
+    # Calculate the maximum display width of left info
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    
+    def get_display_width(s):
+        """Calculate the display width of a string, considering Chinese characters and emojis"""
+        # Remove ANSI color codes
+        clean_s = ansi_escape.sub('', s)
+        width = 0
+        for c in clean_s:
+            # Chinese characters and some emojis occupy two character widths
+            if ord(c) > 127:
+                width += 2
+            else:
+                width += 1
+        return width
+    
+    max_left_width = 0
+    for item in left_info:
+        width = get_display_width(item)
+        max_left_width = max(max_left_width, width)
+    
+    # Set the starting position of right info
+    fixed_spacing = 4  # Fixed spacing
+    right_start = max_left_width + fixed_spacing
+    
+    # Calculate the number of spaces needed for right info
+    spaces_list = []
+    for i in range(len(left_info)):
+        if i < len(left_info):
+            left_item = left_info[i]
+            left_width = get_display_width(left_item)
+            spaces = right_start - left_width
+            spaces_list.append(spaces)
+    
+    # Print info
+    max_rows = max(len(left_info), len(right_info))
+    
+    for i in range(max_rows):
+        # Print left info
+        if i < len(left_info):
+            left_item = left_info[i]
+            print(left_item, end='')
+            
+            # Use pre-calculated spaces
+            spaces = spaces_list[i]
+        else:
+            # If left side has no items, print only spaces
+            spaces = right_start
+            print('', end='')
+        
+        # Print right info
+        if i < len(right_info):
+            print(' ' * spaces + right_info[i])
+        else:
+            print()  # Change line
+    
+    print(f"{Fore.CYAN}{'─' * 70}{Style.RESET_ALL}")
 
 def main(translator=None):
     """main function"""
