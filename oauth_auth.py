@@ -21,7 +21,8 @@ EMOJI = {
     'SUCCESS': '✅',
     'ERROR': '❌',
     'WAIT': '⏳',
-    'INFO': 'ℹ️'
+    'INFO': 'ℹ️',
+    'WARNING': '⚠️'
 }
 
 class OAuthHandler:
@@ -85,6 +86,20 @@ class OAuthHandler:
             platform_name = platform.system().lower()
             print(f"{Fore.CYAN}{EMOJI['INFO']} Detected platform: {platform_name}{Style.RESET_ALL}")
             
+            # Linux-specific checks
+            if platform_name == 'linux':
+                # Check if DISPLAY is set
+                display = os.environ.get('DISPLAY')
+                if not display:
+                    print(f"{Fore.RED}{EMOJI['ERROR']} No display found. Make sure X server is running.{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Try: export DISPLAY=:0{Style.RESET_ALL}")
+                    return False
+                
+                # Check if running as root
+                if os.geteuid() == 0:
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Running as root is not recommended for browser automation{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Consider running the script without sudo{Style.RESET_ALL}")
+            
             # Kill existing browser processes
             self._kill_browser_processes()
             
@@ -103,7 +118,35 @@ class OAuthHandler:
             print(f"{Fore.CYAN}{EMOJI['INFO']} Using browser profile: {active_profile}{Style.RESET_ALL}")
             
             # Configure browser options
-            co = self._configure_browser_options(chrome_path, user_data_dir, active_profile)
+            co = ChromiumOptions()
+            
+            # Never use headless mode for OAuth flows
+            co.headless(False)
+            
+            # Platform-specific options
+            if platform_name == 'linux':
+                co.set_argument('--no-sandbox')
+                co.set_argument('--disable-dev-shm-usage')
+                co.set_argument('--disable-gpu')
+                
+                # If running as root, try to use actual user's Chrome profile
+                if os.geteuid() == 0:
+                    sudo_user = os.environ.get('SUDO_USER')
+                    if sudo_user:
+                        actual_home = f"/home/{sudo_user}"
+                        user_data_dir = os.path.join(actual_home, ".config", "google-chrome")
+                        if os.path.exists(user_data_dir):
+                            print(f"{Fore.CYAN}{EMOJI['INFO']} Using Chrome profile from: {user_data_dir}{Style.RESET_ALL}")
+                            co.set_argument(f"--user-data-dir={user_data_dir}")
+            
+            # Set paths and profile
+            co.set_paths(browser_path=chrome_path, user_data_path=user_data_dir)
+            co.set_argument(f'--profile-directory={active_profile}')
+            
+            # Basic options
+            co.set_argument('--no-first-run')
+            co.set_argument('--no-default-browser-check')
+            co.auto_port()
             
             print(f"{Fore.CYAN}{EMOJI['INFO']} Starting browser at: {chrome_path}{Style.RESET_ALL}")
             self.browser = ChromiumPage(co)
@@ -118,9 +161,11 @@ class OAuthHandler:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} Browser setup failed: {str(e)}{Style.RESET_ALL}")
             if "DevToolsActivePort file doesn't exist" in str(e):
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Try running with administrator/root privileges{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Try running without sudo/administrator privileges{Style.RESET_ALL}")
             elif "Chrome failed to start" in str(e):
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} Make sure Chrome/Chromium is properly installed{Style.RESET_ALL}")
+                if platform_name == 'linux':
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Try: sudo apt install chromium-browser{Style.RESET_ALL}")
             return False
 
     def _kill_browser_processes(self):
