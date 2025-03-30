@@ -467,6 +467,27 @@
         "configuration": "配置",
         "enabled": "已啟用",
         "disabled": "已禁用",
-        "config_directory": "配置目錄"
+        "config_directory": "配置目錄",
+        "neither_cursor_nor_cursor_directory_found": "未找到 Cursor 或 Cursor 目錄",
+        "please_make_sure_cursor_is_installed_and_has_been_run_at_least_once": "請確保 Cursor 已安裝並至少運行一次",
+        "storage_directory_not_found": "未找到儲存目錄",
+        "storage_file_found": "找到儲存文件",
+        "file_size": "文件大小",
+        "file_permissions": "文件權限",
+        "file_owner": "文件所有者",
+        "file_group": "文件組",
+        "error_getting_file_stats": "獲取文件統計信息時出錯",
+        "permission_denied": "權限拒絕",
+        "try_running": "嘗試運行 'cursor --help' 檢查是否已安裝",
+        "and": "和",
+        "storage_file_is_empty": "儲存文件為空",
+        "the_file_might_be_corrupted_please_reinstall_cursor": "文件可能已損壞，請重新安裝 Cursor",
+        "storage_file_not_found": "未找到儲存文件",
+        "error_checking_linux_paths": "檢查 Linux 路徑時出錯",
+        "config_option_added": "添加配置選項",
+        "config_updated": "配置更新",
+        "config_created": "配置已創建",
+        "config_setup_error": "配置設置錯誤"
+
     }
 } 
