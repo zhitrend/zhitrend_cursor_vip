@@ -493,6 +493,27 @@
         "configuration": "Configuration",
         "enabled": "Enabled",
         "disabled": "Disabled",
-        "config_directory": "Config Directory"
+        "config_directory": "Config Directory",
+        "neither_cursor_nor_cursor_directory_found": "Neither Cursor nor Cursor directory found in {config_base}",
+        "please_make_sure_cursor_is_installed_and_has_been_run_at_least_once": "Please make sure Cursor is installed and has been run at least once",
+        "storage_directory_not_found": "Storage directory not found: {storage_dir}",
+        "storage_file_found": "Storage file found: {storage_path}",
+        "file_size": "File size: {size}",
+        "file_permissions": "File permissions: {permissions}",
+        "file_owner": "File owner: {owner}",
+        "file_group": "File group: {group}",
+        "error_getting_file_stats": "Error getting file stats: {error}",
+        "permission_denied": "Permission denied: {storage_path}",
+        "try_running": "Try running 'cursor --help' to check if it's installed",
+        "and": "and",
+        "storage_file_is_empty": "Storage file is empty: {storage_path}",
+        "the_file_might_be_corrupted_please_reinstall_cursor": "The file might be corrupted, please reinstall Cursor",
+        "storage_file_not_found": "Storage file not found: {storage_path}",
+        "error_checking_linux_paths": "Error checking Linux paths: {error}",
+        "config_option_added": "Config option added: {option}",
+        "config_updated": "Config updated",
+        "config_created": "Config created: {config_file}",
+        "config_setup_error": "Error setting up config: {error}"
+
     }
 }   

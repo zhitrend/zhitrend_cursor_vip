@@ -68,6 +68,9 @@ def setup_config(translator=None):
                 'updater_path': os.path.join(localappdata, "cursor-updater"),
                 'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app-update.yml")
             }
+            # Create storage directory
+            os.makedirs(os.path.dirname(default_config['WindowsPaths']['storage_path']), exist_ok=True)
+            
         elif sys.platform == "darwin":
             default_config['MacPaths'] = {
                 'storage_path': os.path.abspath(os.path.expanduser("~/Library/Application Support/Cursor/User/globalStorage/storage.json")),
@@ -77,17 +80,91 @@ def setup_config(translator=None):
                 'updater_path': os.path.expanduser("~/Library/Application Support/cursor-updater"),
                 'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
             }
-        elif sys.platform == "linux":
-            sudo_user = os.environ.get('SUDO_USER')
-            actual_home = f"/home/{sudo_user}" if sudo_user else os.path.expanduser("~")
+            # Create storage directory
+            os.makedirs(os.path.dirname(default_config['MacPaths']['storage_path']), exist_ok=True)
             
+        elif sys.platform == "linux":
+            # Get the actual user's home directory, handling both sudo and normal cases
+            current_user = os.getenv('USER') or os.getenv('USERNAME') or os.getenv('SUDO_USER')
+            if not current_user:
+                current_user = os.path.expanduser('~').split('/')[-1]
+            
+            actual_home = f"/home/{current_user}"
+            if not os.path.exists(actual_home):
+                actual_home = os.path.expanduser("~")
+            
+            # Define base config directory
+            config_base = os.path.join(actual_home, ".config")
+            
+            # Try both "Cursor" and "cursor" directory names
+            cursor_dir = None
+            for dir_name in ["Cursor", "cursor"]:
+                test_dir = os.path.join(config_base, dir_name)
+                if os.path.exists(test_dir):
+                    cursor_dir = test_dir
+                    break
+            
+            if not cursor_dir:
+                print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.neither_cursor_nor_cursor_directory_found', config_base=config_base)}{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+            
+            # Define Linux paths using the found cursor directory
+            storage_path = os.path.abspath(os.path.join(cursor_dir, "User/globalStorage/storage.json")) if cursor_dir else ""
+            storage_dir = os.path.dirname(storage_path) if storage_path else ""
+            
+            # Verify paths and permissions
+            try:
+                # Check storage directory
+                if storage_dir and not os.path.exists(storage_dir):
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.storage_directory_not_found', storage_dir=storage_dir)}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                
+                # Check storage.json with more detailed verification
+                if storage_path and os.path.exists(storage_path):
+                    # Get file stats
+                    try:
+                        stat = os.stat(storage_path)
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.storage_file_found', storage_path=storage_path)}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_size', stat.st_size)}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_permissions', oct(stat.st_mode & 0o777))}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_owner', stat.st_uid)}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_group', stat.st_gid)}{Style.RESET_ALL}")
+                    except Exception as e:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.error_getting_file_stats', error=str(e))}{Style.RESET_ALL}")
+                    
+                    # Check if file is readable and writable
+                    if not os.access(storage_path, os.R_OK | os.W_OK):
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.permission_denied', storage_path=storage_path)}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.try_running', current_user=current_user, storage_path=storage_path)}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.and', storage_path=storage_path)}{Style.RESET_ALL}")
+                    
+                    # Try to read the file to verify it's not corrupted
+                    try:
+                        with open(storage_path, 'r') as f:
+                            content = f.read()
+                            if not content.strip():
+                                print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.storage_file_is_empty', storage_path=storage_path)}{Style.RESET_ALL}")
+                                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                            else:
+                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('config.storage_file_is_valid_and_contains_data')}{Style.RESET_ALL}")
+                    except Exception as e:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.error_reading_storage_file', error=str(e))}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.the_file_might_be_corrupted_please_reinstall_cursor')}{Style.RESET_ALL}")
+                elif storage_path:
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.storage_file_not_found', storage_path=storage_path)}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                
+            except (OSError, IOError) as e:
+                print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.error_checking_linux_paths', error=str(e))}{Style.RESET_ALL}")
+            
+            # Define all paths using the found cursor directory
             default_config['LinuxPaths'] = {
-                'storage_path': os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/storage.json")),
-                'sqlite_path': os.path.abspath(os.path.join(actual_home, ".config/cursor/User/globalStorage/state.vscdb")),
-                'machine_id_path': os.path.expanduser("~/.config/cursor/machineid"),
+                'storage_path': storage_path,
+                'sqlite_path': os.path.abspath(os.path.join(cursor_dir, "User/globalStorage/state.vscdb")) if cursor_dir else "",
+                'machine_id_path': os.path.join(cursor_dir, "machineid") if cursor_dir else "",
                 'cursor_path': get_linux_cursor_path(),
-                'updater_path': os.path.expanduser("~/.config/cursor-updater"),
-                'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
+                'updater_path': os.path.join(config_base, "cursor-updater"),
+                'update_yml_path': os.path.join(cursor_dir, "resources/app-update.yml") if cursor_dir else ""
             }
 
         # Read existing configuration and merge
@@ -104,13 +181,13 @@ def setup_config(translator=None):
                         config.set(section, option, str(value))
                         config_modified = True
                         if translator:
-                            print(f"{Fore.YELLOW}ℹ️ {translator.get('register.config_option_added', option=f'{section}.{option}')}{Style.RESET_ALL}")
+                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('register.config_option_added', option=f'{section}.{option}')}{Style.RESET_ALL}")
 
             if config_modified:
                 with open(config_file, 'w', encoding='utf-8') as f:
                     config.write(f)
                 if translator:
-                    print(f"{Fore.GREEN}✅ {translator.get('register.config_updated')}{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('register.config_updated')}{Style.RESET_ALL}")
         else:
             for section, options in default_config.items():
                 config.add_section(section)
@@ -120,15 +197,13 @@ def setup_config(translator=None):
             with open(config_file, 'w', encoding='utf-8') as f:
                 config.write(f)
             if translator:
-                print(f"{Fore.GREEN}✅ {translator.get('register.config_created')}: {config_file}{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('register.config_created')}: {config_file}{Style.RESET_ALL}")
 
         return config
 
     except Exception as e:
         if translator:
-            print(f"{Fore.RED}❌ {translator.get('register.config_setup_error', error=str(e))}{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.RED}❌ Error setting up config: {e}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('register.config_setup_error', error=str(e))}{Style.RESET_ALL}")
         return None
     
 def print_config(config, translator=None):

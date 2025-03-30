@@ -488,6 +488,27 @@
         "configuration": "配置",
         "enabled": "已启用",
         "disabled": "已禁用",
-        "config_directory": "配置目录"
+        "config_directory": "配置目录",
+        "neither_cursor_nor_cursor_directory_found": "未找到 Cursor 或 Cursor 目录",
+        "please_make_sure_cursor_is_installed_and_has_been_run_at_least_once": "请确保 Cursor 已安装并至少运行一次",
+        "storage_directory_not_found": "未找到存储目录",
+        "storage_file_found": "找到存储文件",
+        "file_size": "文件大小",
+        "file_permissions": "文件权限",
+        "file_owner": "文件所有者",
+        "file_group": "文件组",
+        "error_getting_file_stats": "获取文件统计信息时出错",
+        "permission_denied": "权限拒绝",
+        "try_running": "尝试运行 'cursor --help' 检查是否已安装",
+        "and": "和",
+        "storage_file_is_empty": "存储文件为空",
+        "the_file_might_be_corrupted_please_reinstall_cursor": "文件可能已损坏，请重新安装 Cursor",
+        "storage_file_not_found": "未找到存储文件",
+        "error_checking_linux_paths": "检查 Linux 路径时出错",
+        "config_option_added": "添加配置选项",
+        "config_updated": "配置更新",
+        "config_created": "配置已创建",
+        "config_setup_error": "配置设置错误"
     }
+
 } 
