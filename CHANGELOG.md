@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.8.03
+1. Fix: Improve Linux path handling and add case-insensitive Cursor directory detection ｜ 修復Linux系統路徑錯誤以及添加cursor 路徑偵測
+2. Fix: Some Issues | 修復一些問題
+
 ## v1.8.02
 1. Add: New Temp Email | 增加新臨時郵箱
 2. Add: Config Options | 增加配置選項
