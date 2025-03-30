@@ -85,28 +85,45 @@ def setup_config(translator=None):
             
         elif sys.platform == "linux":
             # Get the actual user's home directory, handling both sudo and normal cases
-            current_user = os.getenv('USER') or os.getenv('USERNAME') or os.getenv('SUDO_USER')
+            sudo_user = os.environ.get('SUDO_USER')
+            current_user = sudo_user if sudo_user else (os.getenv('USER') or os.getenv('USERNAME'))
+            
             if not current_user:
                 current_user = os.path.expanduser('~').split('/')[-1]
             
-            actual_home = f"/home/{current_user}"
+            # Handle sudo case
+            if sudo_user:
+                actual_home = f"/home/{sudo_user}"
+                root_home = "/root"
+            else:
+                actual_home = f"/home/{current_user}"
+                root_home = None
+            
             if not os.path.exists(actual_home):
                 actual_home = os.path.expanduser("~")
             
             # Define base config directory
             config_base = os.path.join(actual_home, ".config")
             
-            # Try both "Cursor" and "cursor" directory names
+            # Try both "Cursor" and "cursor" directory names in both user and root locations
             cursor_dir = None
-            for dir_name in ["Cursor", "cursor"]:
-                test_dir = os.path.join(config_base, dir_name)
-                if os.path.exists(test_dir):
-                    cursor_dir = test_dir
+            possible_paths = [
+                os.path.join(config_base, "Cursor"),
+                os.path.join(config_base, "cursor"),
+                os.path.join(root_home, ".config", "Cursor") if root_home else None,
+                os.path.join(root_home, ".config", "cursor") if root_home else None
+            ]
+            
+            for path in possible_paths:
+                if path and os.path.exists(path):
+                    cursor_dir = path
                     break
             
             if not cursor_dir:
-                print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.neither_cursor_nor_cursor_directory_found', config_base=config_base)}{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['WARNING']} Neither Cursor nor cursor directory found in {config_base}{Style.RESET_ALL}")
+                if root_home:
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Also checked {root_home}/.config{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
             
             # Define Linux paths using the found cursor directory
             storage_path = os.path.abspath(os.path.join(cursor_dir, "User/globalStorage/storage.json")) if cursor_dir else ""
@@ -116,46 +133,50 @@ def setup_config(translator=None):
             try:
                 # Check storage directory
                 if storage_dir and not os.path.exists(storage_dir):
-                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.storage_directory_not_found', storage_dir=storage_dir)}{Style.RESET_ALL}")
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage directory not found: {storage_dir}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
                 
                 # Check storage.json with more detailed verification
                 if storage_path and os.path.exists(storage_path):
                     # Get file stats
                     try:
                         stat = os.stat(storage_path)
-                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.storage_file_found', storage_path=storage_path)}{Style.RESET_ALL}")
-                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_size', stat.st_size)}{Style.RESET_ALL}")
-                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_permissions', oct(stat.st_mode & 0o777))}{Style.RESET_ALL}")
-                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_owner', stat.st_uid)}{Style.RESET_ALL}")
-                        print(f"{Fore.GREEN}{EMOJI['INFO']} {translator.get('config.file_group', stat.st_gid)}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} Storage file found: {storage_path}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File size: {stat.st_size} bytes{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File permissions: {oct(stat.st_mode & 0o777)}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File owner: {stat.st_uid}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['INFO']} File group: {stat.st_gid}{Style.RESET_ALL}")
                     except Exception as e:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.error_getting_file_stats', error=str(e))}{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Error getting file stats: {str(e)}{Style.RESET_ALL}")
                     
                     # Check if file is readable and writable
                     if not os.access(storage_path, os.R_OK | os.W_OK):
-                        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.permission_denied', storage_path=storage_path)}{Style.RESET_ALL}")
-                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.try_running', current_user=current_user, storage_path=storage_path)}{Style.RESET_ALL}")
-                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.and', storage_path=storage_path)}{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Permission denied: {storage_path}{Style.RESET_ALL}")
+                        if sudo_user:
+                            print(f"{Fore.YELLOW}{EMOJI['INFO']} Try running: chown {sudo_user}:{sudo_user} {storage_path}{Style.RESET_ALL}")
+                            print(f"{Fore.YELLOW}{EMOJI['INFO']} And: chmod 644 {storage_path}{Style.RESET_ALL}")
+                        else:
+                            print(f"{Fore.YELLOW}{EMOJI['INFO']} Try running: chown {current_user}:{current_user} {storage_path}{Style.RESET_ALL}")
+                            print(f"{Fore.YELLOW}{EMOJI['INFO']} And: chmod 644 {storage_path}{Style.RESET_ALL}")
                     
                     # Try to read the file to verify it's not corrupted
                     try:
                         with open(storage_path, 'r') as f:
                             content = f.read()
                             if not content.strip():
-                                print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.storage_file_is_empty', storage_path=storage_path)}{Style.RESET_ALL}")
-                                print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                                print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage file is empty: {storage_path}{Style.RESET_ALL}")
+                                print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
                             else:
-                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('config.storage_file_is_valid_and_contains_data')}{Style.RESET_ALL}")
+                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Storage file is valid and contains data{Style.RESET_ALL}")
                     except Exception as e:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.error_reading_storage_file', error=str(e))}{Style.RESET_ALL}")
-                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.the_file_might_be_corrupted_please_reinstall_cursor')}{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Error reading storage file: {str(e)}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} The file might be corrupted. Please reinstall Cursor{Style.RESET_ALL}")
                 elif storage_path:
-                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {translator.get('config.storage_file_not_found', storage_path=storage_path)}{Style.RESET_ALL}")
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('config.please_make_sure_cursor_is_installed_and_has_been_run_at_least_once')}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Storage file not found: {storage_path}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Please make sure Cursor is installed and has been run at least once{Style.RESET_ALL}")
                 
             except (OSError, IOError) as e:
-                print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.error_checking_linux_paths', error=str(e))}{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} Error checking Linux paths: {str(e)}{Style.RESET_ALL}")
             
             # Define all paths using the found cursor directory
             default_config['LinuxPaths'] = {
