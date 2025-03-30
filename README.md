@@ -15,14 +15,13 @@
 </p>
 <h4>Support Latest 0.48.x Version | 支持最新 0.48.x 版本</h4>
 
-This tool register accounts with custom emails, support Google and GitHub account registrations, temporary GitHub account registration, kills all Cursor's running processes,reset and wipe Cursor data and hardware info.
+This tool registers accounts with custom emails, support Google and GitHub account registrations, temporary GitHub account registration, kills all Cursor's running processes, resets and wipes Cursor data and hardware info.
 
 Supports Windows, macOS and Linux.
 
 For optimal performance, run with privileges and always stay up to date.
 
-Always clean your browser cache and cookies. If possible, user a VPN to create new accounts.
-
+Always clean your browser's cache and cookies. If possible, use a VPN to create new accounts.
 
 
 這是一個自動化工具，自動註冊，支持 Windows 和 macOS 系統，完成 Auth 驗證，重置 Cursor 的配置。
@@ -101,7 +100,7 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 
 </details>
 
-2. If you want to stop the script, please press Ctrl+C<br>要停止腳本，請按 Ctrl+C
+If you want to stop the script, please press Ctrl+C<br>要停止腳本，請按 Ctrl+C
 
 ## ❗ Note | 注意事項
 
@@ -116,9 +115,9 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/rese
 chromepath = C:\Program Files\Google/Chrome/Application/chrome.exe
 
 [Turnstile]
-# Handle Tuenstile Wait Time | 等待人機驗證時間
+# Handle Turnstile Wait Time | 等待人機驗證時間
 handle_turnstile_time = 2
-# Handle Tuenstile Wait Random Time (must merge 1-3 or 1,3) | 等待人機驗證隨機時間（必須是 1-3 或者 1,3 這樣的組合）
+# Handle Turnstile Wait Random Time (must merge 1-3 or 1,3) | 等待人機驗證隨機時間（必須是 1-3 或者 1,3 這樣的組合）
 handle_turnstile_random_time = 1-3
 
 [OSPaths]
@@ -169,7 +168,7 @@ show_account_info = True
 
 </details>
 
-* Use administrator to run the script <br>請使用管理員身份運行腳本
+* Use administrator privileges to run the script <br>請使用管理員身份運行腳本
 
 * Confirm that Cursor is closed before running the script <br>請確保在運行腳本前已經關閉 Cursor<br>
 
