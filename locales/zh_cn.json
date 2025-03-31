@@ -572,7 +572,10 @@
         "navigating_to_authentication_page": "正在导航到认证页面...",
         "please_select_your_google_account_to_continue": "请选择您的 Google 账户以继续...",
         "found_browser_data_directory": "找到浏览器数据目录: {path}",
-        "authentication_successful_getting_account_info": "认证成功, 获取账户信息..."
+        "authentication_successful_getting_account_info": "认证成功, 获取账户信息...",
+        "warning_could_not_kill_existing_browser_processes": "警告: 无法杀死现有浏览器进程: {error}",
+        "browser_failed_to_start": "浏览器启动失败: {error}",
+        "browser_failed": "浏览器启动失败: {error}"
     }
 
 } 

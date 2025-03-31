@@ -577,6 +577,9 @@
         "navigating_to_authentication_page": "Navigating to authentication page...",
         "please_select_your_google_account_to_continue": "Please select your Google account to continue...",
         "found_browser_data_directory": "Found browser data directory: {path}",
-        "authentication_successful_getting_account_info": "Authentication successful, getting account info..."
+        "authentication_successful_getting_account_info": "Authentication successful, getting account info...",
+        "warning_could_not_kill_existing_browser_processes": "Warning: Could not kill existing browser processes: {error}",
+        "browser_failed_to_start": "Browser failed to start: {error}",
+        "browser_failed": "Browser failed to start: {error}"
     }
 }

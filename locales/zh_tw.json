@@ -552,6 +552,9 @@
         "navigating_to_authentication_page": "正在導航到認證頁面...",
         "please_select_your_google_account_to_continue": "請選擇您的 Google 帳戶以繼續...",
         "found_browser_data_directory": "找到瀏覽器數據目錄: {path}",
-        "authentication_successful_getting_account_info": "認證成功, 獲取帳戶信息..."
+        "authentication_successful_getting_account_info": "認證成功, 獲取帳戶信息...",
+        "warning_could_not_kill_existing_browser_processes": "警告: 無法殺死現有瀏覽器進程: {error}",
+        "browser_failed_to_start": "瀏覽器啟動失敗: {error}",
+        "browser_failed": "瀏覽器啟動失敗: {error}"
     }
 } 
