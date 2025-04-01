@@ -419,8 +419,8 @@ class OAuthHandler:
                                         usage_text = usage_element.text
                                         print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                         
-                                        # Check if account is expired
-                                        if usage_text.strip() == "150 / 150":
+                                        # Check if account is expired (both 150/150 and 50/50 cases)
+                                        if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
                                             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', creating_new_account='creating new account') if self.translator else 'Account has reached maximum usage, creating new account...'}{Style.RESET_ALL}")
                                             
                                             # Delete current account
@@ -622,8 +622,8 @@ class OAuthHandler:
                                             usage_text = usage_element.text
                                             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                             
-                                            # Check if account is expired
-                                            if usage_text.strip() == "150 / 150":
+                                            # Check if account is expired (both 150/150 and 50/50 cases)
+                                            if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
                                                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                 
                                                 delete_js = """
@@ -708,8 +708,8 @@ class OAuthHandler:
                                                 usage_text = usage_element.text
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                                 
-                                                # Check if account is expired
-                                                if usage_text.strip() == "150 / 150":
+                                                # Check if account is expired (both 150/150 and 50/50 cases)
+                                                if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
                                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                     
                                                     delete_js = """
