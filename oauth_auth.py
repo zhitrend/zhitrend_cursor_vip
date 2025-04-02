@@ -62,42 +62,37 @@ class OAuthHandler:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error_loading', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
             return []
 
-    def _select_profile(self, user_data_dir):
-        """Let user select a Chrome profile"""
+    def _select_profile(self):
+        """Select a Chrome profile to use"""
         try:
-            profiles = self._get_available_profiles(user_data_dir)
+            # Get available profiles
+            profiles = self._get_available_profiles(self._get_user_data_directory())
             if not profiles:
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('chrome_profile.no_profiles') if self.translator else 'No Chrome profiles found'}{Style.RESET_ALL}")
-                return 'Default'
-            
-            # Display warning about closing Chrome processes
-            print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('chrome_profile.warning_chrome_close') if self.translator else 'Warning: This will close all running Chrome processes'}{Style.RESET_ALL}")
+                return False
 
-            print(f"\n{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('chrome_profile.select_profile') if self.translator else 'Select a Chrome profile to use:'}{Style.RESET_ALL}")
-            print(f"{Fore.CYAN}{self.translator.get('chrome_profile.profile_list') if self.translator else 'Available profiles:'}{Style.RESET_ALL}")
-            
-            for i, (profile_dir, profile_name) in enumerate(profiles, 1):
-                display_name = self.translator.get('chrome_profile.default_profile') if self.translator and profile_dir == 'Default' else \
-                             profile_name if profile_name else \
-                             self.translator.get('chrome_profile.profile', number=i) if self.translator else f'Profile {i}'
-                print(f"{Fore.CYAN}{i}. {display_name} ({profile_dir}){Style.RESET_ALL}")
+            # Display available profiles
+            print(f"\n{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('chrome_profile.select_prompt') if self.translator else 'Select a Chrome profile to use:'}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{self.translator.get('chrome_profile.available_profiles') if self.translator else 'Available profiles:'}{Style.RESET_ALL}")
+            for i, (dir_name, display_name) in enumerate(profiles, 1):
+                print(f"{Fore.CYAN}{i}. {display_name} ({dir_name}){Style.RESET_ALL}")
 
+            # Get user selection
             while True:
                 try:
-                    choice = input(f"\n{Fore.CYAN}{self.translator.get('menu.input_choice', choices=f'1-{len(profiles)}') if self.translator else f'Please enter your choice (1-{len(profiles)}): '}{Style.RESET_ALL}")
-                    choice = int(choice)
+                    choice = int(input(f"\n{Fore.CYAN}{self.translator.get('chrome_profile.enter_choice', choices=f'1-{len(profiles)}') if self.translator else f'Please enter your choice (1-{len(profiles)}): '}{Style.RESET_ALL}"))
                     if 1 <= choice <= len(profiles):
-                        selected = profiles[choice - 1][0]  # Get the profile directory name
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('chrome_profile.profile_selected', profile=selected) if self.translator else f'Selected profile: {selected}'}{Style.RESET_ALL}")
-                        return selected
+                        self.selected_profile = profiles[choice - 1][0]
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('chrome_profile.selected', profile=self.selected_profile) if self.translator else f'Selected profile: {self.selected_profile}'}{Style.RESET_ALL}")
+                        return True
                     else:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_selection') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_choice') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
                 except ValueError:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_selection') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_choice') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
             
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error_loading', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
-            return 'Default'
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
+            return False
         
     def setup_browser(self):
         """Setup browser for OAuth flow using selected profile"""
@@ -129,11 +124,12 @@ class OAuthHandler:
             self._kill_browser_processes()
             
             # Let user select a profile
-            active_profile = self._select_profile(user_data_dir)
-            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.using_browser_profile', profile=active_profile) if self.translator else f'Using browser profile: {active_profile}'}{Style.RESET_ALL}")
+            if not self._select_profile():
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Operation cancelled by user{Style.RESET_ALL}")
+                return False
             
             # Configure browser options
-            co = self._configure_browser_options(chrome_path, user_data_dir, active_profile)
+            co = self._configure_browser_options(chrome_path, user_data_dir, self.selected_profile)
             
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_browser', path=chrome_path) if self.translator else f'Starting browser at: {chrome_path}'}{Style.RESET_ALL}")
             self.browser = ChromiumPage(co)
