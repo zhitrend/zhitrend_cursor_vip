@@ -1,15 +1,16 @@
 {
     "menu": {
-        "title": "Beschikbare opties",
-        "exit": "Programma afsluiten",
-        "reset": "Machine-ID resetten",
-        "register": "Nieuw Cursor-account registreren",
-        "register_google": "Registreren met Google-account",
-        "register_github": "Registreren met GitHub-account",
-        "register_manual": "Cursor registreren met aangepast e-mailadres",
-        "quit": "Cursor-applicatie sluiten",
-        "select_language": "Taal wijzigen",
-        "input_choice": "Voer uw keuze in: {choices}",
+        "title": "Beschikbare Opties",
+        "exit": "Programma Afsluiten",
+        "reset": "Machine ID Resetten",
+        "register": "Nieuw Cursor Account Registreren",
+        "register_google": "Registreren met Google Account",
+        "register_github": "Registreren met GitHub Account",
+        "register_manual": "Cursor Registreren met Aangepaste E-mail",
+        "quit": "Cursor Toepassing Sluiten",
+        "select_language": "Taal Wijzigen",
+        "select_chrome_profile": "Chrome Profiel Selecteren",
+        "input_choice": "Voer uw keuze in ({choices})",
         "invalid_choice": "Ongeldige selectie. Voer een nummer in uit {choices}.",
         "program_terminated": "Programma is beëindigd door de gebruiker",
         "error_occurred": "Er is een fout opgetreden: {error}. Probeer het opnieuw.",
@@ -374,5 +375,17 @@
         "electron_localstorage_files_removed": "Electron localStorage-bestanden verwijderd",
         "electron_localstorage_files_removal_error": "Fout bij het verwijderen van Electron localStorage-bestanden: {error}",
         "removing_electron_localstorage_files_completed": "Electron localStorage-bestanden verwijderd"
+    },
+    "chrome_profile": {
+        "title": "Chrome Profiel Selectie",
+        "select_profile": "Selecteer een Chrome profiel om te gebruiken:",
+        "profile_list": "Beschikbare profielen:",
+        "default_profile": "Standaard Profiel",
+        "profile": "Profiel {number}",
+        "no_profiles": "Geen Chrome profielen gevonden",
+        "error_loading": "Fout bij laden van Chrome profielen: {error}",
+        "profile_selected": "Geselecteerd profiel: {profile}",
+        "invalid_selection": "Ongeldige selectie. Probeer het opnieuw",
+        "warning_chrome_close": "Waarschuwing: Dit zal alle actieve Chrome processen sluiten"
     }
 } 

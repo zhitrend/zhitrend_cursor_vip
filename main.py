@@ -284,7 +284,8 @@ def print_menu():
         9: f"{Fore.GREEN}9{Style.RESET_ALL}. {EMOJI['UPDATE']} {translator.get('menu.disable_auto_update')}",
         10: f"{Fore.GREEN}10{Style.RESET_ALL}. {EMOJI['RESET']} {translator.get('menu.totally_reset')}",
         11: f"{Fore.GREEN}11{Style.RESET_ALL}. {EMOJI['CONTRIBUTE']} {translator.get('menu.contribute')}",
-        12: f"{Fore.GREEN}12{Style.RESET_ALL}. {EMOJI['SETTINGS']}  {translator.get('menu.config')}"
+        12: f"{Fore.GREEN}12{Style.RESET_ALL}. {EMOJI['SETTINGS']}  {translator.get('menu.config')}",
+        13: f"{Fore.GREEN}13{Style.RESET_ALL}. {EMOJI['SETTINGS']}  {translator.get('menu.select_chrome_profile')}"
     }
     
     # Automatically calculate the number of menu items in the left and right columns
@@ -556,7 +557,7 @@ def main():
     
     while True:
         try:
-            choice_num = 12
+            choice_num = 13
             choice = input(f"\n{EMOJI['ARROW']} {Fore.CYAN}{translator.get('menu.input_choice', choices=f'0-{choice_num}')}: {Style.RESET_ALL}")
 
             if choice == "0":
@@ -612,6 +613,13 @@ def main():
             elif choice == "12":
                 from config import print_config
                 print_config(get_config(), translator)
+                print_menu()
+            elif choice == "13":
+                from oauth_auth import OAuthHandler
+                oauth = OAuthHandler(translator)
+                user_data_dir = oauth._get_user_data_directory()
+                if user_data_dir:
+                    oauth._select_profile(user_data_dir)
                 print_menu()
             else:
                 print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('menu.invalid_choice')}{Style.RESET_ALL}")

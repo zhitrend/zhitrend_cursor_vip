@@ -439,5 +439,17 @@
         "completed_successfully": "¡Registro de GitHub + Cursor completado exitosamente!",
         "registration_encountered_issues": "El registro de GitHub + Cursor encontró problemas.",
         "check_browser_windows_for_manual_intervention_or_try_again_later": "Revise las ventanas del navegador para intervención manual o intente nuevamente más tarde."
-    }   
+    },
+    "chrome_profile": {
+        "title": "Selección de Perfil de Chrome",
+        "select_profile": "Seleccione un perfil de Chrome para usar:",
+        "profile_list": "Perfiles disponibles:",
+        "default_profile": "Perfil Predeterminado",
+        "profile": "Perfil {number}",
+        "no_profiles": "No se encontraron perfiles de Chrome",
+        "error_loading": "Error al cargar perfiles de Chrome: {error}",
+        "profile_selected": "Perfil seleccionado: {profile}",
+        "invalid_selection": "Selección inválida. Por favor, intente de nuevo",
+        "warning_chrome_close": "Advertencia: Esto cerrará todos los procesos de Chrome en ejecución"
+    }
 }   

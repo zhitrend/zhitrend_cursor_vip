@@ -386,5 +386,17 @@
         "electron_localstorage_files_removed": "Electron localStorage dosyaları kaldırıldı",
         "electron_localstorage_files_removal_error": "Electron localStorage dosyaları kaldırılırken hata: {error}",
         "removing_electron_localstorage_files_completed": "Electron localStorage dosyaları kaldırma işlemi tamamlandı"
+    },
+    "chrome_profile": {
+        "title": "Chrome Profil Seçimi",
+        "select_profile": "Kullanılacak Chrome profilini seçin:",
+        "profile_list": "Mevcut profiller:",
+        "default_profile": "Varsayılan Profil",
+        "profile": "Profil {number}",
+        "no_profiles": "Chrome profili bulunamadı",
+        "error_loading": "Chrome profilleri yüklenirken hata: {error}",
+        "profile_selected": "Seçilen profil: {profile}",
+        "invalid_selection": "Geçersiz seçim. Lütfen tekrar deneyin",
+        "warning_chrome_close": "Uyarı: Bu işlem tüm çalışan Chrome işlemlerini kapatacaktır"
     }
 }

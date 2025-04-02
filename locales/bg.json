@@ -388,5 +388,17 @@
         "electron_localstorage_files_removed": "Electron localStorage файлове бяха премахнати",
         "electron_localstorage_files_removal_error": "Грешка при премахване на Electron localStorage файлове: {error}",
         "removing_electron_localstorage_files_completed": "Премахването на Electron localStorage файлове беше завършено"
+    },
+    "chrome_profile": {
+        "title": "Избор на Chrome Профил",
+        "select_profile": "Изберете Chrome профил за използване:",
+        "profile_list": "Налични профили:",
+        "default_profile": "Профил по Подразбиране",
+        "profile": "Профил {number}",
+        "no_profiles": "Не са намерени Chrome профили",
+        "error_loading": "Грешка при зареждане на Chrome профили: {error}",
+        "profile_selected": "Избран профил: {profile}",
+        "invalid_selection": "Невалиден избор. Моля, опитайте отново",
+        "warning_chrome_close": "Предупреждение: Това ще затвори всички работещи Chrome процеси"
     }
 }
