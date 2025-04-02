@@ -72,26 +72,26 @@ class OAuthHandler:
                 return False
 
             # Display available profiles
-            print(f"\n{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('chrome_profile.select_prompt') if self.translator else 'Select a Chrome profile to use:'}{Style.RESET_ALL}")
-            print(f"{Fore.CYAN}{self.translator.get('chrome_profile.available_profiles') if self.translator else 'Available profiles:'}{Style.RESET_ALL}")
+            print(f"\n{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('chrome_profile.select_profile') if self.translator else 'Select a Chrome profile to use:'}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{self.translator.get('chrome_profile.profile_list') if self.translator else 'Available profiles:'}{Style.RESET_ALL}")
             for i, (dir_name, display_name) in enumerate(profiles, 1):
                 print(f"{Fore.CYAN}{i}. {display_name} ({dir_name}){Style.RESET_ALL}")
 
             # Get user selection
             while True:
                 try:
-                    choice = int(input(f"\n{Fore.CYAN}{self.translator.get('chrome_profile.enter_choice', choices=f'1-{len(profiles)}') if self.translator else f'Please enter your choice (1-{len(profiles)}): '}{Style.RESET_ALL}"))
+                    choice = int(input(f"\n{Fore.CYAN}{self.translator.get('menu.input_choice', choices=f'1-{len(profiles)}') if self.translator else f'Please enter your choice (1-{len(profiles)}): '}{Style.RESET_ALL}"))
                     if 1 <= choice <= len(profiles):
                         self.selected_profile = profiles[choice - 1][0]
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('chrome_profile.selected', profile=self.selected_profile) if self.translator else f'Selected profile: {self.selected_profile}'}{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('chrome_profile.profile_selected', profile=self.selected_profile) if self.translator else f'Selected profile: {self.selected_profile}'}{Style.RESET_ALL}")
                         return True
                     else:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_choice') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_selection') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
                 except ValueError:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_choice') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_selection') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
             
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error_loading', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
             return False
         
     def setup_browser(self):
