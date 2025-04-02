@@ -113,6 +113,8 @@ class OAuthHandler:
                               "- macOS: Google Chrome, Chromium\n" +
                               "- Linux: Google Chrome, Chromium, chromium-browser")
             
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_browser_data_directory', path=user_data_dir) if self.translator else f'Found browser data directory: {user_data_dir}'}{Style.RESET_ALL}")
+            
             # Show warning about closing Chrome first
             print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('chrome_profile.warning_chrome_close') if self.translator else 'Warning: This will close all running Chrome processes'}{Style.RESET_ALL}")
             choice = input(f"{Fore.YELLOW}Continue? (y/N): {Style.RESET_ALL}").lower()
@@ -191,7 +193,6 @@ class OAuthHandler:
             # Try each possible path
             for path in possible_paths:
                 if os.path.exists(path):
-                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_browser_data_directory', path=path) if self.translator else f'Found browser data directory: {path}'}{Style.RESET_ALL}")
                     return path
             
             # Create temporary profile if no existing profile found
