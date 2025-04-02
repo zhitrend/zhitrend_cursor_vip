@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.8.05
+1. Fix: Linux Path Not Found ｜ 修復linuxpath問題
+2. Add: support for detecting both 150/150 and 50/50 usage limits ｜ 添加偵測50 或者150的使用量
+3. Improve: usage parsing and validation ｜ 檢測使用量
+
 ## v1.8.04
 1. Update totally_reset_cursor.py | 更新 totally_reset_cursor.py
 2. Fix: improve Linux Chrome visibility and root user handling | 修復 Linux Chrome 可見性以及 root 用戶處理
