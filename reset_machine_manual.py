@@ -26,6 +26,7 @@ EMOJI = {
     "ERROR": "❌",
     "INFO": "ℹ️",
     "RESET": "🔄",
+    "WARNING": "⚠️",
 }
 
 def get_cursor_paths(translator=None) -> Tuple[str, str]:
@@ -37,10 +38,41 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
     config_dir = os.path.join(get_user_documents_path(), ".cursor-free-vip")
     config_file = os.path.join(config_dir, "config.ini")
     
+    # Create config directory if it doesn't exist
+    if not os.path.exists(config_dir):
+        os.makedirs(config_dir)
+    
+    # Default paths for different systems
+    default_paths = {
+        "Darwin": "/Applications/Cursor.app/Contents/Resources/app",
+        "Windows": os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app"),
+        "Linux": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app", os.path.expanduser("~/.local/share/cursor/resources/app"), "/usr/lib/cursor/app/"]
+    }
+    
+    # If config doesn't exist, create it with default paths
     if not os.path.exists(config_file):
-        raise OSError(translator.get('reset.config_not_found') if translator else "找不到配置文件")
+        for section in ['MacPaths', 'WindowsPaths', 'LinuxPaths']:
+            if not config.has_section(section):
+                config.add_section(section)
         
-    config.read(config_file, encoding='utf-8')  # Specify encoding
+        if system == "Darwin":
+            config.set('MacPaths', 'cursor_path', default_paths["Darwin"])
+        elif system == "Windows":
+            config.set('WindowsPaths', 'cursor_path', default_paths["Windows"])
+        elif system == "Linux":
+            # For Linux, try to find the first existing path
+            for path in default_paths["Linux"]:
+                if os.path.exists(path):
+                    config.set('LinuxPaths', 'cursor_path', path)
+                    break
+            else:
+                # If no path exists, use the first one as default
+                config.set('LinuxPaths', 'cursor_path', default_paths["Linux"][0])
+        
+        with open(config_file, 'w', encoding='utf-8') as f:
+            config.write(f)
+    else:
+        config.read(config_file, encoding='utf-8')
     
     # Get path based on system
     if system == "Darwin":
@@ -51,15 +83,26 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
         section = 'LinuxPaths'
     else:
         raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
-        
+    
     if not config.has_section(section) or not config.has_option(section, 'cursor_path'):
         raise OSError(translator.get('reset.path_not_configured') if translator else "未配置 Cursor 路徑")
-        
+    
     base_path = config.get(section, 'cursor_path')
+    
+    # For Linux, try to find the first existing path if the configured one doesn't exist
+    if system == "Linux" and not os.path.exists(base_path):
+        for path in default_paths["Linux"]:
+            if os.path.exists(path):
+                base_path = path
+                # Update config with the found path
+                config.set(section, 'cursor_path', path)
+                with open(config_file, 'w', encoding='utf-8') as f:
+                    config.write(f)
+                break
     
     if not os.path.exists(base_path):
         raise OSError(translator.get('reset.path_not_found', path=base_path) if translator else f"找不到 Cursor 路徑: {base_path}")
-        
+    
     pkg_path = os.path.join(base_path, "package.json")
     main_path = os.path.join(base_path, "out/main.js")
     
@@ -127,7 +170,7 @@ def get_workbench_cursor_path(translator=None) -> str:
             "main": "out/vs/workbench/workbench.desktop.main.js"
         },
         "Linux": {
-            "bases": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app"],
+            "bases": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app", "/usr/lib/cursor/app/"],
             "main": "out/vs/workbench/workbench.desktop.main.js"
         }
     }
@@ -256,11 +299,11 @@ def modify_workbench_js(file_path: str, translator=None) -> bool:
 
             if sys.platform == "win32":
                 # Define replacement patterns
-                CButton_old_pattern = r'$(k,E(Ks,{title:"Upgrade to Pro",size:"small",get codicon(){return F.rocket},get onClick(){return t.pay}}),null)'
-                CButton_new_pattern = r'$(k,E(Ks,{title:"yeongpin GitHub",size:"small",get codicon(){return F.rocket},get onClick(){return function(){window.open("https://github.com/yeongpin/cursor-free-vip","_blank")}}}),null)'
+                CButton_old_pattern = r'M(x,I(as,{title:"Upgrade to Pro",size:"small",get codicon(){return $.rocket},get onClick(){return t.pay}}),null)'
+                CButton_new_pattern = r'M(x,I(as,{title:"yeongpin GitHub",size:"small",get codicon(){return $.rocket},get onClick(){return function(){window.open("https://github.com/yeongpin/cursor-free-vip","_blank")}}}),null)'
             elif sys.platform == "linux":
-                CButton_old_pattern = r'$(k,E(Ks,{title:"Upgrade to Pro",size:"small",get codicon(){return F.rocket},get onClick(){return t.pay}}),null)'
-                CButton_new_pattern = r'$(k,E(Ks,{title:"yeongpin GitHub",size:"small",get codicon(){return F.rocket},get onClick(){return function(){window.open("https://github.com/yeongpin/cursor-free-vip","_blank")}}}),null)'
+                CButton_old_pattern = r'M(x,I(as,{title:"Upgrade to Pro",size:"small",get codicon(){return $.rocket},get onClick(){return t.pay}}),null)'
+                CButton_new_pattern = r'M(x,I(as,{title:"yeongpin GitHub",size:"small",get codicon(){return $.rocket},get onClick(){return function(){window.open("https://github.com/yeongpin/cursor-free-vip","_blank")}}}),null)'
             elif sys.platform == "darwin":
                 CButton_old_pattern = r'M(x,I(as,{title:"Upgrade to Pro",size:"small",get codicon(){return $.rocket},get onClick(){return t.pay}}),null)'
                 CButton_new_pattern = r'M(x,I(as,{title:"yeongpin GitHub",size:"small",get codicon(){return $.rocket},get onClick(){return function(){window.open("https://github.com/yeongpin/cursor-free-vip","_blank")}}}),null)'
@@ -534,6 +577,7 @@ class MachineIDResetter:
             
             if sys.platform.startswith("win"):
                 self._update_windows_machine_guid()
+                self._update_windows_machine_id()
             elif sys.platform == "darwin":
                 self._update_macos_platform_uuid(new_ids)
                 
@@ -563,6 +607,45 @@ class MachineIDResetter:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.update_windows_machine_guid_failed', error=str(e))}{Style.RESET_ALL}")
             raise
+    
+    def _update_windows_machine_id(self):
+        """Update Windows MachineId in SQMClient registry"""
+        try:
+            import winreg
+            # 1. Generate new GUID
+            new_guid = "{" + str(uuid.uuid4()).upper() + "}"
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('reset.new_machine_id')}: {new_guid}{Style.RESET_ALL}")
+            
+            # 2. Open the registry key
+            try:
+                key = winreg.OpenKey(
+                    winreg.HKEY_LOCAL_MACHINE,
+                    r"SOFTWARE\Microsoft\SQMClient",
+                    0,
+                    winreg.KEY_WRITE | winreg.KEY_WOW64_64KEY
+                )
+            except FileNotFoundError:
+                # If the key does not exist, create it
+                key = winreg.CreateKey(
+                    winreg.HKEY_LOCAL_MACHINE,
+                    r"SOFTWARE\Microsoft\SQMClient"
+                )
+            
+            # 3. Set MachineId value
+            winreg.SetValueEx(key, "MachineId", 0, winreg.REG_SZ, new_guid)
+            winreg.CloseKey(key)
+            
+            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.windows_machine_id_updated')}{Style.RESET_ALL}")
+            return True
+            
+        except PermissionError:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.permission_denied')}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('reset.run_as_admin')}{Style.RESET_ALL}")
+            return False
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('reset.update_windows_machine_id_failed', error=str(e))}{Style.RESET_ALL}")
+            return False
+                    
 
     def _update_macos_platform_uuid(self, new_ids):
         """Update macOS Platform UUID"""
@@ -621,13 +704,10 @@ class MachineIDResetter:
             self.update_system_ids(new_ids)
 
 
-            ### Remove In v1.7.02
             # Modify workbench.desktop.main.js
-            
-            # workbench_path = get_workbench_cursor_path(self.translator)
-            # modify_workbench_js(workbench_path, self.translator)
+            workbench_path = get_workbench_cursor_path(self.translator)
+            modify_workbench_js(workbench_path, self.translator)
 
-            ### Remove In v1.7.02
             # Check Cursor version and perform corresponding actions
             
             greater_than_0_45 = check_cursor_version(self.translator)

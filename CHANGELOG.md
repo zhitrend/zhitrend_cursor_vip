@@ -1,8 +1,48 @@
 # Change Log
 
-## v1.7.18 (Pre-Release)
-1. Fix: No Write Permission | 修復沒有寫入權限
+## v1.8.05
+1. Fix: Linux Path Not Found ｜ 修復linuxpath問題
+2. Add: support for detecting both 150/150 and 50/50 usage limits ｜ 添加偵測50 或者150的使用量
+3. Improve: usage parsing and validation ｜ 檢測使用量
+
+## v1.8.04
+1. Update totally_reset_cursor.py | 更新 totally_reset_cursor.py
+2. Fix: improve Linux Chrome visibility and root user handling | 修復 Linux Chrome 可見性以及 root 用戶處理
+3. Fix: improve Linux path handling and fix permission issues | 修復 Linux 路徑處理以及修復權限問題
+4. Fix: Some Issues | 修復一些問題
+
+## v1.8.03
+1. Fix: Improve Linux path handling and add case-insensitive Cursor directory detection ｜ 修復Linux系統路徑錯誤以及添加cursor 路徑偵測
 2. Fix: Some Issues | 修復一些問題
+
+## v1.8.02
+1. Add: New Temp Email | 增加新臨時郵箱
+2. Add: Config Options | 增加配置選項
+3. Add: Update Windows Machine ID | 增加更新 Windows 機器 ID
+4. Add: Contributors Options | 增加貢獻者選項
+5. Add: Check update enable Options In config | 增加在 config 中檢查更新選項
+6. Add: Show account info enabled options in config | 增加在 config 中顯示賬號信息選項
+7. Optimize Row & Colume Options | 優化行與列選項
+8. Fix: Too Many Free Trial On Some Machine | 修復某些機器上太多免費試用
+9. Fix: Disable Auto Update | 修復禁用自動更新
+10. Fix: Linux Chrome Not Open Correct | 修復 Linux Chrome 未正確打開
+11. Fix: Some Issues | 修復一些問題
+
+## v1.8.01
+1. Add: Cursor Account Info | 增加 Cursor 賬號信息
+2. Fix: Disable Auto Update | 修復禁用自動更新
+3. Add: 0.48.x Version Support | 增加 0.48.x 版本支持
+4. Revert: Totally Reser Cursor to Beta | 恢復完全重置 Cursor 到 Beta
+5. Reopen: Totally Reset Cursor | 重新開啟完全重置 Cursor
+6. Fix: Logo.py Center | 修復 Logo.py 居中
+7. Fix: Linux Chrome Not Open Correct | 修復 Linux Chrome 未正確打開
+8. Fix: Some Issues | 修復一些問題
+
+## v1.7.18
+1. Fix: No Write Permission | 修復沒有寫入權限
+2. Fix: Improve Linux path detection and config handling ｜ 修正 linux 路徑和config寫入讀取
+3. Fix: Locale path_no_exist missing ｜ 修正 path_no_exist 語言遺失
+4. Fix: Some Issues | 修復一些問題
 
 ## v1.7.17
 1. Fix: Remove 10 options Totally Reset Cursor | 修復完全重置 Cursor 選項

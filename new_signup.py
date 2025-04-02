@@ -203,9 +203,10 @@ def setup_driver(translator=None):
         # Use incognito mode
         co.set_argument("--incognito")
 
-        # Set random port
-        co.set_argument("--no-sandbox")
-        
+        if sys.platform == "linux":
+            # Set random port
+            co.set_argument("--no-sandbox")
+            
         # Set random port
         co.auto_port()
         

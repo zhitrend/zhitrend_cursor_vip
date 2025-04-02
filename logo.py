@@ -20,7 +20,7 @@ init()
 # get terminal width
 def get_terminal_width():
     try:
-        columns, _ = shutil.get_terminal_size()
+        columns, _ = shutil.get_terminal_size()/2
         return columns
     except:
         return 80  # default width
@@ -34,7 +34,7 @@ def center_multiline_text(text, handle_chinese=False):
     for line in lines:
         # calculate actual display width (remove ANSI color codes)
         clean_line = line
-        for color in [Fore.CYAN, Fore.YELLOW, Fore.GREEN, Fore.RED, Style.RESET_ALL]:
+        for color in [Fore.CYAN, Fore.YELLOW, Fore.GREEN, Fore.RED, Fore.BLUE, Style.RESET_ALL]:
             clean_line = clean_line.replace(color, '')
         
         # remove all ANSI escape sequences to get the actual length
@@ -83,7 +83,7 @@ muhammedfurkan plamkatawe
 """
 OTHER_INFO_TEXT = f"""{Fore.YELLOW}
 Github: https://github.com/yeongpin/cursor-free-vip{Fore.RED}
-Press 7 to change language | 按下 7 键切换语言{Style.RESET_ALL}"""
+Press 8 to change language | 按下 8 键切换语言{Style.RESET_ALL}"""
 
 # center display LOGO and DESCRIPTION
 CURSOR_LOGO = center_multiline_text(LOGO_TEXT, handle_chinese=False)
@@ -94,7 +94,7 @@ CURSOR_OTHER_INFO = center_multiline_text(OTHER_INFO_TEXT, handle_chinese=True)
 def print_logo():
     print(CURSOR_LOGO)
     print(CURSOR_DESCRIPTION)
-    print(CURSOR_CONTRIBUTORS)
+    # print(CURSOR_CONTRIBUTORS)
     print(CURSOR_OTHER_INFO)
 
 if __name__ == "__main__":
