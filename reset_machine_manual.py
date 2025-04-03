@@ -188,24 +188,10 @@ def get_workbench_cursor_path(translator=None) -> str:
     }
     
     if system == "Linux":
-        # Add original AppImage paths
-        appimage_bases = glob.glob("/tmp/.mount_Cursor*/resources/app")
-        extracted_bases = glob.glob(os.path.expanduser("~/squashfs-root/resources/app"))
-        
-        # Add correct path for AppImage structure
-        appimage_usr_paths = glob.glob("/tmp/.mount_Cursor*/usr/share/cursor/resources/app")
-        
-        # Also try without the "app" directory if it doesn't exist
-        appimage_usr_resources = glob.glob("/tmp/.mount_Cursor*/usr/share/cursor/resources")
-        
-        # Add debug output
-        for mount in glob.glob("/tmp/.mount_Cursor*"):
-            print(f"{Fore.CYAN}{EMOJI['INFO']} Found AppImage mount: {mount}{Style.RESET_ALL}")
-        
-        paths_map["Linux"]["bases"].extend(appimage_bases)
-        paths_map["Linux"]["bases"].extend(extracted_bases)
-        paths_map["Linux"]["bases"].extend(appimage_usr_paths)
-        paths_map["Linux"]["bases"].extend(appimage_usr_resources)
+        # Add extracted AppImage with correct usr structure
+        extracted_usr_paths = glob.glob(os.path.expanduser("~/squashfs-root/usr/share/cursor/resources/app"))
+            
+        paths_map["Linux"]["bases"].extend(extracted_usr_paths)
 
     if system not in paths_map:
         raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
