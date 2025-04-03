@@ -51,14 +51,22 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
     }
     
     if system == "Linux":
-        # Look for any AppImage mounts of Cursor
-        appimage_paths = glob.glob("/tmp/.mount_Cursor*/resources/app")
-        # Look for extracted AppImage directories
-        extracted_paths = glob.glob(os.path.expanduser("~/squashfs-root/resources/app"))
+        # Look for extracted AppImage with correct usr structure
+        extracted_usr_paths = glob.glob(os.path.expanduser("~/squashfs-root/usr/share/cursor/resources/app"))
+        # Also check current directory for extraction without home path prefix
+        current_dir_paths = glob.glob("squashfs-root/usr/share/cursor/resources/app")
         
         # Add any found paths to the Linux paths list
-        default_paths["Linux"].extend(appimage_paths)
-        default_paths["Linux"].extend(extracted_paths)
+        default_paths["Linux"].extend(extracted_usr_paths)
+        default_paths["Linux"].extend(current_dir_paths)
+        
+        # Print debug information
+        print(f"{Fore.CYAN}{EMOJI['INFO']} Available paths found:{Style.RESET_ALL}")
+        for path in default_paths["Linux"]:
+            if os.path.exists(path):
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {path} (exists){Style.RESET_ALL}")
+            else:
+                print(f"{Fore.RED}{EMOJI['ERROR']} {path} (not found){Style.RESET_ALL}")
     
     
     # If config doesn't exist, create it with default paths
