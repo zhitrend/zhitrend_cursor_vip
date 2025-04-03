@@ -8,6 +8,7 @@ import sqlite3
 import platform
 import re
 import tempfile
+import glob
 from colorama import Fore, Style, init
 from typing import Tuple
 import configparser
@@ -48,6 +49,17 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
         "Windows": os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app"),
         "Linux": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app", os.path.expanduser("~/.local/share/cursor/resources/app"), "/usr/lib/cursor/app/"]
     }
+    
+    if system == "Linux":
+        # Look for any AppImage mounts of Cursor
+        appimage_paths = glob.glob("/tmp/.mount_Cursor*/resources/app")
+        # Look for extracted AppImage directories
+        extracted_paths = glob.glob(os.path.expanduser("~/squashfs-root/resources/app"))
+        
+        # Add any found paths to the Linux paths list
+        default_paths["Linux"].extend(appimage_paths)
+        default_paths["Linux"].extend(extracted_paths)
+    
     
     # If config doesn't exist, create it with default paths
     if not os.path.exists(config_file):
@@ -174,6 +186,26 @@ def get_workbench_cursor_path(translator=None) -> str:
             "main": "out/vs/workbench/workbench.desktop.main.js"
         }
     }
+    
+    if system == "Linux":
+        # Add original AppImage paths
+        appimage_bases = glob.glob("/tmp/.mount_Cursor*/resources/app")
+        extracted_bases = glob.glob(os.path.expanduser("~/squashfs-root/resources/app"))
+        
+        # Add correct path for AppImage structure
+        appimage_usr_paths = glob.glob("/tmp/.mount_Cursor*/usr/share/cursor/resources/app")
+        
+        # Also try without the "app" directory if it doesn't exist
+        appimage_usr_resources = glob.glob("/tmp/.mount_Cursor*/usr/share/cursor/resources")
+        
+        # Add debug output
+        for mount in glob.glob("/tmp/.mount_Cursor*"):
+            print(f"{Fore.CYAN}{EMOJI['INFO']} Found AppImage mount: {mount}{Style.RESET_ALL}")
+        
+        paths_map["Linux"]["bases"].extend(appimage_bases)
+        paths_map["Linux"]["bases"].extend(extracted_bases)
+        paths_map["Linux"]["bases"].extend(appimage_usr_paths)
+        paths_map["Linux"]["bases"].extend(appimage_usr_resources)
 
     if system not in paths_map:
         raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
@@ -181,9 +213,9 @@ def get_workbench_cursor_path(translator=None) -> str:
     if system == "Linux":
         for base in paths_map["Linux"]["bases"]:
             main_path = os.path.join(base, paths_map["Linux"]["main"])
+            print(f"{Fore.CYAN}{EMOJI['INFO']} Checking path: {main_path}{Style.RESET_ALL}")
             if os.path.exists(main_path):
                 return main_path
-        raise OSError(translator.get('reset.linux_path_not_found') if translator else "在 Linux 系统上未找到 Cursor 安装路径")
 
     base_path = paths_map[system]["base"]
     main_path = os.path.join(base_path, paths_map[system]["main"])
