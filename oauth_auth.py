@@ -10,6 +10,8 @@ from cursor_auth import CursorAuth
 from utils import get_random_wait_time, get_default_chrome_path
 from config import get_config
 import platform
+import subprocess
+import shutil
 
 # Initialize colorama
 init()
@@ -149,11 +151,20 @@ class OAuthHandler:
             # co.auto_port()
             
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_browser', path=chrome_path) if self.translator else f'Starting browser at: {chrome_path}'}{Style.RESET_ALL}")
-            self.browser = ChromiumPage(co)
-            
-            # Verify browser launched successfully
-            if not self.browser:
-                raise Exception("Failed to initialize browser instance")
+            try:
+                self.browser = ChromiumPage(co)
+                # Verify browser launched successfully
+                if not self.browser:
+                    raise Exception("Failed to initialize browser instance")
+            except Exception as browser_error:
+                print(f"{Fore.RED}{EMOJI['ERROR']} Подробная ошибка запуска браузера: {str(browser_error)}{Style.RESET_ALL}")
+                # Выведем, какие пути проверялись
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Пути поиска Chrome:{Style.RESET_ALL}")
+                for path in [chrome_path] + self._get_all_possible_browser_paths():
+                    exists = os.path.exists(path) if path else False
+                    status = f"{Fore.GREEN}Существует{Style.RESET_ALL}" if exists else f"{Fore.RED}Не найден{Style.RESET_ALL}"
+                    print(f"  - {path}: {status}")
+                raise browser_error
             
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.browser_setup_completed') if self.translator else 'Browser setup completed successfully'}{Style.RESET_ALL}")
             return True
@@ -166,6 +177,15 @@ class OAuthHandler:
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.make_sure_chrome_chromium_is_properly_installed') if self.translator else 'Make sure Chrome/Chromium is properly installed'}{Style.RESET_ALL}")
                 if platform_name == 'linux':
                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.try_install_chromium') if self.translator else 'Try: sudo apt install chromium-browser'}{Style.RESET_ALL}")
+                # Добавим проверку PATH
+                if os.name == 'nt':  # Windows
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Проверьте, что Chrome/Chromium добавлен в PATH и доступен по команде 'chrome'{Style.RESET_ALL}")
+                    # Попробуем запустить chrome напрямую, чтобы увидеть ошибку
+                    try:
+                        subprocess.run('where chrome', shell=True, check=True)
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Chrome найден в PATH{Style.RESET_ALL}")
+                    except subprocess.CalledProcessError:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Chrome не найден в PATH{Style.RESET_ALL}")
             return False
 
     def _kill_browser_processes(self):
@@ -229,6 +249,24 @@ class OAuthHandler:
             if chrome_path and os.path.exists(chrome_path):
                 return chrome_path
             
+            # Trying to find through which/where
+            try:
+                if os.name == 'nt':  # Windows
+                    result = subprocess.run('where chrome', shell=True, capture_output=True, text=True)
+                    if result.returncode == 0 and result.stdout.strip():
+                        path = result.stdout.strip().split('\n')[0].strip()
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Chrome found in PATH: {path}{Style.RESET_ALL}")
+                        return path
+                else:  # Linux/Mac
+                    result = subprocess.run('which google-chrome || which chrome || which chromium-browser || which chromium', 
+                                           shell=True, capture_output=True, text=True)
+                    if result.returncode == 0 and result.stdout.strip():
+                        path = result.stdout.strip()
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Browser found in PATH: {path}{Style.RESET_ALL}")
+                        return path
+            except Exception as which_error:
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} Ошибка при поиске через PATH: {str(which_error)}{Style.RESET_ALL}")
+            
             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.searching_for_alternative_browser_installations') if self.translator else 'Searching for alternative browser installations...'}{Style.RESET_ALL}")
             
             # Platform-specific paths
@@ -237,9 +275,22 @@ class OAuthHandler:
                     r'C:\Program Files\Google\Chrome\Application\chrome.exe',
                     r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
                     r'C:\Program Files\Chromium\Application\chrome.exe',
+                    r'C:\Program Files\Google\Chrome\chrome.exe',  # Дополнительный путь
+                    r'C:\Program Files (x86)\Google\Chrome\chrome.exe',  # Дополнительный путь
                     os.path.expandvars(r'%ProgramFiles%\Google\Chrome\Application\chrome.exe'),
-                    os.path.expandvars(r'%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe')
+                    os.path.expandvars(r'%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe'),
+                    os.path.expandvars(r'%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe'),  # Дополнительный путь
+                    os.path.expandvars(r'%USERPROFILE%\AppData\Local\Google\Chrome\Application\chrome.exe'),  # Дополнительный путь
                 ]
+                
+                # Добавим проверку всех дисков
+                for drive in 'CDEFGHIJKLMNOPQRSTUVWXYZ':
+                    chrome_path = f"{drive}:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+                    if os.path.exists(chrome_path):
+                        return chrome_path
+                    chrome_path = f"{drive}:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+                    if os.path.exists(chrome_path):
+                        return chrome_path
             elif sys.platform == 'darwin':  # macOS
                 alt_paths = [
                     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -830,7 +881,7 @@ class OAuthHandler:
                     missing.append("email")
                 if not token:
                     missing.append("token")
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.missing_authentication_data', data=', '.join(missing)) if self.translator else f'Missing authentication data: {", ".join(missing)}'}{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.missing_authentication_data', data=', '.join(missing)) if self.translator else 'Missing authentication data: ' + ', '.join(missing)}{Style.RESET_ALL}")
                 return False, None
             
         except Exception as e:
@@ -878,6 +929,46 @@ class OAuthHandler:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account', error=str(e)) if self.translator else f'Failed to delete account: {str(e)}'}{Style.RESET_ALL}")
             return False
+
+    def _get_all_possible_browser_paths(self):
+        """Получить все возможные пути к браузерам для отладки"""
+        if os.name == 'nt':  # Windows
+            paths = [
+                r'C:\Program Files\Google\Chrome\Application\chrome.exe',
+                r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
+                r'C:\Program Files\Chromium\Application\chrome.exe',
+                os.path.expandvars(r'%ProgramFiles%\Google\Chrome\Application\chrome.exe'),
+                os.path.expandvars(r'%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe')
+            ]
+            
+            # Добавить путь из which, если доступен
+            chrome_path = None
+            try:
+                chrome_path = shutil.which("chrome")
+            except:
+                pass
+                
+            if chrome_path:
+                paths.append(chrome_path)
+                
+            return paths
+            
+        elif sys.platform == 'darwin':  # macOS
+            return [
+                '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+                '/Applications/Chromium.app/Contents/MacOS/Chromium',
+                '~/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+                '~/Applications/Chromium.app/Contents/MacOS/Chromium'
+            ]
+        else:  # Linux
+            return [
+                '/usr/bin/google-chrome',
+                '/usr/bin/chromium-browser',
+                '/usr/bin/chromium',
+                '/snap/bin/chromium',
+                '/usr/local/bin/chrome',
+                '/usr/local/bin/chromium'
+            ]
 
 def main(auth_type, translator=None):
     """Main function to handle OAuth authentication
