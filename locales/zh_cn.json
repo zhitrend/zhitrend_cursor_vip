@@ -2,13 +2,14 @@
     "menu": {
         "title": "可用选项",
         "exit": "退出程序",
-        "reset": "重置机器标识",
-        "register": "注册新 Cursor 账号",
-        "register_google": "使用 Google 账号注册",
-        "register_github": "使用 GitHub 账号注册",
-        "register_manual": "使用自定义邮箱注册",
-        "quit": "关闭 Cursor 应用",
+        "reset": "重置机器ID",
+        "register": "注册新的Cursor账户",
+        "register_google": "使用Google账户注册",
+        "register_github": "使用GitHub账户注册",
+        "register_manual": "使用自定义邮箱注册Cursor",
+        "quit": "关闭Cursor应用",
         "select_language": "更改语言",
+        "select_chrome_profile": "选择Chrome配置文件",
         "input_choice": "请输入您的选择 ({choices})",
         "invalid_choice": "选择无效，请输入 {choices} 范围内的数字",
         "program_terminated": "程序已被用户终止",
@@ -576,6 +577,17 @@
         "warning_could_not_kill_existing_browser_processes": "警告: 无法杀死现有浏览器进程: {error}",
         "browser_failed_to_start": "浏览器启动失败: {error}",
         "browser_failed": "浏览器启动失败: {error}"
+    },
+    "chrome_profile": {
+        "title": "Chrome配置文件选择",
+        "select_profile": "选择要使用的Chrome配置文件：",
+        "profile_list": "可用配置文件：",
+        "default_profile": "默认配置文件",
+        "profile": "配置文件 {number}",
+        "no_profiles": "未找到Chrome配置文件",
+        "error_loading": "加载Chrome配置文件时出错：{error}",
+        "profile_selected": "已选择配置文件：{profile}",
+        "invalid_selection": "选择无效。请重试",
+        "warning_chrome_close": "警告：这将关闭所有正在运行的Chrome进程"
     }
-
 } 

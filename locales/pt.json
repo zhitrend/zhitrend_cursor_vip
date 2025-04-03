@@ -383,5 +383,17 @@
         "electron_localstorage_files_removed": "Arquivos localStorage do Electron removidos",
         "electron_localstorage_files_removal_error": "Erro ao remover arquivos localStorage do Electron: {error}",
         "removing_electron_localstorage_files_completed": "Remoção dos arquivos localStorage do Electron concluída"
+    },
+    "chrome_profile": {
+        "title": "Seleção de Perfil do Chrome",
+        "select_profile": "Selecione um perfil do Chrome para usar:",
+        "profile_list": "Perfis disponíveis:",
+        "default_profile": "Perfil Padrão",
+        "profile": "Perfil {number}",
+        "no_profiles": "Nenhum perfil do Chrome encontrado",
+        "error_loading": "Erro ao carregar perfis do Chrome: {error}",
+        "profile_selected": "Perfil selecionado: {profile}",
+        "invalid_selection": "Seleção inválida. Por favor, tente novamente",
+        "warning_chrome_close": "Aviso: Isso fechará todos os processos do Chrome em execução"
     }
 }

@@ -6,10 +6,11 @@
         "register": "Neues Cursor-Konto Registrieren",
         "register_google": "Mit Google-Konto Registrieren",
         "register_github": "Mit GitHub-Konto Registrieren",
-        "register_manual": "Cursor mit Benutzerdefinierter E-Mail Registrieren",
+        "register_manual": "Cursor Mit Benutzerdefinierter E-Mail Registrieren",
         "quit": "Cursor-Anwendung Schließen",
         "select_language": "Sprache Ändern",
-        "input_choice": "Bitte Auswahl eingeben ({choices})",
+        "select_chrome_profile": "Chrome-Profil Auswählen",
+        "input_choice": "Bitte geben Sie Ihre Auswahl ein ({choices})",
         "invalid_choice": "Ungültige Auswahl. Bitte eine Nummer von {choices} eingeben",
         "program_terminated": "Programm wurde vom Benutzer beendet",
         "error_occurred": "Ein Fehler ist aufgetreten: {error}. Bitte erneut versuchen",
@@ -376,5 +377,17 @@
         "electron_localstorage_files_removed": "Electron localStorage-Dateien entfernt",
         "electron_localstorage_files_removal_error": "Fehler beim Entfernen von Electron localStorage-Dateien: {error}",
         "removing_electron_localstorage_files_completed": "Entfernen von Electron localStorage-Dateien abgeschlossen"
+    },
+    "chrome_profile": {
+        "title": "Chrome-Profil Auswahl",
+        "select_profile": "Wählen Sie ein Chrome-Profil zum Verwenden:",
+        "profile_list": "Verfügbare Profile:",
+        "default_profile": "Standard-Profil",
+        "profile": "Profil {number}",
+        "no_profiles": "Keine Chrome-Profile gefunden",
+        "error_loading": "Fehler beim Laden der Chrome-Profile: {error}",
+        "profile_selected": "Ausgewähltes Profil: {profile}",
+        "invalid_selection": "Ungültige Auswahl. Bitte versuchen Sie es erneut",
+        "warning_chrome_close": "Warnung: Dies wird alle laufenden Chrome-Prozesse beenden"
     }
 }

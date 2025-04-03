@@ -1,12 +1,15 @@
 {
     "menu": {
-        "title": "Các Tùy Chọn Khả Dụng",
+        "title": "Các Tùy Chọn",
         "exit": "Thoát Chương Trình",
         "reset": "Đặt Lại ID Máy",
         "register": "Đăng Ký Tài Khoản Cursor Mới",
+        "register_google": "Đăng Ký Bằng Tài Khoản Google",
+        "register_github": "Đăng Ký Bằng Tài Khoản GitHub",
         "register_manual": "Đăng Ký Cursor Với Email Tùy Chỉnh",
         "quit": "Đóng Ứng Dụng Cursor",
         "select_language": "Thay Đổi Ngôn Ngữ",
+        "select_chrome_profile": "Chọn Hồ Sơ Chrome",
         "input_choice": "Vui lòng nhập lựa chọn của bạn ({choices})",
         "invalid_choice": "Lựa chọn không hợp lệ. Vui lòng nhập một số từ {choices}",
         "program_terminated": "Chương trình đã bị người dùng chấm dứt",
@@ -381,5 +384,17 @@
         "electron_localstorage_files_removed": "Đã xóa các tệp Electron localStorage",
         "electron_localstorage_files_removal_error": "Lỗi khi xóa các tệp Electron localStorage: {error}",
         "removing_electron_localstorage_files_completed": "Đã hoàn tất việc xóa các tệp Electron localStorage"
+    },
+    "chrome_profile": {
+        "title": "Chọn Hồ Sơ Chrome",
+        "select_profile": "Chọn hồ sơ Chrome để sử dụng:",
+        "profile_list": "Các hồ sơ có sẵn:",
+        "default_profile": "Hồ Sơ Mặc Định",
+        "profile": "Hồ Sơ {number}",
+        "no_profiles": "Không tìm thấy hồ sơ Chrome",
+        "error_loading": "Lỗi khi tải hồ sơ Chrome: {error}",
+        "profile_selected": "Đã chọn hồ sơ: {profile}",
+        "invalid_selection": "Lựa chọn không hợp lệ. Vui lòng thử lại",
+        "warning_chrome_close": "Cảnh báo: Điều này sẽ đóng tất cả các tiến trình Chrome đang chạy"
     }
 }

@@ -9,6 +9,7 @@
         "register_manual": "Register Cursor with Custom Email",
         "quit": "Close Cursor Application",
         "select_language": "Change Language",
+        "select_chrome_profile": "Select Chrome Profile",
         "input_choice": "Please enter your choice ({choices})",
         "invalid_choice": "Invalid selection. Please enter a number from {choices}",
         "program_terminated": "Program was terminated by user",
@@ -581,5 +582,17 @@
         "warning_could_not_kill_existing_browser_processes": "Warning: Could not kill existing browser processes: {error}",
         "browser_failed_to_start": "Browser failed to start: {error}",
         "browser_failed": "Browser failed to start: {error}"
+    },
+    "chrome_profile": {
+        "title": "Chrome Profile Selection",
+        "select_profile": "Select a Chrome profile to use:",
+        "profile_list": "Available profiles:",
+        "default_profile": "Default Profile",
+        "profile": "Profile {number}",
+        "no_profiles": "No Chrome profiles found",
+        "error_loading": "Error loading Chrome profiles: {error}",
+        "profile_selected": "Selected profile: {profile}",
+        "invalid_selection": "Invalid selection. Please try again",
+        "warning_chrome_close": "Warning: This will close all running Chrome processes"
     }
-}
+}   

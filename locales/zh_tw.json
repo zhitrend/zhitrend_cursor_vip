@@ -2,11 +2,14 @@
     "menu": {
         "title": "可用選項",
         "exit": "退出程式",
-        "reset": "重置機器識別碼",
-        "register": "註冊新 Cursor 帳號",
-        "register_manual": "使用自訂郵箱註冊",
-        "quit": "關閉 Cursor 應用程式",
-        "select_language": "變更語言",
+        "reset": "重置機器ID",
+        "register": "註冊新的Cursor帳戶",
+        "register_google": "使用Google帳戶註冊",
+        "register_github": "使用GitHub帳戶註冊",
+        "register_manual": "使用自定義郵箱註冊Cursor",
+        "quit": "關閉Cursor應用",
+        "select_language": "更改語言",
+        "select_chrome_profile": "選擇Chrome配置檔案",
         "input_choice": "請輸入您的選擇 ({choices})",
         "invalid_choice": "選擇無效，請輸入 {choices} 範圍內的數字",
         "program_terminated": "程式已被使用者終止",
@@ -498,7 +501,6 @@
         "storage_file_is_valid_and_contains_data": "儲存文件有效且包含數據",
         "error_reading_storage_file": "讀取儲存文件時出錯",
         "also_checked": "也檢查了 {path}"
-
     },
     "oauth": {
         "authentication_button_not_found": "未找到認證按鈕",
@@ -556,5 +558,17 @@
         "warning_could_not_kill_existing_browser_processes": "警告: 無法殺死現有瀏覽器進程: {error}",
         "browser_failed_to_start": "瀏覽器啟動失敗: {error}",
         "browser_failed": "瀏覽器啟動失敗: {error}"
+    },
+    "chrome_profile": {
+        "title": "Chrome配置檔案選擇",
+        "select_profile": "選擇要使用的Chrome配置檔案：",
+        "profile_list": "可用配置檔案：",
+        "default_profile": "預設配置檔案",
+        "profile": "配置檔案 {number}",
+        "no_profiles": "未找到Chrome配置檔案",
+        "error_loading": "載入Chrome配置檔案時出錯：{error}",
+        "profile_selected": "已選擇配置檔案：{profile}",
+        "invalid_selection": "選擇無效。請重試",
+        "warning_chrome_close": "警告：這將關閉所有正在執行的Chrome程序"
     }
 } 
