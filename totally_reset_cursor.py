@@ -14,6 +14,7 @@ import configparser
 from new_signup import get_user_documents_path
 import traceback
 from config import get_config
+import glob
 
 # Initialize colorama
 init()
@@ -48,6 +49,24 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
         "Windows": os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app"),
         "Linux": ["/opt/Cursor/resources/app", "/usr/share/cursor/resources/app", os.path.expanduser("~/.local/share/cursor/resources/app")]
     }
+    
+    if system == "Linux":
+        # Look for extracted AppImage directories - with usr structure
+        extracted_usr_paths = glob.glob(os.path.expanduser("~/squashfs-root/usr/share/cursor/resources/app"))
+        # Check current directory for extraction without home path prefix
+        current_dir_paths = glob.glob("squashfs-root/usr/share/cursor/resources/app")
+        
+        # Add all paths to the Linux paths list
+        default_paths["Linux"].extend(extracted_usr_paths)
+        default_paths["Linux"].extend(current_dir_paths)
+
+        # Print debug info for troubleshooting
+        print(f"{Fore.CYAN}{EMOJI['INFO']} Available paths found:{Style.RESET_ALL}")
+        for path in default_paths["Linux"]:
+            if os.path.exists(path):
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {path} (exists){Style.RESET_ALL}")
+            else:
+                print(f"{Fore.RED}{EMOJI['ERROR']} {path} (not found){Style.RESET_ALL}")
     
     # If config doesn't exist, create it with default paths
     if not os.path.exists(config_file):
@@ -175,10 +194,16 @@ def get_workbench_cursor_path(translator=None) -> str:
         }
     }
 
-    if system not in paths_map:
-        raise OSError(translator.get('reset.unsupported_os', system=system) if translator else f"不支持的操作系统: {system}")
-
     if system == "Linux":
+        # Look for extracted AppImage with correct usr structure
+        extracted_usr_paths = glob.glob(os.path.expanduser("~/squashfs-root/usr/share/cursor/resources/app"))
+        # Check current directory for extraction
+        current_dir_paths = glob.glob("squashfs-root/usr/share/cursor/resources/app")
+  
+        
+        paths_map["Linux"]["bases"].extend(extracted_usr_paths)
+        paths_map["Linux"]["bases"].extend(current_dir_paths)
+
         for base in paths_map["Linux"]["bases"]:
             main_path = os.path.join(base, paths_map["Linux"]["main"])
             if os.path.exists(main_path):
