@@ -34,12 +34,15 @@ class AutoUpdateDisabler:
             if self.system == "Windows":
                 self.updater_path = config.get('WindowsPaths', 'updater_path', fallback=os.path.join(os.getenv("LOCALAPPDATA", ""), "cursor-updater"))
                 self.update_yml_path = config.get('WindowsPaths', 'update_yml_path', fallback=os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app", "update.yml"))
+                self.product_json_path = config.get('WindowsPaths', 'product_json_path', fallback=os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app", "product.json"))
             elif self.system == "Darwin":
                 self.updater_path = config.get('MacPaths', 'updater_path', fallback=os.path.expanduser("~/Library/Application Support/cursor-updater"))
                 self.update_yml_path = config.get('MacPaths', 'update_yml_path', fallback="/Applications/Cursor.app/Contents/Resources/app-update.yml")
+                self.product_json_path = config.get('MacPaths', 'product_json_path', fallback="/Applications/Cursor.app/Contents/Resources/app/product.json")
             elif self.system == "Linux":
                 self.updater_path = config.get('LinuxPaths', 'updater_path', fallback=os.path.expanduser("~/.config/cursor-updater"))
                 self.update_yml_path = config.get('LinuxPaths', 'update_yml_path', fallback=os.path.expanduser("~/.config/cursor/resources/app-update.yml"))
+                self.product_json_path = config.get('LinuxPaths', 'product_json_path', fallback=os.path.expanduser("~/.config/cursor/resources/app/product.json"))
         else:
             # If configuration loading fails, use default paths
             self.updater_paths = {
@@ -56,21 +59,28 @@ class AutoUpdateDisabler:
             }
             self.update_yml_path = self.update_yml_paths.get(self.system)
 
+            self.product_json_paths = {
+                "Windows": os.path.join(os.getenv("LOCALAPPDATA", ""), "Programs", "Cursor", "resources", "app", "product.json"),
+                "Darwin": "/Applications/Cursor.app/Contents/Resources/app/product.json",
+                "Linux": os.path.expanduser("~/.config/cursor/resources/app/product.json")
+            }
+            self.product_json_path = self.product_json_paths.get(self.system)
+
     def _change_main_js(self):
         """Change main.js"""
         try:
-            main_path = get_config(self.translator).get('main_js_path', fallback=os.path.expanduser("~/.config/cursor/resources/app/main.js"))
-            original_stat = os.stat(main_path)
+            original_stat = os.stat(self.product_json_path)
             original_mode = original_stat.st_mode
             original_uid = original_stat.st_uid
             original_gid = original_stat.st_gid
 
             with tempfile.NamedTemporaryFile(mode="w", delete=False) as tmp_file:
-                with open(main_path, "r", encoding="utf-8") as main_file:
-                    content = main_file.read()
+                with open(self.product_json_path, "r", encoding="utf-8") as product_json_file:
+                    content = product_json_file.read()
                 
                 patterns = {
-                    r"https://api2.cursor.sh/aiserver.v1.AuthService/DownloadUpdate": r"",
+                    r"https://api2.cursor.sh/updates": r"",
+                    r"http://cursorapi.com/updates": r"",
                 }
                 
                 for pattern, replacement in patterns.items():
@@ -79,12 +89,12 @@ class AutoUpdateDisabler:
                 tmp_file.write(content)
                 tmp_path = tmp_file.name
 
-            shutil.copy2(main_path, main_path + ".old")
-            shutil.move(tmp_path, main_path)
+            shutil.copy2(self.product_json_path, self.product_json_path + ".old")
+            shutil.move(tmp_path, self.product_json_path)
 
-            os.chmod(main_path, original_mode)
+            os.chmod(self.product_json_path, original_mode)
             if os.name != "nt":
-                os.chown(main_path, original_uid, original_gid)
+                os.chown(self.product_json_path, original_uid, original_gid)
 
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('reset.file_modified')}{Style.RESET_ALL}")
             return True
