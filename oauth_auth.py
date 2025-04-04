@@ -403,21 +403,30 @@ class OAuthHandler:
                                         usage_text = usage_element.text
                                         print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                         
-                                        # Check if account is expired (both 150/150 and 50/50 cases)
-                                        if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
-                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', creating_new_account='creating new account') if self.translator else 'Account has reached maximum usage, creating new account...'}{Style.RESET_ALL}")
+                                        def check_usage_limits(usage_str):
+                                            try:
+                                                parts = usage_str.split('/')
+                                                if len(parts) != 2:
+                                                    return False
+                                                current = int(parts[0].strip())
+                                                limit = int(parts[1].strip())
+                                                return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
+                                            except:
+                                                return False
+
+                                        if check_usage_limits(usage_text):
+                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                             
-                                            # Delete current account
                                             if self._delete_current_account():
-                                                # Start new authentication based on auth type
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
                                                 if self.auth_type == "google":
                                                     return self.handle_google_auth()
-                                                else:  # github
+                                                else:
                                                     return self.handle_github_auth()
                                             else:
                                                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
-                                        
+                                        else:
+                                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                 except Exception as e:
                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                 
@@ -606,57 +615,32 @@ class OAuthHandler:
                                             usage_text = usage_element.text
                                             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                             
-                                            # Check if account is expired (both 150/150 and 50/50 cases)
-                                            if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
+                                            def check_usage_limits(usage_str):
+                                                try:
+                                                    parts = usage_str.split('/')
+                                                    if len(parts) != 2:
+                                                        return False
+                                                    current = int(parts[0].strip())
+                                                    limit = int(parts[1].strip())
+                                                    return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
+                                                except:
+                                                    return False
+
+                                            if check_usage_limits(usage_text):
                                                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                 
-                                                delete_js = """
-                                                function deleteAccount() {
-                                                    return new Promise((resolve, reject) => {
-                                                        fetch('https://www.cursor.com/api/dashboard/delete-account', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            credentials: 'include'
-                                                        })
-                                                        .then(response => {
-                                                            if (response.status === 200) {
-                                                                resolve('Account deleted successfully');
-                                                            } else {
-                                                                reject('Failed to delete account: ' + response.status);
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            reject('Error: ' + error);
-                                                        });
-                                                    });
-                                                }
-                                                return deleteAccount();
-                                                """
-                                                
-                                                try:
-                                                    result = self.browser.run_js(delete_js)
-                                                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Delete account result: {result}{Style.RESET_ALL}")
-                                                    
-                                                    # Navigate back to auth page and repeat authentication
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_re_authentication_process') if self.translator else 'Starting re-authentication process...'}{Style.RESET_ALL}")
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.redirecting_to_authenticator_cursor_sh') if self.translator else 'Redirecting to authenticator.cursor.sh...'}{Style.RESET_ALL}")
-                                                    
-                                                    # Explicitly navigate to the authentication page
-                                                    self.browser.get("https://authenticator.cursor.sh/sign-up")
-                                                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
-                                                    
-                                                    # Call handle_google_auth again to repeat the entire process
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_google_authentication') if self.translator else 'Starting new Google authentication...'}{Style.RESET_ALL}")
-                                                    return self.handle_google_auth()
-                                                    
-                                                except Exception as e:
-                                                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account_or_re_authenticate', error=str(e)) if self.translator else f'Failed to delete account or re-authenticate: {str(e)}'}{Style.RESET_ALL}")
+                                                if self._delete_current_account():
+                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
+                                                    if self.auth_type == "google":
+                                                        return self.handle_google_auth()
+                                                    else:
+                                                        return self.handle_github_auth()
+                                                else:
+                                                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
                                             else:
                                                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                     except Exception as e:
-                                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_usage_count', error=str(e)) if self.translator else f'Could not find usage count: {str(e)}'}{Style.RESET_ALL}")
+                                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                     
                                     # Remove the browser stay open prompt and input wait
                                     return True, {"email": actual_email, "token": token}
@@ -692,57 +676,32 @@ class OAuthHandler:
                                                 usage_text = usage_element.text
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                                 
-                                                # Check if account is expired (both 150/150 and 50/50 cases)
-                                                if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
+                                                def check_usage_limits(usage_str):
+                                                    try:
+                                                        parts = usage_str.split('/')
+                                                        if len(parts) != 2:
+                                                            return False
+                                                        current = int(parts[0].strip())
+                                                        limit = int(parts[1].strip())
+                                                        return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
+                                                    except:
+                                                        return False
+
+                                                if check_usage_limits(usage_text):
                                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                     
-                                                    delete_js = """
-                                                    function deleteAccount() {
-                                                        return new Promise((resolve, reject) => {
-                                                            fetch('https://www.cursor.com/api/dashboard/delete-account', {
-                                                                method: 'POST',
-                                                                headers: {
-                                                                    'Content-Type': 'application/json'
-                                                                },
-                                                                credentials: 'include'
-                                                            })
-                                                            .then(response => {
-                                                                if (response.status === 200) {
-                                                                    resolve('Account deleted successfully');
-                                                                } else {
-                                                                    reject('Failed to delete account: ' + response.status);
-                                                                }
-                                                            })
-                                                            .catch(error => {
-                                                                reject('Error: ' + error);
-                                                            });
-                                                        });
-                                                    }
-                                                    return deleteAccount();
-                                                    """
-                                                    
-                                                    try:
-                                                        result = self.browser.run_js(delete_js)
-                                                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Delete account result: {result}{Style.RESET_ALL}")
-                                                        
-                                                        # Navigate back to auth page and repeat authentication
-                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_re_authentication_process') if self.translator else 'Starting re-authentication process...'}{Style.RESET_ALL}")
-                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.redirecting_to_authenticator_cursor_sh') if self.translator else 'Redirecting to authenticator.cursor.sh...'}{Style.RESET_ALL}")
-                                                        
-                                                        # Explicitly navigate to the authentication page
-                                                        self.browser.get("https://authenticator.cursor.sh/sign-up")
-                                                        time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
-                                                        
-                                                        # Call handle_google_auth again to repeat the entire process
-                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_google_authentication') if self.translator else 'Starting new Google authentication...'}{Style.RESET_ALL}")
-                                                        return self.handle_google_auth()
-                                                        
-                                                    except Exception as e:
-                                                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account_or_re_authenticate', error=str(e)) if self.translator else f'Failed to delete account or re-authenticate: {str(e)}'}{Style.RESET_ALL}")
-                                            else:
-                                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
+                                                    if self._delete_current_account():
+                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
+                                                        if self.auth_type == "google":
+                                                            return self.handle_google_auth()
+                                                        else:
+                                                            return self.handle_github_auth()
+                                                    else:
+                                                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
+                                                else:
+                                                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                         except Exception as e:
-                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_usage_count', error=str(e)) if self.translator else f'Could not find usage count: {str(e)}'}{Style.RESET_ALL}")
+                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                         
                                         # Remove the browser stay open prompt and input wait
                                         return True, {"email": actual_email, "token": token}
