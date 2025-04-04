@@ -158,7 +158,7 @@ class OAuthHandler:
                     raise Exception("Failed to initialize browser instance")
             except Exception as browser_error:
                 print(f"{Fore.RED}{EMOJI['ERROR']} Подробная ошибка запуска браузера: {str(browser_error)}{Style.RESET_ALL}")
-                # Выведем, какие пути проверялись
+                # Printing which paths were checked
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} Пути поиска Chrome:{Style.RESET_ALL}")
                 for path in [chrome_path] + self._get_all_possible_browser_paths():
                     exists = os.path.exists(path) if path else False
@@ -177,15 +177,15 @@ class OAuthHandler:
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.make_sure_chrome_chromium_is_properly_installed') if self.translator else 'Make sure Chrome/Chromium is properly installed'}{Style.RESET_ALL}")
                 if platform_name == 'linux':
                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.try_install_chromium') if self.translator else 'Try: sudo apt install chromium-browser'}{Style.RESET_ALL}")
-                # Добавим проверку PATH
+                # Adding PATH check
                 if os.name == 'nt':  # Windows
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Проверьте, что Chrome/Chromium добавлен в PATH и доступен по команде 'chrome'{Style.RESET_ALL}")
-                    # Попробуем запустить chrome напрямую, чтобы увидеть ошибку
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Check if chrome is installed in PATH and is available with command 'chrome'{Style.RESET_ALL}")
+                    # Trying to run chrome directly
                     try:
                         subprocess.run('where chrome', shell=True, check=True)
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Chrome найден в PATH{Style.RESET_ALL}")
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Found Chrome in PATH{Style.RESET_ALL}")
                     except subprocess.CalledProcessError:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} Chrome не найден в PATH{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} Chrome isn't in PATH{Style.RESET_ALL}")
             return False
 
     def _kill_browser_processes(self):
