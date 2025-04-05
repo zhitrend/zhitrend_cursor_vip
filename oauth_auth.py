@@ -10,8 +10,6 @@ from cursor_auth import CursorAuth
 from utils import get_random_wait_time, get_default_chrome_path
 from config import get_config
 import platform
-import subprocess
-import shutil
 
 # Initialize colorama
 init()
@@ -34,76 +32,76 @@ class OAuthHandler:
         self.auth_type = auth_type  # make sure the auth_type is not None
         os.environ['BROWSER_HEADLESS'] = 'False'
         self.browser = None
+        self.selected_profile = None
         
-    def _get_active_profile(self, user_data_dir):
-        """Find the existing default/active Chrome profile"""
+    def _get_available_profiles(self, user_data_dir):
+        """Get list of available Chrome profiles with their names"""
         try:
-            # List all profile directories
             profiles = []
-            for item in os.listdir(user_data_dir):
-                if item == 'Default' or (item.startswith('Profile ') and os.path.isdir(os.path.join(user_data_dir, item))):
-                    profiles.append(item)
+            profile_names = {}
             
-            if not profiles:
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.no_chrome_profiles_found') if self.translator else 'No Chrome profiles found, using Default'}{Style.RESET_ALL}")
-                return 'Default'
-            
-            # First check if Default profile exists
-            if 'Default' in profiles:
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_default_chrome_profile') if self.translator else 'Found Default Chrome profile'}{Style.RESET_ALL}")
-                return 'Default'
-            
-            # If no Default profile, check Local State for last used profile
+            # Read Local State file to get profile names
             local_state_path = os.path.join(user_data_dir, 'Local State')
             if os.path.exists(local_state_path):
                 with open(local_state_path, 'r', encoding='utf-8') as f:
                     local_state = json.load(f)
-                
-                # Get info about last used profile
-                profile_info = local_state.get('profile', {})
-                last_used = profile_info.get('last_used', '')
-                info_cache = profile_info.get('info_cache', {})
-                
-                # Try to find an active profile
-                for profile in profiles:
-                    profile_path = profile.replace('\\', '/')
-                    if profile_path in info_cache:
-                        #print(f"{Fore.CYAN}{EMOJI['INFO']} Using existing Chrome profile: {profile}{Style.RESET_ALL}")
-                        return profile
-            
-            # If no profile found in Local State, use the first available profile
-            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.using_first_available_chrome_profile', profile=profiles[0]) if self.translator else f'Using first available Chrome profile: {profiles[0]}'}{Style.RESET_ALL}")
-            return profiles[0]
+                    info_cache = local_state.get('profile', {}).get('info_cache', {})
+                    for profile_dir, info in info_cache.items():
+                        profile_dir = profile_dir.replace('\\', '/')
+                        if profile_dir == 'Default':
+                            profile_names['Default'] = info.get('name', 'Default')
+                        elif profile_dir.startswith('Profile '):
+                            profile_names[profile_dir] = info.get('name', profile_dir)
+
+            # Get list of profile directories
+            for item in os.listdir(user_data_dir):
+                if item == 'Default' or (item.startswith('Profile ') and os.path.isdir(os.path.join(user_data_dir, item))):
+                    profiles.append((item, profile_names.get(item, item)))
+            return sorted(profiles)
+        except Exception as e:
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error_loading', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
+            return []
+
+    def _select_profile(self):
+        """Select a Chrome profile to use"""
+        try:
+            # Get available profiles
+            profiles = self._get_available_profiles(self._get_user_data_directory())
+            if not profiles:
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('chrome_profile.no_profiles') if self.translator else 'No Chrome profiles found'}{Style.RESET_ALL}")
+                return False
+
+            # Display available profiles
+            print(f"\n{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('chrome_profile.select_profile') if self.translator else 'Select a Chrome profile to use:'}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{self.translator.get('chrome_profile.profile_list') if self.translator else 'Available profiles:'}{Style.RESET_ALL}")
+            for i, (dir_name, display_name) in enumerate(profiles, 1):
+                print(f"{Fore.CYAN}{i}. {display_name} ({dir_name}){Style.RESET_ALL}")
+
+            # Get user selection
+            while True:
+                try:
+                    choice = int(input(f"\n{Fore.CYAN}{self.translator.get('menu.input_choice', choices=f'1-{len(profiles)}') if self.translator else f'Please enter your choice (1-{len(profiles)}): '}{Style.RESET_ALL}"))
+                    if 1 <= choice <= len(profiles):
+                        self.selected_profile = profiles[choice - 1][0]
+                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('chrome_profile.profile_selected', profile=self.selected_profile) if self.translator else f'Selected profile: {self.selected_profile}'}{Style.RESET_ALL}")
+                        return True
+                    else:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_selection') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
+                except ValueError:
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.invalid_selection') if self.translator else 'Invalid selection. Please try again.'}{Style.RESET_ALL}")
             
         except Exception as e:
-            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.error_finding_chrome_profile', error=str(e)) if self.translator else f'Error finding Chrome profile, using Default: {str(e)}'}{Style.RESET_ALL}")
-            return 'Default'
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error_loading', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
+            return False
         
     def setup_browser(self):
-        """Setup browser for OAuth flow using active profile"""
+        """Setup browser for OAuth flow using selected profile"""
         try:
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.initializing_browser_setup') if self.translator else 'Initializing browser setup...'}{Style.RESET_ALL}")
             
             # Platform-specific initialization
             platform_name = platform.system().lower()
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.detected_platform', platform=platform_name) if self.translator else f'Detected platform: {platform_name}'}{Style.RESET_ALL}")
-            
-            # Linux-specific checks
-            if platform_name == 'linux':
-                # Check if DISPLAY is set
-                display = os.environ.get('DISPLAY')
-                if not display:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.no_display_found') if self.translator else 'No display found. Make sure X server is running.'}{Style.RESET_ALL}")
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.try_export_display') if self.translator else 'Try: export DISPLAY=:0'}{Style.RESET_ALL}")
-                    return False
-                
-                # Check if running as root
-                if os.geteuid() == 0:
-                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('oauth.running_as_root_warning') if self.translator else 'Running as root is not recommended for browser automation'}{Style.RESET_ALL}")
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.consider_running_without_sudo') if self.translator else 'Consider running the script without sudo'}{Style.RESET_ALL}")
-            
-            # Kill existing browser processes
-            self._kill_browser_processes()
             
             # Get browser paths and user data directory
             user_data_dir = self._get_user_data_directory()
@@ -115,56 +113,32 @@ class OAuthHandler:
                               "- macOS: Google Chrome, Chromium\n" +
                               "- Linux: Google Chrome, Chromium, chromium-browser")
             
-            # Get active profile
-            active_profile = self._get_active_profile(user_data_dir)
-            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.using_browser_profile', profile=active_profile) if self.translator else f'Using browser profile: {active_profile}'}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_browser_data_directory', path=user_data_dir) if self.translator else f'Found browser data directory: {user_data_dir}'}{Style.RESET_ALL}")
+            
+            # Show warning about closing Chrome first
+            print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('chrome_profile.warning_chrome_close') if self.translator else 'Warning: This will close all running Chrome processes'}{Style.RESET_ALL}")
+            choice = input(f"{Fore.YELLOW} {self.translator.get('menu.continue_prompt', choices='y/N')} {Style.RESET_ALL}").lower()
+            if choice != 'y':
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.operation_cancelled_by_user') if self.translator else 'Operation cancelled by user'}{Style.RESET_ALL}")
+                return False
+
+            # Kill existing browser processes
+            self._kill_browser_processes()
+            
+            # Let user select a profile
+            if not self._select_profile():
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.operation_cancelled_by_user') if self.translator else 'Operation cancelled by user'}{Style.RESET_ALL}")
+                return False
             
             # Configure browser options
-            co = ChromiumOptions()
-            
-            # Never use headless mode for OAuth flows
-            co.headless(False)
-            
-            # Platform-specific options
-            if os.name == 'linux':
-                co.set_argument('--no-sandbox')
-                co.set_argument('--disable-dev-shm-usage')
-                co.set_argument('--disable-gpu')
-                
-                # If running as root, try to use actual user's Chrome profile
-                if os.geteuid() == 0:
-                    sudo_user = os.environ.get('SUDO_USER')
-                    if sudo_user:
-                        actual_home = f"/home/{sudo_user}"
-                        user_data_dir = os.path.join(actual_home, ".config", "google-chrome")
-                        if os.path.exists(user_data_dir):
-                            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.using_chrome_profile_from', user_data_dir=user_data_dir) if self.translator else f'Using Chrome profile from: {user_data_dir}'}{Style.RESET_ALL}")
-                            co.set_argument(f"--user-data-dir={user_data_dir}")
-            
-            # Set paths and profile
-            co.set_paths(browser_path=chrome_path, user_data_path=user_data_dir)
-            co.set_argument(f'--profile-directory={active_profile}')
-            
-            # Basic options
-            co.set_argument('--no-first-run')
-            co.set_argument('--no-default-browser-check')
-            # co.auto_port()
+            co = self._configure_browser_options(chrome_path, user_data_dir, self.selected_profile)
             
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_browser', path=chrome_path) if self.translator else f'Starting browser at: {chrome_path}'}{Style.RESET_ALL}")
-            try:
-                self.browser = ChromiumPage(co)
-                # Verify browser launched successfully
-                if not self.browser:
-                    raise Exception("Failed to initialize browser instance")
-            except Exception as browser_error:
-                print(f"{Fore.RED}{EMOJI['ERROR']} Подробная ошибка запуска браузера: {str(browser_error)}{Style.RESET_ALL}")
-                # Printing which paths were checked
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Пути поиска Chrome:{Style.RESET_ALL}")
-                for path in [chrome_path] + self._get_all_possible_browser_paths():
-                    exists = os.path.exists(path) if path else False
-                    status = f"{Fore.GREEN}Существует{Style.RESET_ALL}" if exists else f"{Fore.RED}Не найден{Style.RESET_ALL}"
-                    print(f"  - {path}: {status}")
-                raise browser_error
+            self.browser = ChromiumPage(co)
+            
+            # Verify browser launched successfully
+            if not self.browser:
+                raise Exception(f"{self.translator.get('oauth.browser_failed_to_start') if self.translator else 'Failed to initialize browser instance'}")
             
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.browser_setup_completed') if self.translator else 'Browser setup completed successfully'}{Style.RESET_ALL}")
             return True
@@ -177,15 +151,6 @@ class OAuthHandler:
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.make_sure_chrome_chromium_is_properly_installed') if self.translator else 'Make sure Chrome/Chromium is properly installed'}{Style.RESET_ALL}")
                 if platform_name == 'linux':
                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.try_install_chromium') if self.translator else 'Try: sudo apt install chromium-browser'}{Style.RESET_ALL}")
-                # Adding PATH check
-                if os.name == 'nt':  # Windows
-                    print(f"{Fore.YELLOW}{EMOJI['INFO']} Check if chrome is installed in PATH and is available with command 'chrome'{Style.RESET_ALL}")
-                    # Trying to run chrome directly
-                    try:
-                        subprocess.run('where chrome', shell=True, check=True)
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Found Chrome in PATH{Style.RESET_ALL}")
-                    except subprocess.CalledProcessError:
-                        print(f"{Fore.RED}{EMOJI['ERROR']} Chrome isn't in PATH{Style.RESET_ALL}")
             return False
 
     def _kill_browser_processes(self):
@@ -228,7 +193,6 @@ class OAuthHandler:
             # Try each possible path
             for path in possible_paths:
                 if os.path.exists(path):
-                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_browser_data_directory', path=path) if self.translator else f'Found browser data directory: {path}'}{Style.RESET_ALL}")
                     return path
             
             # Create temporary profile if no existing profile found
@@ -249,24 +213,6 @@ class OAuthHandler:
             if chrome_path and os.path.exists(chrome_path):
                 return chrome_path
             
-            # Trying to find through which/where
-            try:
-                if os.name == 'nt':  # Windows
-                    result = subprocess.run('where chrome', shell=True, capture_output=True, text=True)
-                    if result.returncode == 0 and result.stdout.strip():
-                        path = result.stdout.strip().split('\n')[0].strip()
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Chrome found in PATH: {path}{Style.RESET_ALL}")
-                        return path
-                else:  # Linux/Mac
-                    result = subprocess.run('which google-chrome || which chrome || which chromium-browser || which chromium', 
-                                           shell=True, capture_output=True, text=True)
-                    if result.returncode == 0 and result.stdout.strip():
-                        path = result.stdout.strip()
-                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Browser found in PATH: {path}{Style.RESET_ALL}")
-                        return path
-            except Exception as which_error:
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Ошибка при поиске через PATH: {str(which_error)}{Style.RESET_ALL}")
-            
             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.searching_for_alternative_browser_installations') if self.translator else 'Searching for alternative browser installations...'}{Style.RESET_ALL}")
             
             # Platform-specific paths
@@ -275,22 +221,9 @@ class OAuthHandler:
                     r'C:\Program Files\Google\Chrome\Application\chrome.exe',
                     r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
                     r'C:\Program Files\Chromium\Application\chrome.exe',
-                    r'C:\Program Files\Google\Chrome\chrome.exe',  # Дополнительный путь
-                    r'C:\Program Files (x86)\Google\Chrome\chrome.exe',  # Дополнительный путь
                     os.path.expandvars(r'%ProgramFiles%\Google\Chrome\Application\chrome.exe'),
-                    os.path.expandvars(r'%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe'),
-                    os.path.expandvars(r'%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe'),  # Дополнительный путь
-                    os.path.expandvars(r'%USERPROFILE%\AppData\Local\Google\Chrome\Application\chrome.exe'),  # Дополнительный путь
+                    os.path.expandvars(r'%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe')
                 ]
-                
-                # Добавим проверку всех дисков
-                for drive in 'CDEFGHIJKLMNOPQRSTUVWXYZ':
-                    chrome_path = f"{drive}:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-                    if os.path.exists(chrome_path):
-                        return chrome_path
-                    chrome_path = f"{drive}:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-                    if os.path.exists(chrome_path):
-                        return chrome_path
             elif sys.platform == 'darwin':  # macOS
                 alt_paths = [
                     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -470,21 +403,30 @@ class OAuthHandler:
                                         usage_text = usage_element.text
                                         print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                         
-                                        # Check if account is expired (both 150/150 and 50/50 cases)
-                                        if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
-                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', creating_new_account='creating new account') if self.translator else 'Account has reached maximum usage, creating new account...'}{Style.RESET_ALL}")
+                                        def check_usage_limits(usage_str):
+                                            try:
+                                                parts = usage_str.split('/')
+                                                if len(parts) != 2:
+                                                    return False
+                                                current = int(parts[0].strip())
+                                                limit = int(parts[1].strip())
+                                                return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
+                                            except:
+                                                return False
+
+                                        if check_usage_limits(usage_text):
+                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                             
-                                            # Delete current account
                                             if self._delete_current_account():
-                                                # Start new authentication based on auth type
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
                                                 if self.auth_type == "google":
                                                     return self.handle_google_auth()
-                                                else:  # github
+                                                else:
                                                     return self.handle_github_auth()
                                             else:
                                                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
-                                        
+                                        else:
+                                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                 except Exception as e:
                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                 
@@ -673,57 +615,32 @@ class OAuthHandler:
                                             usage_text = usage_element.text
                                             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                             
-                                            # Check if account is expired (both 150/150 and 50/50 cases)
-                                            if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
+                                            def check_usage_limits(usage_str):
+                                                try:
+                                                    parts = usage_str.split('/')
+                                                    if len(parts) != 2:
+                                                        return False
+                                                    current = int(parts[0].strip())
+                                                    limit = int(parts[1].strip())
+                                                    return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
+                                                except:
+                                                    return False
+
+                                            if check_usage_limits(usage_text):
                                                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                 
-                                                delete_js = """
-                                                function deleteAccount() {
-                                                    return new Promise((resolve, reject) => {
-                                                        fetch('https://www.cursor.com/api/dashboard/delete-account', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            credentials: 'include'
-                                                        })
-                                                        .then(response => {
-                                                            if (response.status === 200) {
-                                                                resolve('Account deleted successfully');
-                                                            } else {
-                                                                reject('Failed to delete account: ' + response.status);
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            reject('Error: ' + error);
-                                                        });
-                                                    });
-                                                }
-                                                return deleteAccount();
-                                                """
-                                                
-                                                try:
-                                                    result = self.browser.run_js(delete_js)
-                                                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Delete account result: {result}{Style.RESET_ALL}")
-                                                    
-                                                    # Navigate back to auth page and repeat authentication
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_re_authentication_process') if self.translator else 'Starting re-authentication process...'}{Style.RESET_ALL}")
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.redirecting_to_authenticator_cursor_sh') if self.translator else 'Redirecting to authenticator.cursor.sh...'}{Style.RESET_ALL}")
-                                                    
-                                                    # Explicitly navigate to the authentication page
-                                                    self.browser.get("https://authenticator.cursor.sh/sign-up")
-                                                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
-                                                    
-                                                    # Call handle_google_auth again to repeat the entire process
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_google_authentication') if self.translator else 'Starting new Google authentication...'}{Style.RESET_ALL}")
-                                                    return self.handle_google_auth()
-                                                    
-                                                except Exception as e:
-                                                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account_or_re_authenticate', error=str(e)) if self.translator else f'Failed to delete account or re-authenticate: {str(e)}'}{Style.RESET_ALL}")
+                                                if self._delete_current_account():
+                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
+                                                    if self.auth_type == "google":
+                                                        return self.handle_google_auth()
+                                                    else:
+                                                        return self.handle_github_auth()
+                                                else:
+                                                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
                                             else:
                                                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                     except Exception as e:
-                                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_usage_count', error=str(e)) if self.translator else f'Could not find usage count: {str(e)}'}{Style.RESET_ALL}")
+                                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                     
                                     # Remove the browser stay open prompt and input wait
                                     return True, {"email": actual_email, "token": token}
@@ -759,57 +676,32 @@ class OAuthHandler:
                                                 usage_text = usage_element.text
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                                 
-                                                # Check if account is expired (both 150/150 and 50/50 cases)
-                                                if usage_text.strip() == "150 / 150" or usage_text.strip() == "50 / 50":
+                                                def check_usage_limits(usage_str):
+                                                    try:
+                                                        parts = usage_str.split('/')
+                                                        if len(parts) != 2:
+                                                            return False
+                                                        current = int(parts[0].strip())
+                                                        limit = int(parts[1].strip())
+                                                        return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
+                                                    except:
+                                                        return False
+
+                                                if check_usage_limits(usage_text):
                                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                     
-                                                    delete_js = """
-                                                    function deleteAccount() {
-                                                        return new Promise((resolve, reject) => {
-                                                            fetch('https://www.cursor.com/api/dashboard/delete-account', {
-                                                                method: 'POST',
-                                                                headers: {
-                                                                    'Content-Type': 'application/json'
-                                                                },
-                                                                credentials: 'include'
-                                                            })
-                                                            .then(response => {
-                                                                if (response.status === 200) {
-                                                                    resolve('Account deleted successfully');
-                                                                } else {
-                                                                    reject('Failed to delete account: ' + response.status);
-                                                                }
-                                                            })
-                                                            .catch(error => {
-                                                                reject('Error: ' + error);
-                                                            });
-                                                        });
-                                                    }
-                                                    return deleteAccount();
-                                                    """
-                                                    
-                                                    try:
-                                                        result = self.browser.run_js(delete_js)
-                                                        print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Delete account result: {result}{Style.RESET_ALL}")
-                                                        
-                                                        # Navigate back to auth page and repeat authentication
-                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_re_authentication_process') if self.translator else 'Starting re-authentication process...'}{Style.RESET_ALL}")
-                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.redirecting_to_authenticator_cursor_sh') if self.translator else 'Redirecting to authenticator.cursor.sh...'}{Style.RESET_ALL}")
-                                                        
-                                                        # Explicitly navigate to the authentication page
-                                                        self.browser.get("https://authenticator.cursor.sh/sign-up")
-                                                        time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
-                                                        
-                                                        # Call handle_google_auth again to repeat the entire process
-                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_google_authentication') if self.translator else 'Starting new Google authentication...'}{Style.RESET_ALL}")
-                                                        return self.handle_google_auth()
-                                                        
-                                                    except Exception as e:
-                                                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account_or_re_authenticate', error=str(e)) if self.translator else f'Failed to delete account or re-authenticate: {str(e)}'}{Style.RESET_ALL}")
-                                            else:
-                                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
+                                                    if self._delete_current_account():
+                                                        print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
+                                                        if self.auth_type == "google":
+                                                            return self.handle_google_auth()
+                                                        else:
+                                                            return self.handle_github_auth()
+                                                    else:
+                                                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
+                                                else:
+                                                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                         except Exception as e:
-                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_usage_count', error=str(e)) if self.translator else f'Could not find usage count: {str(e)}'}{Style.RESET_ALL}")
+                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                         
                                         # Remove the browser stay open prompt and input wait
                                         return True, {"email": actual_email, "token": token}
@@ -881,7 +773,7 @@ class OAuthHandler:
                     missing.append("email")
                 if not token:
                     missing.append("token")
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.missing_authentication_data', data=', '.join(missing)) if self.translator else 'Missing authentication data: ' + ', '.join(missing)}{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.missing_authentication_data', data=', '.join(missing)) if self.translator else f'Missing authentication data: {", ".join(missing)}'}{Style.RESET_ALL}")
                 return False, None
             
         except Exception as e:
@@ -929,46 +821,6 @@ class OAuthHandler:
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account', error=str(e)) if self.translator else f'Failed to delete account: {str(e)}'}{Style.RESET_ALL}")
             return False
-
-    def _get_all_possible_browser_paths(self):
-        """Получить все возможные пути к браузерам для отладки"""
-        if os.name == 'nt':  # Windows
-            paths = [
-                r'C:\Program Files\Google\Chrome\Application\chrome.exe',
-                r'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
-                r'C:\Program Files\Chromium\Application\chrome.exe',
-                os.path.expandvars(r'%ProgramFiles%\Google\Chrome\Application\chrome.exe'),
-                os.path.expandvars(r'%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe')
-            ]
-            
-            # Добавить путь из which, если доступен
-            chrome_path = None
-            try:
-                chrome_path = shutil.which("chrome")
-            except:
-                pass
-                
-            if chrome_path:
-                paths.append(chrome_path)
-                
-            return paths
-            
-        elif sys.platform == 'darwin':  # macOS
-            return [
-                '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-                '/Applications/Chromium.app/Contents/MacOS/Chromium',
-                '~/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-                '~/Applications/Chromium.app/Contents/MacOS/Chromium'
-            ]
-        else:  # Linux
-            return [
-                '/usr/bin/google-chrome',
-                '/usr/bin/chromium-browser',
-                '/usr/bin/chromium',
-                '/snap/bin/chromium',
-                '/usr/local/bin/chrome',
-                '/usr/local/bin/chromium'
-            ]
 
 def main(auth_type, translator=None):
     """Main function to handle OAuth authentication
