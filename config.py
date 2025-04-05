@@ -66,7 +66,8 @@ def setup_config(translator=None):
                 'machine_id_path': os.path.join(appdata, "Cursor", "machineId"),
                 'cursor_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app"),
                 'updater_path': os.path.join(localappdata, "cursor-updater"),
-                'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app-update.yml")
+                'update_yml_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app-update.yml"),
+                'product_json_path': os.path.join(localappdata, "Programs", "Cursor", "resources", "app", "product.json")
             }
             # Create storage directory
             os.makedirs(os.path.dirname(default_config['WindowsPaths']['storage_path']), exist_ok=True)
@@ -78,7 +79,8 @@ def setup_config(translator=None):
                 'machine_id_path': os.path.expanduser("~/Library/Application Support/Cursor/machineId"),
                 'cursor_path': "/Applications/Cursor.app/Contents/Resources/app",
                 'updater_path': os.path.expanduser("~/Library/Application Support/cursor-updater"),
-                'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml"
+                'update_yml_path': "/Applications/Cursor.app/Contents/Resources/app-update.yml",
+                'product_json_path': "/Applications/Cursor.app/Contents/Resources/app/product.json"
             }
             # Create storage directory
             os.makedirs(os.path.dirname(default_config['MacPaths']['storage_path']), exist_ok=True)
@@ -185,7 +187,8 @@ def setup_config(translator=None):
                 'machine_id_path': os.path.join(cursor_dir, "machineid") if cursor_dir else "",
                 'cursor_path': get_linux_cursor_path(),
                 'updater_path': os.path.join(config_base, "cursor-updater"),
-                'update_yml_path': os.path.join(cursor_dir, "resources/app-update.yml") if cursor_dir else ""
+                'update_yml_path': os.path.join(cursor_dir, "resources/app-update.yml") if cursor_dir else "",
+                'product_json_path': os.path.join(cursor_dir, "resources/app/product.json") if cursor_dir else ""
             }
 
         # Read existing configuration and merge

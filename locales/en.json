@@ -307,7 +307,16 @@
         "clear_update_yml_failed": "Failed to clear update.yml file: {error}",
         "unsupported_os": "Unsupported OS: {system}",
         "remove_directory_failed": "Failed to remove directory: {error}",
-        "create_block_file_failed": "Failed to create block file: {error}"
+        "create_block_file_failed": "Failed to create block file: {error}",
+        "directory_locked": "Directory is locked: {path}",
+        "yml_locked": "update.yml file is locked",
+        "block_file_locked": "block file is locked",
+        "yml_already_locked": "update.yml file is already locked",
+        "block_file_already_locked": "block file is already locked",
+        "block_file_locked_error": "Block file locked error: {error}",
+        "yml_locked_error": "update.yml file locked error: {error}",
+        "block_file_already_locked_error": "Block file already locked error: {error}",
+        "yml_already_locked_error": "update.yml file already locked error: {error}"
     },
     "updater": {
         "checking": "Checking for updates...",

@@ -284,7 +284,16 @@
         "clear_update_yml_failed": "清空 update.yml 文件失败: {error}",
         "unsupported_os": "不支持的操作系统: {system}",
         "remove_directory_failed": "刪除目錄失败: {error}",
-        "create_block_file_failed": "創建阻止文件失败: {error}"
+        "create_block_file_failed": "創建阻止文件失败: {error}",
+        "directory_locked": "目錄被鎖定: {path}",
+        "yml_locked": "update.yml 文件被鎖定",
+        "block_file_locked": "阻止文件被鎖定",
+        "yml_already_locked": "update.yml 文件已鎖定",
+        "block_file_already_locked": "阻止文件已鎖定",
+        "block_file_locked_error": "阻止文件锁定错误: {error}",
+        "yml_locked_error": "update.yml 文件锁定错误: {error}",
+        "block_file_already_locked_error": "阻止文件已锁定错误: {error}",
+        "yml_already_locked_error": "update.yml 文件已锁定错误: {error}"
     },
     "updater": {
         "checking": "檢查更新...",
