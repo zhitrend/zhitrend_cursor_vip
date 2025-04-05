@@ -10,6 +10,7 @@
 7. Add: Support for custom Cursor installation paths on Windows | 添加 Windows 系统下自定义 Cursor 安装路径支持
 8. Add: Chrome profile selection feature | 添加 Chrome 配置文件选择功能
 9. Fix: improve account usage limit detection | 修復賬號檢測
+10. Fix: For custom Chrome Installations | 修復自定義chrome遊覽器安裝
 
 ## v1.8.05
 1. Fix: Linux Path Not Found ｜ 修復linuxpath問題
