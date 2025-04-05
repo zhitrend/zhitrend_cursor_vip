@@ -79,6 +79,7 @@ class AutoUpdateDisabler:
                     content = product_json_file.read()
                 
                 patterns = {
+                    r"https://api2.cursor.sh/aiserver.v1.AuthService/DownloadUpdate": r"",
                     r"https://api2.cursor.sh/updates": r"",
                     r"http://cursorapi.com/updates": r"",
                 }
@@ -132,17 +133,18 @@ class AutoUpdateDisabler:
             print(f"{Fore.CYAN}{EMOJI['FOLDER']} {self.translator.get('update.removing_directory') if self.translator else '正在删除更新程序目录...'}{Style.RESET_ALL}")
             
             if os.path.exists(updater_path):
-                if os.path.isdir(updater_path):
-                    shutil.rmtree(updater_path)
-                else:
-                    os.remove(updater_path)
-                    
-            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.directory_removed') if self.translator else '更新程序目录已删除'}{Style.RESET_ALL}")
+                try:
+                    if os.path.isdir(updater_path):
+                        shutil.rmtree(updater_path)
+                    else:
+                        os.remove(updater_path)
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.directory_removed') if self.translator else '更新程序目录已删除'}{Style.RESET_ALL}")
+                except PermissionError:
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('update.directory_locked', path=updater_path) if self.translator else f'更新程序目录已被锁定，跳过删除: {updater_path}'}{Style.RESET_ALL}")
             return True
             
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('update.remove_directory_failed', error=str(e)) if self.translator else f'删除目录失败: {e}'}{Style.RESET_ALL}")
-            # 即使删除失败，也返回 True，继续执行下一步
             return True
     
     def _clear_update_yml_file(self):
@@ -155,15 +157,15 @@ class AutoUpdateDisabler:
             print(f"{Fore.CYAN}{EMOJI['FILE']} {self.translator.get('update.clearing_update_yml') if self.translator else '正在清空更新配置文件...'}{Style.RESET_ALL}")
             
             if os.path.exists(update_yml_path):
-                # 清空文件内容
-                with open(update_yml_path, 'w') as f:
-                    f.write('')
-                
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.update_yml_cleared') if self.translator else '更新配置文件已清空'}{Style.RESET_ALL}")
-                return True
+                try:
+                    with open(update_yml_path, 'w') as f:
+                        f.write('')
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.update_yml_cleared') if self.translator else '更新配置文件已清空'}{Style.RESET_ALL}")
+                except PermissionError:
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('update.yml_locked') if self.translator else '更新配置文件已被锁定，跳过清空'}{Style.RESET_ALL}")
             else:
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('update.update_yml_not_found') if self.translator else '更新配置文件不存在'}{Style.RESET_ALL}")
-                return True
+            return True
                 
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('update.clear_update_yml_failed', error=str(e)) if self.translator else f'清空更新配置文件失败: {e}'}{Style.RESET_ALL}")
@@ -180,37 +182,43 @@ class AutoUpdateDisabler:
             print(f"{Fore.CYAN}{EMOJI['FILE']} {self.translator.get('update.creating_block_file') if self.translator else '正在创建阻止文件...'}{Style.RESET_ALL}")
             
             # 创建 updater_path 阻止文件
-            os.makedirs(os.path.dirname(updater_path), exist_ok=True)
-            open(updater_path, 'w').close()
-            
-            # 设置 updater_path 为只读
-            if self.system == "Windows":
-                os.system(f'attrib +r "{updater_path}"')
-            else:
-                os.chmod(updater_path, 0o444)  # 设置为只读
-            
-            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.block_file_created') if self.translator else '阻止文件已创建'}: {updater_path}{Style.RESET_ALL}")
+            try:
+                os.makedirs(os.path.dirname(updater_path), exist_ok=True)
+                open(updater_path, 'w').close()
+                
+                # 设置 updater_path 为只读
+                if self.system == "Windows":
+                    os.system(f'attrib +r "{updater_path}"')
+                else:
+                    os.chmod(updater_path, 0o444)  # 设置为只读
+                
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.block_file_created') if self.translator else '阻止文件已创建'}: {updater_path}{Style.RESET_ALL}")
+            except PermissionError:
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('update.block_file_locked') if self.translator else '阻止文件已被锁定，跳过创建'}{Style.RESET_ALL}")
             
             # 检查 update_yml_path
             update_yml_path = self.update_yml_path
             if update_yml_path and os.path.exists(os.path.dirname(update_yml_path)):
-                # 创建 update_yml_path 阻止文件
-                with open(update_yml_path, 'w') as f:
-                    f.write('# This file is locked to prevent auto-updates\nversion: 0.0.0\n')
-                
-                # 设置 update_yml_path 为只读
-                if self.system == "Windows":
-                    os.system(f'attrib +r "{update_yml_path}"')
-                else:
-                    os.chmod(update_yml_path, 0o444)  # 设置为只读
-                
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.yml_locked') if self.translator else '更新配置文件已锁定'}: {update_yml_path}{Style.RESET_ALL}")
+                try:
+                    # 创建 update_yml_path 阻止文件
+                    with open(update_yml_path, 'w') as f:
+                        f.write('# This file is locked to prevent auto-updates\nversion: 0.0.0\n')
+                    
+                    # 设置 update_yml_path 为只读
+                    if self.system == "Windows":
+                        os.system(f'attrib +r "{update_yml_path}"')
+                    else:
+                        os.chmod(update_yml_path, 0o444)  # 设置为只读
+                    
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('update.yml_locked') if self.translator else '更新配置文件已锁定'}: {update_yml_path}{Style.RESET_ALL}")
+                except PermissionError:
+                    print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('update.yml_already_locked') if self.translator else '更新配置文件已被锁定，跳过修改'}{Style.RESET_ALL}")
             
             return True
             
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('update.create_block_file_failed', error=str(e)) if self.translator else f'创建阻止文件失败: {e}'}{Style.RESET_ALL}")
-            return False
+            return True  # 返回 True 以继续执行后续步骤
 
     def disable_auto_update(self):
         """Disable auto update"""
