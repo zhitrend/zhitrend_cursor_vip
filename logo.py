@@ -79,7 +79,7 @@ Contributors:
 BasaiCorp  aliensb  handwerk2016  Nigel1992
 UntaDotMy  RenjiYuusei  imbajin  ahmed98Osama
 bingoohuang  mALIk-sHAHId  MFaiqKhan  httpmerak
-muhammedfurkan plamkatawe
+muhammedfurkan plamkatawe Lucaszmv
 """
 OTHER_INFO_TEXT = f"""{Fore.YELLOW}
 Github: https://github.com/yeongpin/cursor-free-vip{Fore.RED}
