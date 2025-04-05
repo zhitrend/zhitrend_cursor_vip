@@ -618,9 +618,7 @@ def main():
             elif choice == "13":
                 from oauth_auth import OAuthHandler
                 oauth = OAuthHandler(translator)
-                user_data_dir = oauth._get_user_data_directory()
-                if user_data_dir:
-                    oauth._select_profile(user_data_dir)
+                oauth._select_profile()
                 print_menu()
             elif choice == "14":
                 import delete_cursor_google

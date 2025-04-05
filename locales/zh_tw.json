@@ -28,7 +28,8 @@
         "config": "顯示配置",
         "delete_google_account": "刪除 Cursor Google 帳號",
         "continue_prompt": "繼續？(y/N): ",
-        "operation_cancelled_by_user": "操作被使用者取消"
+        "operation_cancelled_by_user": "操作被使用者取消",
+        "exiting": "退出中 ……"
     },
     "languages": {
         "en": "英文",

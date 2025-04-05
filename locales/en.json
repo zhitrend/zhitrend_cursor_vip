@@ -28,7 +28,8 @@
         "config": "Show Config",
         "delete_google_account": "Delete Cursor Google Account",
         "continue_prompt": "Continue? (y/N): ",
-        "operation_cancelled_by_user": "Operation cancelled by user"
+        "operation_cancelled_by_user": "Operation cancelled by user",
+        "exiting": "Exiting ……"
     },
     "languages": {
         "en": "English",

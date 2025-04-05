@@ -74,14 +74,18 @@ class OAuthHandler:
             # Display available profiles
             print(f"\n{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('chrome_profile.select_profile') if self.translator else 'Select a Chrome profile to use:'}{Style.RESET_ALL}")
             print(f"{Fore.CYAN}{self.translator.get('chrome_profile.profile_list') if self.translator else 'Available profiles:'}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}0. {self.translator.get('menu.exit') if self.translator else 'Exit'}{Style.RESET_ALL}")
             for i, (dir_name, display_name) in enumerate(profiles, 1):
                 print(f"{Fore.CYAN}{i}. {display_name} ({dir_name}){Style.RESET_ALL}")
 
             # Get user selection
             while True:
                 try:
-                    choice = int(input(f"\n{Fore.CYAN}{self.translator.get('menu.input_choice', choices=f'1-{len(profiles)}') if self.translator else f'Please enter your choice (1-{len(profiles)}): '}{Style.RESET_ALL}"))
-                    if 1 <= choice <= len(profiles):
+                    choice = int(input(f"\n{Fore.CYAN}{self.translator.get('menu.input_choice', choices=f'0-{len(profiles)}') if self.translator else f'Please enter your choice (0-{len(profiles)}): '}{Style.RESET_ALL}"))
+                    if choice == 0:  # Add quit 
+                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.exiting') if self.translator else 'Exiting profile selection...'}{Style.RESET_ALL}")
+                        return False
+                    elif 1 <= choice <= len(profiles):
                         self.selected_profile = profiles[choice - 1][0]
                         print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('chrome_profile.profile_selected', profile=self.selected_profile) if self.translator else f'Selected profile: {self.selected_profile}'}{Style.RESET_ALL}")
                         return True
