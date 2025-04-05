@@ -27,7 +27,7 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 這是一個自動化工具，自動註冊，支持 Windows 和 macOS 系統，完成 Auth 驗證，重置 Cursor 的配置。
 
 <p align="center">
-  <img src="./images/pro_2025-04-05_18-47-56.png" alt="new" width="400" style="border-radius: 6px;"/><br>
+  <img src="./images/pro_2025-04-05_18-47-56.png" alt="new" width="800" style="border-radius: 6px;"/><br>
 </p>
 
 ##### If you don't have Google Chrome, you can download it from [here](https://www.google.com/intl/en_pk/chrome/)
