@@ -26,7 +26,9 @@
         "fixed_soon": "Fixed Soon",
         "contribute": "Contribute to the Project",
         "config": "Show Config",
-        "delete_google_account": "Delete Cursor Google Account"
+        "delete_google_account": "Delete Cursor Google Account",
+        "continue_prompt": "Continue? (y/N): ",
+        "operation_cancelled_by_user": "Operation cancelled by user"
     },
     "languages": {
         "en": "English",
@@ -599,7 +601,8 @@
         "authentication_successful_getting_account_info": "Authentication successful, getting account info...",
         "warning_could_not_kill_existing_browser_processes": "Warning: Could not kill existing browser processes: {error}",
         "browser_failed_to_start": "Browser failed to start: {error}",
-        "browser_failed": "Browser failed to start: {error}"
+        "browser_failed": "Browser failed to start: {error}",
+        "browser_failed_to_start_fallback": "Browser failed to start: {error}"
     },
     "chrome_profile": {
         "title": "Chrome Profile Selection",
@@ -654,6 +657,7 @@
         "interrupted": "Account deletion process interrupted by user.",
         "unexpected_error": "Unexpected error: {error}",
         "found_email": "Found email: {email}",
-        "email_not_found": "Email not found: {error}"
+        "email_not_found": "Email not found: {error}",
+        "confirm_prompt": "Are you sure you want to proceed? (y/N): "
     }
 }   

@@ -26,7 +26,9 @@
         "fixed_soon": "即将修复",
         "contribute": "贡献项目",
         "config": "显示配置",
-        "delete_google_account": "删除 Cursor Google 账号"
+        "delete_google_account": "删除 Cursor Google 账号",
+        "continue_prompt": "继续？(y/N): ",
+        "operation_cancelled_by_user": "操作被用户取消"
     },
     "languages": {
         "en": "英语",
@@ -577,7 +579,8 @@
         "authentication_successful_getting_account_info": "认证成功, 获取账户信息...",
         "warning_could_not_kill_existing_browser_processes": "警告: 无法杀死现有浏览器进程: {error}",
         "browser_failed_to_start": "浏览器启动失败: {error}",
-        "browser_failed": "浏览器启动失败: {error}"
+        "browser_failed": "浏览器启动失败: {error}",
+        "browser_failed_to_start_fallback": "浏览器启动失败: {error}"
     },
     "chrome_profile": {
         "title": "Chrome配置文件选择",
@@ -632,6 +635,7 @@
         "unexpected_error": "意外错误：{error}",
         "found_email": "找到邮箱：{email}",
         "email_not_found": "未找到邮箱: {error}",
-        "found_danger_zone": "已找到危险区域部分"
+        "found_danger_zone": "已找到危险区域部分",
+        "confirm_prompt": "您确定要继续吗？(y/N): "
     }
 } 

@@ -25,7 +25,10 @@
         "coming_soon": "即將推出",
         "fixed_soon": "即將修復",
         "contribute": "貢獻項目",
-        "config": "顯示配置"
+        "config": "顯示配置",
+        "delete_google_account": "刪除 Cursor Google 帳號",
+        "continue_prompt": "繼續？(y/N): ",
+        "operation_cancelled_by_user": "操作被使用者取消"
     },
     "languages": {
         "en": "英文",
@@ -557,7 +560,8 @@
         "authentication_successful_getting_account_info": "認證成功, 獲取帳戶信息...",
         "warning_could_not_kill_existing_browser_processes": "警告: 無法殺死現有瀏覽器進程: {error}",
         "browser_failed_to_start": "瀏覽器啟動失敗: {error}",
-        "browser_failed": "瀏覽器啟動失敗: {error}"
+        "browser_failed": "瀏覽器啟動失敗: {error}",
+        "browser_failed_to_start_fallback": "瀏覽器啟動失敗: {error}"
     },
     "chrome_profile": {
         "title": "Chrome配置檔案選擇",
@@ -570,5 +574,50 @@
         "profile_selected": "已選擇配置檔案：{profile}",
         "invalid_selection": "選擇無效。請重試",
         "warning_chrome_close": "警告：這將關閉所有正在執行的Chrome程序"
+    },
+    "account_delete": {
+        "title": "Cursor Google 帳號刪除工具",
+        "warning": "警告：這將永久刪除您的 Cursor 帳號。此操作無法撤銷。",
+        "cancelled": "帳號刪除已取消。",
+        "starting_process": "開始帳號刪除過程...",
+        "google_button_not_found": "未找到 Google 登錄按鈕",
+        "logging_in": "正在使用 Google 登錄...",
+        "waiting_for_auth": "等待 Google 驗證...",
+        "login_successful": "登錄成功",
+        "unexpected_page": "登錄後頁面異常：{url}",
+        "trying_settings": "嘗試導航到設置頁面...",
+        "select_google_account": "請選擇您的 Google 帳號...",
+        "auth_timeout": "認證超時，繼續執行...",
+        "navigating_to_settings": "正在導航到設置頁面...",
+        "already_on_settings": "已在設置頁面",
+        "login_redirect_failed": "登錄重定向失敗，嘗試直接導航...",
+        "advanced_tab_not_found": "多次嘗試後未找到高級選項卡",
+        "advanced_tab_retry": "未找到高級選項卡，嘗試 {attempt}/{max_attempts}",
+        "advanced_tab_error": "查找高級選項卡時出錯：{error}",
+        "advanced_tab_clicked": "已點擊高級選項卡",
+        "direct_advanced_navigation": "嘗試直接導航到高級選項卡",
+        "delete_button_not_found": "多次嘗試後未找到刪除帳號按鈕",
+        "delete_button_retry": "未找到刪除按鈕，嘗試 {attempt}/{max_attempts}",
+        "delete_button_error": "查找刪除按鈕時出錯：{error}",
+        "delete_button_clicked": "已點擊刪除帳號按鈕",
+        "delete_input_not_found": "多次嘗試後未找到刪除確認輸入框",
+        "delete_input_retry": "未找到刪除輸入框，嘗試 {attempt}/{max_attempts}",
+        "delete_input_error": "查找刪除輸入框時出錯：{error}",
+        "delete_input_not_found_continuing": "未找到刪除確認輸入框，嘗試繼續執行...",
+        "typed_delete": "已在確認框中輸入\"Delete\"",
+        "confirm_button_not_found": "多次嘗試後未找到確認按鈕",
+        "confirm_button_retry": "未找到確認按鈕，嘗試 {attempt}/{max_attempts}",
+        "confirm_button_error": "查找確認按鈕時出錯：{error}",
+        "account_deleted": "帳號刪除成功！",
+        "error": "帳號刪除過程中出錯：{error}",
+        "success": "您的 Cursor 帳號已成功刪除！",
+        "failed": "帳號刪除過程失敗或已取消。",
+        "interrupted": "帳號刪除過程被用戶中斷。",
+        "unexpected_error": "意外錯誤：{error}",
+        "found_email": "找到郵箱：{email}",
+        "email_not_found": "未找到郵箱: {error}",
+        "found_danger_zone": "已找到危險區域部分",
+        "confirm_prompt": "您確定要繼續嗎？(y/N): ",
+        "typed_delete_js": "已使用 JavaScript 輸入\"Delete\""
     }
 } 

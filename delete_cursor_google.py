@@ -153,11 +153,11 @@ class CursorGoogleAccountDeleter(OAuthHandler):
                 """)
                 
                 if advanced_element_js:
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Found and clicked Advanced using direct JavaScript selector{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('account_delete.advanced_tab_clicked', fallback='Found and clicked Advanced using direct JavaScript selector')}{Style.RESET_ALL}")
                     advanced_found = True
                     time.sleep(1)  # Reduced from 2 seconds
             except Exception as e:
-                print(f"{Fore.YELLOW}{EMOJI['WARNING']} JavaScript querySelector approach failed: {str(e)}{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('account_delete.advanced_tab_error', error=str(e), fallback='JavaScript querySelector approach failed: {str(e)}')}{Style.RESET_ALL}")
             
             if not advanced_found:
                 # Fallback to direct URL navigation which is faster and more reliable
@@ -240,7 +240,7 @@ class CursorGoogleAccountDeleter(OAuthHandler):
                         if delete_input:
                             delete_input.clear()
                             delete_input.input("Delete")
-                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Typed \"Delete\" in confirmation box{Style.RESET_ALL}")
+                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('account_delete.typed_delete', fallback='Typed \"Delete\" in confirmation box')}{Style.RESET_ALL}")
                             delete_input_found = True
                             time.sleep(2)
                             break
@@ -254,7 +254,7 @@ class CursorGoogleAccountDeleter(OAuthHandler):
                                 const changeEvent = new Event('change', {{ bubbles: true }});
                                 arguments[0].dispatchEvent(changeEvent);
                             """, delete_input)
-                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Typed \"Delete\" using JavaScript{Style.RESET_ALL}")
+                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('account_delete.typed_delete_js', fallback='Typed \"Delete\" using JavaScript')}{Style.RESET_ALL}")
                             delete_input_found = True
                             time.sleep(2)
                             break
@@ -262,7 +262,7 @@ class CursorGoogleAccountDeleter(OAuthHandler):
                             continue
                 
                 if not delete_input_found:
-                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} Delete confirmation input not found, continuing anyway{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('account_delete.delete_input_not_found', fallback='Delete confirmation input not found, continuing anyway')}{Style.RESET_ALL}")
                     time.sleep(2)
             
             # Wait before clicking the final DELETE button
@@ -310,7 +310,7 @@ class CursorGoogleAccountDeleter(OAuthHandler):
                 """)
                 
                 if delete_button_js:
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Clicked DELETE button{Style.RESET_ALL}")
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('account_delete.delete_button_clicked', fallback='Clicked DELETE button')}{Style.RESET_ALL}")
                     confirm_button_found = True
             except:
                 pass
@@ -327,7 +327,7 @@ class CursorGoogleAccountDeleter(OAuthHandler):
                         delete_button = self.browser.ele(selector, timeout=2)
                         if delete_button:
                             delete_button.click()
-                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Account deleted successfully!{Style.RESET_ALL}")
+                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('account_delete.delete_button_clicked', fallback='Account deleted successfully!')}{Style.RESET_ALL}")
                             confirm_button_found = True
                             break
                     except:
@@ -362,7 +362,7 @@ def main(translator=None):
     try:
         # Ask for confirmation
         print(f"{Fore.RED}{EMOJI['WARNING']} {translator.get('account_delete.warning') if translator else 'WARNING: This will permanently delete your Cursor account. This action cannot be undone.'}{Style.RESET_ALL}")
-        confirm = input(f"{Fore.RED}Are you sure you want to proceed? (y/N): {Style.RESET_ALL}").lower()
+        confirm = input(f"{Fore.RED} {translator.get('account_delete.confirm_prompt') if translator else 'Are you sure you want to proceed? (y/N): '}{Style.RESET_ALL}").lower()
         
         if confirm != 'y':
             print(f"{Fore.YELLOW}{EMOJI['INFO']} {translator.get('account_delete.cancelled') if translator else 'Account deletion cancelled.'}{Style.RESET_ALL}")
