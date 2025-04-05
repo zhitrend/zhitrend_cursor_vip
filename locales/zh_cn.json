@@ -25,7 +25,10 @@
         "coming_soon": "即将推出",
         "fixed_soon": "即将修复",
         "contribute": "贡献项目",
-        "config": "显示配置"
+        "config": "显示配置",
+        "delete_google_account": "删除 Cursor Google 账号",
+        "continue_prompt": "继续？(y/N): ",
+        "operation_cancelled_by_user": "操作被用户取消"
     },
     "languages": {
         "en": "英语",
@@ -585,7 +588,8 @@
         "authentication_successful_getting_account_info": "认证成功, 获取账户信息...",
         "warning_could_not_kill_existing_browser_processes": "警告: 无法杀死现有浏览器进程: {error}",
         "browser_failed_to_start": "浏览器启动失败: {error}",
-        "browser_failed": "浏览器启动失败: {error}"
+        "browser_failed": "浏览器启动失败: {error}",
+        "browser_failed_to_start_fallback": "浏览器启动失败: {error}"
     },
     "chrome_profile": {
         "title": "Chrome配置文件选择",
@@ -598,5 +602,49 @@
         "profile_selected": "已选择配置文件：{profile}",
         "invalid_selection": "选择无效。请重试",
         "warning_chrome_close": "警告：这将关闭所有正在运行的Chrome进程"
+    },
+    "account_delete": {
+        "title": "Cursor Google 账号删除工具",
+        "warning": "警告：这将永久删除您的 Cursor 账号。此操作无法撤销。",
+        "cancelled": "账号删除已取消。",
+        "starting_process": "开始账号删除过程...",
+        "google_button_not_found": "未找到 Google 登录按钮",
+        "logging_in": "正在使用 Google 登录...",
+        "waiting_for_auth": "等待 Google 验证...",
+        "login_successful": "登录成功",
+        "unexpected_page": "登录后页面异常：{url}",
+        "trying_settings": "尝试导航到设置页面...",
+        "select_google_account": "请选择您的 Google 账号...",
+        "auth_timeout": "认证超时，继续执行...",
+        "navigating_to_settings": "正在导航到设置页面...",
+        "already_on_settings": "已在设置页面",
+        "login_redirect_failed": "登录重定向失败，尝试直接导航...",
+        "advanced_tab_not_found": "多次尝试后未找到高级选项卡",
+        "advanced_tab_retry": "未找到高级选项卡，尝试 {attempt}/{max_attempts}",
+        "advanced_tab_error": "查找高级选项卡时出错：{error}",
+        "advanced_tab_clicked": "已点击高级选项卡",
+        "direct_advanced_navigation": "尝试直接导航到高级选项卡",
+        "delete_button_not_found": "多次尝试后未找到删除账号按钮",
+        "delete_button_retry": "未找到删除按钮，尝试 {attempt}/{max_attempts}",
+        "delete_button_error": "查找删除按钮时出错：{error}",
+        "delete_button_clicked": "已点击删除账号按钮",
+        "delete_input_not_found": "多次尝试后未找到删除确认输入框",
+        "delete_input_retry": "未找到删除输入框，尝试 {attempt}/{max_attempts}",
+        "delete_input_error": "查找删除输入框时出错：{error}",
+        "delete_input_not_found_continuing": "未找到删除确认输入框，尝试继续执行...",
+        "typed_delete": "已在确认框中输入\"Delete\"",
+        "confirm_button_not_found": "多次尝试后未找到确认按钮",
+        "confirm_button_retry": "未找到确认按钮，尝试 {attempt}/{max_attempts}",
+        "confirm_button_error": "查找确认按钮时出错：{error}",
+        "account_deleted": "账号删除成功！",
+        "error": "账号删除过程中出错：{error}",
+        "success": "您的 Cursor 账号已成功删除！",
+        "failed": "账号删除过程失败或已取消。",
+        "interrupted": "账号删除过程被用户中断。",
+        "unexpected_error": "意外错误：{error}",
+        "found_email": "找到邮箱：{email}",
+        "email_not_found": "未找到邮箱: {error}",
+        "found_danger_zone": "已找到危险区域部分",
+        "confirm_prompt": "您确定要继续吗？(y/N): "
     }
 } 

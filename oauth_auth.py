@@ -97,11 +97,11 @@ class OAuthHandler:
     def setup_browser(self):
         """Setup browser for OAuth flow using selected profile"""
         try:
-            print(f"{Fore.CYAN}{EMOJI['INFO']} Initializing browser setup...{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.initializing_browser_setup') if self.translator else 'Initializing browser setup...'}{Style.RESET_ALL}")
             
             # Platform-specific initialization
             platform_name = platform.system().lower()
-            print(f"{Fore.CYAN}{EMOJI['INFO']} Detected platform: {platform_name}{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.detected_platform', platform=platform_name) if self.translator else f'Detected platform: {platform_name}'}{Style.RESET_ALL}")
             
             # Get browser paths and user data directory
             user_data_dir = self._get_user_data_directory()
@@ -117,9 +117,9 @@ class OAuthHandler:
             
             # Show warning about closing Chrome first
             print(f"\n{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('chrome_profile.warning_chrome_close') if self.translator else 'Warning: This will close all running Chrome processes'}{Style.RESET_ALL}")
-            choice = input(f"{Fore.YELLOW}Continue? (y/N): {Style.RESET_ALL}").lower()
+            choice = input(f"{Fore.YELLOW} {self.translator.get('menu.continue_prompt', choices='y/N')} {Style.RESET_ALL}").lower()
             if choice != 'y':
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Operation cancelled by user{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.operation_cancelled_by_user') if self.translator else 'Operation cancelled by user'}{Style.RESET_ALL}")
                 return False
 
             # Kill existing browser processes
@@ -127,7 +127,7 @@ class OAuthHandler:
             
             # Let user select a profile
             if not self._select_profile():
-                print(f"{Fore.YELLOW}{EMOJI['INFO']} Operation cancelled by user{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.operation_cancelled_by_user') if self.translator else 'Operation cancelled by user'}{Style.RESET_ALL}")
                 return False
             
             # Configure browser options
@@ -138,7 +138,7 @@ class OAuthHandler:
             
             # Verify browser launched successfully
             if not self.browser:
-                raise Exception("Failed to initialize browser instance")
+                raise Exception(f"{self.translator.get('oauth.browser_failed_to_start') if self.translator else 'Failed to initialize browser instance'}")
             
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.browser_setup_completed') if self.translator else 'Browser setup completed successfully'}{Style.RESET_ALL}")
             return True

@@ -1,5 +1,16 @@
 # Change Log
 
+## v1.8.06
+1. Add: Google Account Deletion Feature | 添加 Google 账号删除功能
+2. Update: Menu with new account deletion option | 更新菜单添加账号删除选项
+3. Add: Multilanguage support for account deletion | 添加账号删除功能的多语言支持
+4. Fix: Improve usage limits check and tuple index error | 修复使用限制检查和元组索引错误
+5. Fix: bug in disable cursor auto update | 修复禁用 Cursor 自动更新的错误
+6. Fix: Linux-appimage | 修复 Linux-appimage 问题
+7. Add: Support for custom Cursor installation paths on Windows | 添加 Windows 系统下自定义 Cursor 安装路径支持
+8. Add: Chrome profile selection feature | 添加 Chrome 配置文件选择功能
+9. Fix: improve account usage limit detection | 修復賬號檢測
+
 ## v1.8.05
 1. Fix: Linux Path Not Found ｜ 修復linuxpath問題
 2. Add: support for detecting both 150/150 and 50/50 usage limits ｜ 添加偵測50 或者150的使用量
