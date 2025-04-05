@@ -54,6 +54,8 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 
 * Reset Cursor's configuration<br>重置 Cursor 的配置<br>
 
+* Delete Cursor Google Account<br>删除 Cursor Google 账号<br>
+
 * Multi-language support (English, 简体中文, 繁體中文, Vietnamese)<br>多語言支持（英文、简体中文、繁體中文、越南語）<br>
 
 ## 💻 System Support | 系統支持

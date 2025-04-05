@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.8.06
+1. Add: Google Account Deletion Feature ｜ 添加 Google 账号删除功能
+2. Update: Menu with new account deletion option ｜ 更新菜单添加账号删除选项  
+3. Add: Multilanguage support for account deletion ｜ 添加账号删除功能的多语言支持
+
 ## v1.8.05
 1. Fix: Linux Path Not Found ｜ 修復linuxpath問題
 2. Add: support for detecting both 150/150 and 50/50 usage limits ｜ 添加偵測50 或者150的使用量
