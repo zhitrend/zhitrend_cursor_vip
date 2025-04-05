@@ -66,8 +66,8 @@ class AutoUpdateDisabler:
             }
             self.product_json_path = self.product_json_paths.get(self.system)
 
-    def _change_main_js(self):
-        """Change main.js"""
+    def _remove_update_url(self):
+        """Remove update URL"""
         try:
             original_stat = os.stat(self.product_json_path)
             original_mode = original_stat.st_mode
@@ -232,8 +232,8 @@ class AutoUpdateDisabler:
             if not self._create_blocking_file():
                 return False
                 
-            # 5. Change main.js
-            if not self._change_main_js():
+            # 5. Remove update URL from product.json
+            if not self._remove_update_url():
                 return False
                 
             print(f"{Fore.GREEN}{EMOJI['CHECK']} {self.translator.get('update.disable_success') if self.translator else '自动更新已禁用'}{Style.RESET_ALL}")
