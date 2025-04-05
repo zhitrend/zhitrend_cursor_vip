@@ -33,6 +33,8 @@ a = Analysis(
         ('new_tempemail.py', '.'),
         ('quit_cursor.py', '.'),
         ('cursor_register_manual.py', '.'),
+        ('oauth_auth.py', '.'),
+        ('utils.py', '.'),
         ('.env', '.'),
         ('block_domain.txt', '.')
     ],
@@ -42,7 +44,9 @@ a = Analysis(
         'new_signup',
         'new_tempemail',
         'quit_cursor',
-        'cursor_register_manual'
+        'cursor_register_manual',
+        'oauth_auth',
+        'utils'
     ],
     hookspath=[],
     hooksconfig={},
