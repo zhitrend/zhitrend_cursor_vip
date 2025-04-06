@@ -111,7 +111,7 @@ def get_cursor_paths(translator=None) -> Tuple[str, str]:
     # For Linux, try to find the first existing path if the configured one doesn't exist
     if system == "Linux" and not os.path.exists(base_path):
         for path in default_paths["Linux"]:
-    if os.path.exists(path):
+            if os.path.exists(path):
                 base_path = path
                 # Update config with the found path
                 config.set(section, 'cursor_path', path)
@@ -529,7 +529,7 @@ class MachineIDResetter:
             self.db_path = config.get('LinuxPaths', 'storage_path')
             self.sqlite_path = config.get('LinuxPaths', 'sqlite_path')
             
-    else:
+        else:
             raise NotImplementedError(f"Not Supported OS: {sys.platform}")
 
         # Save any changes to config file
