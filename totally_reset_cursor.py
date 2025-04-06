@@ -26,7 +26,7 @@ EMOJI = {
     "SUCCESS": "✅",
     "ERROR": "❌",
     "INFO": "ℹ️",
-    "RESET": "��",
+    "RESET": "🔄",
     "WARNING": "⚠️",
 }
 
