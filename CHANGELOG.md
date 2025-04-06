@@ -3,7 +3,8 @@
 ## v1.8.07
 1. Add: Bypass Cursor Version Check | 添加繞過 Cursor 版本檢查
 2. Add: Multilanguage support for bypass | 添加繞過的多語言支持
-3. Fix: Some Issues | 修復一些問題
+3. MSG: Free & free trial accounts can no longer use chat with premium models on Cursor Version 0.45 or less. Please upgrade to Pro or use Cursor Version 0.46 or later. Install Cursor at https://www.cursor.com/downloads or update from within the editor.
+4. Fix: Some Issues | 修復一些問題
 
 ## v1.8.06
 1. Add: Google Account Deletion Feature | 添加 Google 账号删除功能
