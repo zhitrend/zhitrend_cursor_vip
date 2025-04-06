@@ -647,5 +647,25 @@
         "email_not_found": "未找到邮箱: {error}",
         "found_danger_zone": "已找到危险区域部分",
         "confirm_prompt": "您确定要继续吗？(y/N): "
+    },
+    "bypass": {
+        "starting": "开始绕过 Cursor 版本限制...",
+        "found_product_json": "找到 product.json: {path}",
+        "no_write_permission": "没有写入权限: {path}",
+        "read_failed": "读取 product.json 失败: {error}",
+        "current_version": "当前版本: {version}",
+        "backup_created": "备份创建: {path}",
+        "version_updated": "版本从 {old} 更新到 {new}",
+        "write_failed": "写入 product.json 失败: {error}",
+        "no_update_needed": "不需要更新。当前版本 {version} 已 >= 0.46.0",
+        "bypass_failed": "绕过版本限制失败: {error}",
+        "stack_trace": "堆栈跟踪",
+        "localappdata_not_found": "LOCALAPPDATA 环境变量未找到",
+        "product_json_not_found": "product.json 未在常见 Linux 路径中找到",
+        "unsupported_os": "不支持的操作系统: {system}",
+        "file_not_found": "文件未找到: {path}",
+        "title": "Cursor 版本绕过工具",
+        "description": "此工具修改 Cursor 的 product.json 以绕过版本限制",
+        "menu_option": "绕过 Cursor 版本检查"
     }
 } 

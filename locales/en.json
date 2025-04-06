@@ -669,5 +669,25 @@
         "found_email": "Found email: {email}",
         "email_not_found": "Email not found: {error}",
         "confirm_prompt": "Are you sure you want to proceed? (y/N): "
+    },
+    "bypass": {
+        "starting": "Starting Cursor version bypass...",
+        "found_product_json": "Found product.json: {path}",
+        "no_write_permission": "No write permission for file: {path}",
+        "read_failed": "Failed to read product.json: {error}",
+        "current_version": "Current version: {version}",
+        "backup_created": "Backup created: {path}",
+        "version_updated": "Version updated from {old} to {new}",
+        "write_failed": "Failed to write product.json: {error}",
+        "no_update_needed": "No update needed. Current version {version} is already >= 0.46.0",
+        "bypass_failed": "Version bypass failed: {error}",
+        "stack_trace": "Stack trace",
+        "localappdata_not_found": "LOCALAPPDATA environment variable not found",
+        "product_json_not_found": "product.json not found in common Linux paths",
+        "unsupported_os": "Unsupported operating system: {system}",
+        "file_not_found": "File not found: {path}",
+        "title": "Cursor Version Bypass Tool",
+        "description": "This tool modifies Cursor's product.json to bypass version restrictions",
+        "menu_option": "Bypass Cursor Version Check"
     }
 }   

@@ -629,5 +629,25 @@
         "found_danger_zone": "已找到危險區域部分",
         "confirm_prompt": "您確定要繼續嗎？(y/N): ",
         "typed_delete_js": "已使用 JavaScript 輸入\"Delete\""
+    },
+    "bypass": {
+        "starting": "開始繞過 Cursor 版本限制...",
+        "found_product_json": "找到 product.json: {path}",
+        "no_write_permission": "沒有寫入權限: {path}",
+        "read_failed": "讀取 product.json 失敗: {error}",
+        "current_version": "當前版本: {version}",
+        "backup_created": "備份已創建: {path}",
+        "version_updated": "版本從 {old} 更新到 {new}",
+        "write_failed": "寫入 product.json 失敗: {error}",
+        "no_update_needed": "不需要更新。當前版本 {version} 已 >= 0.46.0",
+        "bypass_failed": "繞過版本限制失敗: {error}",
+        "stack_trace": "堆疊跟踪",
+        "localappdata_not_found": "LOCALAPPDATA 環境變量未找到",
+        "product_json_not_found": "product.json 未在常見 Linux 路徑中找到",
+        "unsupported_os": "不支持的操作系統: {system}",
+        "file_not_found": "文件未找到: {path}",
+        "title": "Cursor 版本繞過工具",
+        "description": "此工具修改 Cursor 的 product.json 以繞過版本限制",
+        "menu_option": "繞過 Cursor 版本檢查"
     }
 } 

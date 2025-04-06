@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.8.07
+1. Add: Bypass Cursor Version Check | 添加繞過 Cursor 版本檢查
+2. Add: Multilanguage support for bypass | 添加繞過的多語言支持
+3. Fix: Some Issues | 修復一些問題
+
 ## v1.8.06
 1. Add: Google Account Deletion Feature | 添加 Google 账号删除功能
 2. Update: Menu with new account deletion option | 更新菜单添加账号删除选项
