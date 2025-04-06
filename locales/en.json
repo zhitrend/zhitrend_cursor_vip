@@ -29,7 +29,8 @@
         "delete_google_account": "Delete Cursor Google Account",
         "continue_prompt": "Continue? (y/N): ",
         "operation_cancelled_by_user": "Operation cancelled by user",
-        "exiting": "Exiting ……"
+        "exiting": "Exiting ……",
+        "bypass_version_check": "Bypass Cursor Version Check"
     },
     "languages": {
         "en": "English",
@@ -523,7 +524,8 @@
         "premium_usage": "Premium Usage",
         "basic_usage": "Basic Usage",
         "usage_not_found": "Usage not found",
-        "lifetime_access_enabled": "Lifetime Access Enabled"
+        "lifetime_access_enabled": "Lifetime Access Enabled",
+        "token_not_found": "Token not found"
     },
     "config": {
         "config_not_available": "Configuration not available",

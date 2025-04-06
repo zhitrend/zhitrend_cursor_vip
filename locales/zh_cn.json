@@ -29,7 +29,8 @@
         "delete_google_account": "删除 Cursor Google 账号",
         "continue_prompt": "继续？(y/N): ",
         "operation_cancelled_by_user": "操作被用户取消",
-        "exiting": "退出中 ……"
+        "exiting": "退出中 ……",
+        "bypass_version_check": "绕过 Cursor 版本检查"
     },
     "languages": {
         "en": "英语",
@@ -501,7 +502,8 @@
         "premium_usage": "高级使用量",
         "basic_usage": "基础使用量",
         "usage_not_found": "使用量未找到",
-        "lifetime_access_enabled": "永久访问已启用"
+        "lifetime_access_enabled": "永久访问已启用",
+        "token_not_found": "Token 未找到"
     },
     "config": {
         "config_not_available": "配置未找到。",
