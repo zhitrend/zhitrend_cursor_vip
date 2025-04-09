@@ -1,5 +1,10 @@
 # Change Log
 
+## v1.8.09
+1. Add: Force Update Config | 添加強制更新配置
+2. Add: Multilanguage support for force update | 添加強制更新功能的多語言支持
+3. Fix: Some Issues | 修復一些問題
+
 ## v1.8.08
 1. Add: Force Update Config | 添加強制更新配置
 2. Add: Multilanguage support for force update | 添加強制更新功能的多語言支持
