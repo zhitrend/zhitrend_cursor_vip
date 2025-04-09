@@ -54,6 +54,7 @@ def setup_config(translator=None):
             },
             'Utils': {
                 'enabled_update_check': 'True',
+                'enabled_force_update': 'True',
                 'enabled_account_info': 'True'
             }
         }
@@ -279,8 +280,8 @@ def force_update_config(translator=None):
             existing_config.read(config_file, encoding='utf-8')
             # Check if "enabled_update_check" is True
             update_enabled = True  # Default to True if not set
-            if existing_config.has_section('Utils') and existing_config.has_option('Utils', 'enabled_update_check'):
-                update_enabled = existing_config.get('Utils', 'enabled_update_check').strip().lower() in ('true', 'yes', '1', 'on')
+            if existing_config.has_section('Utils') and existing_config.has_option('Utils', 'enabled_force_update'):
+                update_enabled = existing_config.get('Utils', 'enabled_force_update').strip().lower() in ('true', 'yes', '1', 'on')
 
             if update_enabled:
                 try:
@@ -288,8 +289,8 @@ def force_update_config(translator=None):
                     backup_file = f"{config_file}.bak.{current_time.strftime('%Y%m%d_%H%M%S')}"
                     shutil.copy2(config_file, backup_file)
                     if translator:
-                        print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('config.backup_created', path=backup_file) if translator else f'Backup created: {backup_file}'}{Style.RESET_ALL}")
-
+                        print(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('config.backup_created', path=backup_file) if translator else f'Backup created: {backup_file}'}{Style.RESET_ALL}")
+                    print(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('config.config_force_update_enabled') if translator else 'Config file force update enabled'}{Style.RESET_ALL}")
                     # Delete the original config file (forced update)
                     os.remove(config_file)
                     if translator:
@@ -299,7 +300,7 @@ def force_update_config(translator=None):
                         print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('config.backup_failed', error=str(e)) if translator else f'Failed to backup config: {str(e)}'}{Style.RESET_ALL}")
             else:
                 if translator:
-                    print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('config.force_update_disabled', fallback='Force update disabled by configuration. Keeping existing config file.') if translator else 'Force update disabled by configuration. Keeping existing config file.'}{Style.RESET_ALL}")
+                    print(f"\n{Fore.CYAN}{EMOJI['INFO']} {translator.get('config.config_force_update_disabled', fallback='Config file force update disabled by configuration. Keeping existing config file.') if translator else 'Config file force update disabled by configuration. Keeping existing config file.'}{Style.RESET_ALL}")
 
         # Generate a new (or updated) configuration if needed
         return setup_config(translator)
