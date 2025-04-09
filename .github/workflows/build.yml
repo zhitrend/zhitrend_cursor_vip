@@ -228,10 +228,30 @@ jobs:
           echo "Contents of subdirectories:"
           ls -la */
           
+      - name: Extract changelog for current version
+        id: get_changelog
+        run: |
+          # Extract changelog for current version
+          CHANGELOG_CONTENT=$(awk -v ver="v${{ env.VERSION }}" '
+            BEGIN { found=0; content=""; }
+            /^## v[0-9]+\.[0-9]+\.[0-9]+/ {
+              if (found == 1) { exit }
+              if ($0 ~ ver) { found=1; next }
+            }
+            found == 1 { content = content $0 "\n" }
+            END { print content }
+          ' CHANGELOG.md)
+          
+          # Save changelog content to environment variable
+          echo 'CHANGELOG_CONTENT<<EOF' >> $GITHUB_ENV
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
           files: |
             artifacts/CursorFreeVIP_${{ env.VERSION }}_windows.exe/CursorFreeVIP_${{ env.VERSION }}_windows.exe
             artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_arm64/CursorFreeVIP_${{ env.VERSION }}_mac_arm64
@@ -240,5 +260,9 @@ jobs:
             artifacts/CursorFreeVIP_${{ env.VERSION }}_mac_intel/CursorFreeVIP_${{ env.VERSION }}_mac_intel
           draft: false
           prerelease: false
+          body: |
+            # Release v${{ env.VERSION }}
+            
+            ${{ env.CHANGELOG_CONTENT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
