@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.8.11
+1. Add: Bypass Token Limit | 添加繞過 Token 限制
+2. Fix: Some Issues | 修復一些問題
+
 ## v1.8.10
 1. Add: Check User Authorized | 添加檢查用戶授權
 2. Fix: Linux Reset Process Error: 'base' | 修復 Linux 重置過程錯誤：'base'

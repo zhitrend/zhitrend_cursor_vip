@@ -31,7 +31,8 @@
         "operation_cancelled_by_user": "操作被用户取消",
         "exiting": "退出中 ……",
         "bypass_version_check": "绕过 Cursor 版本检查",
-        "check_user_authorized": "检查用户授权"
+        "check_user_authorized": "检查用户授权",
+        "bypass_token_limit": "绕过 Token 限制"
     },
     "languages": {
         "en": "英语",
@@ -705,5 +706,10 @@
         "checking_usage_information": "检查使用情况...",
         "check_usage_response": "检查使用情况响应: {response}",
         "usage_response": "使用情况响应: {response}"
+    },
+    "bypass_token_limit": {
+        "title": "绕过 Token 限制工具",
+        "description": "此工具修改 workbench.desktop.main.js 文件以绕过 token 限制",
+        "press_enter": "按回车键继续..."
     }
 } 
