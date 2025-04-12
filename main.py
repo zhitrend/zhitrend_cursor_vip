@@ -79,8 +79,8 @@ def run_as_admin():
 class Translator:
     def __init__(self):
         self.translations = {}
-        self.current_language = self.detect_system_language()  # Use correct method name
         self.fallback_language = 'en'  # Fallback language if translation is missing
+        self.current_language = self.detect_system_language()  # Use correct method name
         self.load_translations()
         self.default_layout_id_to_lang_code_mapping = {
                 0x0409: 'en',         # English
