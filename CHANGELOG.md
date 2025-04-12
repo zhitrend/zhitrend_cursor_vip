@@ -1,5 +1,12 @@
 # Change Log
 
+## v1.9.01
+1. Add: More Browser Support | 添加更多瀏覽器支持
+2. Support: Add Opera, Brave, Edge, Firefox | 添加支持 Opera, Brave, Edge, Firefox
+3. Add config manual browser path | 添加配置手動選擇遊覽器路徑
+4. Fix: Browser Profile Selection | 修復瀏覽器配置文件選擇
+5. Fix: Some Issues | 修復一些問題
+
 ## v1.8.11
 1. Add: Bypass Token Limit | 添加繞過 Token 限制
 2. Fix: Some Issues | 修復一些問題
