@@ -752,5 +752,17 @@
         "title": "Bypass Token Limit Tool",
         "description": "This tool modifies the workbench.desktop.main.js file to bypass the token limit",
         "press_enter": "Press Enter to continue..."
+    },
+    "token": {
+        "refreshing": "Refreshing token...",
+        "refresh_success": "Token refreshed successfully! Valid for {days} days (expires: {expire})",
+        "no_access_token": "No access token in response",
+        "refresh_failed": "Token refresh failed: {error}",
+        "invalid_response": "Invalid JSON response from refresh server",
+        "server_error": "Refresh server error: HTTP {status}",
+        "request_timeout": "Request to refresh server timed out",
+        "connection_error": "Connection error to refresh server",
+        "unexpected_error": "Unexpected error during token refresh: {error}",
+        "extraction_error": "Error extracting token: {error}"
     }
 }   

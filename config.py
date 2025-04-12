@@ -102,6 +102,10 @@ def setup_config(translator=None):
                 'show_selection_alert': False,  # 默认不显示选择提示弹窗
                 'timeout': 120,
                 'max_attempts': 3
+            },
+            'Token': {
+                'refresh_server': 'https://token.cursorpro.com.cn',
+                'enable_refresh': True
             }
         }
 
