@@ -617,7 +617,8 @@
         "profile_selection_error": "配置文件选择过程中出错: {error}",
         "using_configured_browser_path": "使用配置的 {browser} 路径: {path}",
         "browser_not_found_trying_chrome": "未找到 {browser}，尝试使用 Chrome 代替",
-        "found_chrome_at": "找到 Chrome: {path}"
+        "found_chrome_at": "找到 Chrome: {path}",
+        "found_browser_user_data_dir": "找到 {browser} 用户数据目录: {path}"
     },
     "browser_profile": {
         "title": "浏览器配置文件选择",

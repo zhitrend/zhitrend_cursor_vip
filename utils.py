@@ -78,6 +78,20 @@ def get_default_browser_path(browser_type='chrome'):
             return r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
         elif browser_type == 'firefox':
             return r"C:\Program Files\Mozilla Firefox\firefox.exe"
+        elif browser_type == 'opera':
+            # 尝试多个可能的 Opera 路径
+            opera_paths = [
+                r"C:\Program Files\Opera\opera.exe",
+                r"C:\Program Files (x86)\Opera\opera.exe",
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera', 'launcher.exe'),
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera', 'opera.exe'),
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera GX', 'launcher.exe'),
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera GX', 'opera.exe')
+            ]
+            for path in opera_paths:
+                if os.path.exists(path):
+                    return path
+            return opera_paths[0]  # 返回第一个路径，即使它不存在
         elif browser_type == 'brave':
             # Brave 浏览器的默认安装路径
             paths = [
@@ -99,7 +113,9 @@ def get_default_browser_path(browser_type='chrome'):
             return "/Applications/Firefox.app/Contents/MacOS/firefox"
         elif browser_type == 'brave':
             return "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
-    
+        elif browser_type == 'opera':
+            return "/Applications/Opera.app/Contents/MacOS/Opera"
+        
     else:  # Linux
         if browser_type == 'chrome':
             # 尝试多种可能的名称
@@ -117,6 +133,8 @@ def get_default_browser_path(browser_type='chrome'):
             return "/usr/bin/microsoft-edge"
         elif browser_type == 'firefox':
             return "/usr/bin/firefox"
+        elif browser_type == 'opera':
+            return "/usr/bin/opera"
         elif browser_type == 'brave':
             # 尝试常见的 Brave 路径
             brave_names = ["brave", "brave-browser"]

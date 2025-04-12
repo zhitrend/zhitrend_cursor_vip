@@ -211,7 +211,7 @@ class OAuthHandler:
             
             # Verify browser launched successfully
             if not self.browser:
-                raise Exception(f"{self.translator.get('oauth.browser_failed_to_start') if self.translator else 'Failed to initialize browser instance'}")
+                raise Exception(f"{self.translator.get('oauth.browser_failed_to_start', error=str(e)) if self.translator else 'Failed to initialize browser instance'}")
             
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.browser_setup_completed') if self.translator else 'Browser setup completed successfully'}{Style.RESET_ALL}")
             return True
@@ -255,6 +255,11 @@ class OAuthHandler:
                     'win': ['firefox.exe'],
                     'linux': ['firefox'],
                     'mac': ['Firefox']
+                },
+                'opera': {
+                    'win': ['opera.exe', 'launcher.exe'],
+                    'linux': ['opera'],
+                    'mac': ['Opera']
                 }
             }
             
@@ -298,27 +303,31 @@ class OAuthHandler:
                     'chrome': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Google', 'Chrome', 'User Data'),
                     'brave': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'BraveSoftware', 'Brave-Browser', 'User Data'),
                     'edge': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Microsoft', 'Edge', 'User Data'),
-                    'firefox': os.path.join(os.environ.get('APPDATA', ''), 'Mozilla', 'Firefox', 'Profiles')
+                    'firefox': os.path.join(os.environ.get('APPDATA', ''), 'Mozilla', 'Firefox', 'Profiles'),
+                    'opera': os.path.join(os.environ.get('APPDATA', ''), 'Opera Software', 'Opera Stable')
                 }
             elif sys.platform == 'darwin':  # macOS
                 user_data_dirs = {
                     'chrome': os.path.expanduser('~/Library/Application Support/Google/Chrome'),
                     'brave': os.path.expanduser('~/Library/Application Support/BraveSoftware/Brave-Browser'),
                     'edge': os.path.expanduser('~/Library/Application Support/Microsoft Edge'),
-                    'firefox': os.path.expanduser('~/Library/Application Support/Firefox/Profiles')
+                    'firefox': os.path.expanduser('~/Library/Application Support/Firefox/Profiles'),
+                    'opera': os.path.expanduser('~/Library/Application Support/com.operasoftware.Opera')
                 }
             else:  # Linux
                 user_data_dirs = {
                     'chrome': os.path.expanduser('~/.config/google-chrome'),
                     'brave': os.path.expanduser('~/.config/BraveSoftware/Brave-Browser'),
                     'edge': os.path.expanduser('~/.config/microsoft-edge'),
-                    'firefox': os.path.expanduser('~/.mozilla/firefox')
+                    'firefox': os.path.expanduser('~/.mozilla/firefox'),
+                    'opera': os.path.expanduser('~/.config/opera')
                 }
             
             # 获取选定浏览器的用户数据目录，如果找不到则使用 Chrome 的
-            user_data_dir = user_data_dirs.get(browser_type, user_data_dirs['chrome'])
+            user_data_dir = user_data_dirs.get(browser_type)
             
-            if os.path.exists(user_data_dir):
+            if user_data_dir and os.path.exists(user_data_dir):
+                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.found_browser_user_data_dir', browser=browser_type, path=user_data_dir) if self.translator else f'Found {browser_type} user data directory: {user_data_dir}'}{Style.RESET_ALL}")
                 return user_data_dir
             else:
                 print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('oauth.user_data_dir_not_found', browser=browser_type, path=user_data_dir) if self.translator else f'{browser_type} user data directory not found at {user_data_dir}, will try Chrome instead'}{Style.RESET_ALL}")
@@ -373,6 +382,15 @@ class OAuthHandler:
                     possible_paths = [
                         os.path.join(os.environ.get('PROGRAMFILES', ''), 'Mozilla Firefox', 'firefox.exe'),
                         os.path.join(os.environ.get('PROGRAMFILES(X86)', ''), 'Mozilla Firefox', 'firefox.exe')
+                    ]
+                elif browser_type == 'opera':
+                    possible_paths = [
+                        os.path.join(os.environ.get('PROGRAMFILES', ''), 'Opera', 'opera.exe'),
+                        os.path.join(os.environ.get('PROGRAMFILES(X86)', ''), 'Opera', 'opera.exe'),
+                        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera', 'launcher.exe'),
+                        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera', 'opera.exe'),
+                        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera GX', 'launcher.exe'),
+                        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera GX', 'opera.exe')
                     ]
                 else:  # 默认为 Chrome
                     possible_paths = [
@@ -515,13 +533,19 @@ class OAuthHandler:
                 # Check if we're on account selection page
                 if "accounts.google.com" in self.browser.url:
                     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.please_select_your_google_account_to_continue') if self.translator else 'Please select your Google account to continue...'}{Style.RESET_ALL}")
-                    alert_message = self.translator.get('oauth.please_select_your_google_account_to_continue') if self.translator else 'Please select your Google account to continue with Cursor authentication'
-                    try:
-                        self.browser.run_js(f"""
-                        alert('{alert_message}');
-                        """)
-                    except:
-                        pass  # Alert is optional
+                    
+                    # 获取配置中是否启用 alert 选项
+                    config = get_config(self.translator)
+                    show_alert = config.getboolean('OAuth', 'show_selection_alert', fallback=False)
+                    
+                    if show_alert:
+                        alert_message = self.translator.get('oauth.please_select_your_google_account_to_continue') if self.translator else 'Please select your Google account to continue with Cursor authentication'
+                        try:
+                            self.browser.run_js(f"""
+                            alert('{alert_message}');
+                            """)
+                        except:
+                            pass  # Alert is optional
                 
                 # Wait for authentication to complete
                 auth_info = self._wait_for_auth()
@@ -643,7 +667,7 @@ class OAuthHandler:
             
             # Setup browser
             if not self.setup_browser():
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.browser_failed')}{Style.RESET_ALL}")
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.browser_failed', error=str(e)) if self.translator else 'Browser failed to initialize'}{Style.RESET_ALL}")
                 return False, None
             
             # Navigate to auth URL

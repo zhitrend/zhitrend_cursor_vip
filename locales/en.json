@@ -639,7 +639,8 @@
         "profile_selection_error": "Error during profile selection: {error}",
         "using_configured_browser_path": "Using configured {browser} path: {path}",
         "browser_not_found_trying_chrome": "Could not find {browser}, trying Chrome instead",
-        "found_chrome_at": "Found Chrome at: {path}"
+        "found_chrome_at": "Found Chrome at: {path}",
+        "found_browser_user_data_dir": "Found {browser} user data directory: {path}"
     },
     "browser_profile": {
         "title": "Browser Profile Selection",

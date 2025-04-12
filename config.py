@@ -38,7 +38,9 @@ def setup_config(translator=None):
                 'chrome_driver_path': get_default_driver_path('chrome'),
                 'edge_driver_path': get_default_driver_path('edge'),
                 'firefox_driver_path': get_default_driver_path('firefox'),
-                'brave_driver_path': get_default_driver_path('brave')
+                'brave_driver_path': get_default_driver_path('brave'),
+                'opera_path': get_default_browser_path('opera'),
+                'opera_driver_path': get_default_driver_path('opera')
             },
             'Chrome': {
                 'chromepath': get_default_browser_path('chrome')
@@ -67,6 +69,11 @@ def setup_config(translator=None):
                 'enabled_update_check': 'True',
                 'enabled_force_update': 'False',
                 'enabled_account_info': 'True'
+            },
+            'OAuth': {
+                'show_selection_alert': False,  # 默认不显示选择提示弹窗
+                'timeout': 120,
+                'max_attempts': 3
             }
         }
 
