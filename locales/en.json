@@ -572,7 +572,10 @@
         "backup_failed": "Failed to backup config: {error}",
         "force_update_failed": "Force update config failed: {error}",
         "config_force_update_disabled": "Config file force update disabled , skipping forced update",
-        "config_force_update_enabled": "Config file force update enabled , performing forced update"
+        "config_force_update_enabled": "Config file force update enabled , performing forced update",
+        "documents_path_not_found": "Documents path not found, using current directory",
+        "config_dir_created": "Config directory created: {path}",
+        "using_temp_dir": "Using temporary directory due to error: {path} (Error: {error})"
     },
     "oauth": {
         "authentication_button_not_found": "Authentication button not found",

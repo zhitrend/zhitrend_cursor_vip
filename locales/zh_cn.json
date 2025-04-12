@@ -550,7 +550,10 @@
         "backup_failed": "备份失败: {error}",
         "force_update_failed": "强制更新配置失败: {error}",
         "config_force_update_disabled": "配置文件强制更新已禁用，跳过强制更新",
-        "config_force_update_enabled": "配置文件强制更新已启用，正在执行强制更新"
+        "config_force_update_enabled": "配置文件强制更新已启用，正在执行强制更新",
+        "documents_path_not_found": "找不到文档路径，使用当前目录",
+        "config_dir_created": "已创建配置目录: {path}",
+        "using_temp_dir": "由于错误使用临时目录: {path} (错误: {error})"
     },
     "oauth": {
         "authentication_button_not_found": "未找到认证按钮",
