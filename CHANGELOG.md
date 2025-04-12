@@ -1,9 +1,11 @@
 # Change Log
 
 ## v1.9.02
-1. Fix: Config File Path | 修復配置文件路徑
-2. Fix: window user permission | 修復 window 用戶權限
-3. Fix: Some Issues | 修復一些問題
+1. Add: Bypass Cursor JWT EXP Problem | 添加繞過 Cursor JWT EXP 問題
+2. Fix: Cursor editor redirects to logout page and logout automatically | 修復 Cursor 編輯器重定向到登出頁面並自動登出
+3. Fix: Config File Path | 修復配置文件路徑
+4. Fix: window user permission | 修復 window 用戶權限
+5. Fix: Some Issues | 修復一些問題
 
 ## v1.9.01
 1. Add: Bypass Token Limit | 添加繞過 Token 限制
