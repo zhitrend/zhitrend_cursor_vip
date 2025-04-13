@@ -88,7 +88,7 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.sh -o install.sh && chmod +x install.sh && ./install.sh
 ```
 
-#### **Archlinux**
+### **Archlinux**
 
 Install via [AUR](https://aur.archlinux.org/packages/cursor-free-vip-git)
 
