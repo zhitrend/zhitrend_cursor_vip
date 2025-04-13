@@ -59,7 +59,7 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 
 * Automatically register Cursor membership<br>自動註冊 Cursor 會員<br>
 
-* Support Windows and macOS systems<br>支持 Windows 和 macOS 系統<br>
+* Support Windows macOS and Linux systems<br>支持 Windows、macOS 和 Linux 系統<br>
 
 * Complete Auth verification<br>完成 Auth 驗證<br>
 
@@ -82,13 +82,21 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 <details open>
 <summary><b>⭐ Auto Run Script | 腳本自動化運行</b></summary>
 
-**Linux/macOS**
+### **Linux/macOS**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.sh -o install.sh && chmod +x install.sh && ./install.sh
 ```
 
-**Windows**
+### **Archlinux**
+
+Install via [AUR](https://aur.archlinux.org/packages/cursor-free-vip-git)
+
+```bash
+yay -S cursor-free-vip-git
+```
+
+### **Windows**
 
 ```powershell
 irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1 | iex
@@ -99,13 +107,13 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/inst
 <details>
 <summary><b>⭐ Manual Reset Machine | 手動運行重置機器</b></summary>
 
-**Linux/macOS**
+### **Linux/macOS**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.sh | sudo bash
 ```
 
-**Windows**
+### **Windows**
 
 ```powershell
 irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.ps1 | iex
