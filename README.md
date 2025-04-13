@@ -82,13 +82,21 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 <details open>
 <summary><b>⭐ Auto Run Script | 腳本自動化運行</b></summary>
 
-**Linux/macOS**
+### **Linux/macOS**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.sh -o install.sh && chmod +x install.sh && ./install.sh
 ```
 
-**Windows**
+#### **Archlinux**
+
+Install via [AUR](https://aur.archlinux.org/packages/cursor-free-vip-git)
+
+```bash
+yay -S cursor-free-vip-git
+```
+
+### **Windows**
 
 ```powershell
 irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/install.ps1 | iex
@@ -99,21 +107,13 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/inst
 <details>
 <summary><b>⭐ Manual Reset Machine | 手動運行重置機器</b></summary>
 
-**Linux/macOS**
+### **Linux/macOS**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.sh | sudo bash
 ```
 
-**Archlinux**
-
-Install via [AUR](https://aur.archlinux.org/packages/cursor-free-vip-git)
-
-```bash
-yay -S cursor-free-vip-git
-```
-
-**Windows**
+### **Windows**
 
 ```powershell
 irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.ps1 | iex
