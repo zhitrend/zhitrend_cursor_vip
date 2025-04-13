@@ -105,6 +105,14 @@ irm https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/inst
 curl -fsSL https://raw.githubusercontent.com/yeongpin/cursor-free-vip/main/scripts/reset.sh | sudo bash
 ```
 
+**Archlinux**
+
+Install via [AUR](https://aur.archlinux.org/packages/cursor-free-vip-git)
+
+```bash
+yay -S cursor-free-vip-git
+```
+
 **Windows**
 
 ```powershell
