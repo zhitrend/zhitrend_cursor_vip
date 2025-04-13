@@ -59,7 +59,7 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 
 * Automatically register Cursor membership<br>自動註冊 Cursor 會員<br>
 
-* Support Windows and macOS systems<br>支持 Windows 和 macOS 系統<br>
+* Support Windows macOS and Linux systems<br>支持 Windows、macOS 和 Linux 系統<br>
 
 * Complete Auth verification<br>完成 Auth 驗證<br>
 
