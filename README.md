@@ -33,7 +33,7 @@ For optimal performance, run with privileges and always stay up to date.
 Always clean your browser's cache and cookies. If possible, use a VPN to create new accounts.
 
 
-這是一個自動化工具，自動註冊，支持 Windows 和 macOS 系統，完成 Auth 驗證，重置 Cursor 的配置。
+這是一個自動化工具，自動註冊，支持 Windows macOS 和 Linux 系統，完成 Auth 驗證，重置 Cursor 的配置。
 
 <p align="center">
   <img src="./images/pro_2025-04-05_18-47-56.png" alt="new" width="800" style="border-radius: 6px;"/><br>
