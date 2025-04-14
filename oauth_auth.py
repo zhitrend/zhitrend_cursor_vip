@@ -176,10 +176,15 @@ class OAuthHandler:
             browser_path = self._get_browser_path()
             
             if not browser_path:
-                raise Exception(f"{self.translator.get('oauth.no_compatible_browser_found') if self.translator else 'No compatible browser found. Please install Google Chrome or Chromium.'}\n{self.translator.get('oauth.supported_browsers', platform=platform_name)}\n" + 
-                              "- Windows: Google Chrome, Chromium\n" +
-                              "- macOS: Google Chrome, Chromium\n" +
-                              "- Linux: Google Chrome, Chromium, chromium-browser")
+                error_msg = (
+                    f"{self.translator.get('oauth.no_compatible_browser_found') if self.translator else 'No compatible browser found. Please install Google Chrome or Chromium.'}" + 
+                    "\n" +
+                    f"{self.translator.get('oauth.supported_browsers', platform=platform_name)}\n" + 
+                    "- Windows: Google Chrome, Chromium\n" +
+                    "- macOS: Google Chrome, Chromium\n" +
+                    "- Linux: Google Chrome, Chromium, chromium-browser"
+                )
+                raise Exception(error_msg)
             
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_browser_data_directory', path=user_data_dir) if self.translator else f'Found browser data directory: {user_data_dir}'}{Style.RESET_ALL}")
             
@@ -958,7 +963,8 @@ class OAuthHandler:
                         value = cookie.get("value", "")
                         token = get_token_from_cookie(value, self.translator)
                     except Exception as e:
-                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.token_extraction_error', error=str(e)) if self.translator else f'Token extraction error: {str(e)}'}{Style.RESET_ALL}")
+                        error_message = f'Failed to extract auth info: {str(e)}' if not self.translator else self.translator.get('oauth.failed_to_extract_auth_info', error=str(e))
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
                 elif name == "cursor_email":
                     email = cookie.get("value")
                     
@@ -971,11 +977,13 @@ class OAuthHandler:
                     missing.append("email")
                 if not token:
                     missing.append("token")
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.missing_authentication_data', data=', '.join(missing)) if self.translator else f'Missing authentication data: {", ".join(missing)}'}{Style.RESET_ALL}")
+                error_message = f"Missing authentication data: {', '.join(missing)}" if not self.translator else self.translator.get('oauth.missing_authentication_data', data=', '.join(missing))
+                print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
                 return False, None
             
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_extract_auth_info', error=str(e)) if self.translator else f'Failed to extract auth info: {str(e)}'}{Style.RESET_ALL}")
+            error_message = f'Failed to extract auth info: {str(e)}' if not self.translator else self.translator.get('oauth.failed_to_extract_auth_info', error=str(e))
+            print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
             return False, None
 
     def _delete_current_account(self):
@@ -1017,7 +1025,8 @@ class OAuthHandler:
             return True
             
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_account', error=str(e)) if self.translator else f'Failed to delete account: {str(e)}'}{Style.RESET_ALL}")
+            error_message = f'Failed to delete account: {str(e)}' if not self.translator else self.translator.get('oauth.failed_to_delete_account', error=str(e))
+            print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
             return False
 
 def main(auth_type, translator=None):
