@@ -676,7 +676,8 @@ class OAuthHandler:
                         auth_btn = self.browser.ele(f"xpath:{selector}", timeout=2)
                         if auth_btn and auth_btn.is_displayed():
                             break
-                    except:
+                    except Exception as e:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.selector_error', error=str(e)) if self.translator else f'Error selecting auth button: {str(e)}'}{Style.RESET_ALL}")
                         continue
                 
                 if not auth_btn:
@@ -703,13 +704,13 @@ class OAuthHandler:
                 try:
                     if self.browser:
                         self.browser.quit()
-                except:
-                    pass
-            
+                except Exception as e:
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.quit_browser_error', error=str(e)) if self.translator else f'Error quitting browser: {str(e)}'}{Style.RESET_ALL}")
+                
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed', error=str(e))}{Style.RESET_ALL}")
             return False, None
-        
+            
     def _handle_oauth(self, auth_type):
         """Handle OAuth authentication for both Google and GitHub
         
@@ -746,7 +747,8 @@ class OAuthHandler:
                         auth_btn = self.browser.ele(f"xpath:{selector}", timeout=1)
                         if auth_btn and auth_btn.is_displayed():
                             break
-                    except:
+                    except Exception as e:
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.selector_error', error=str(e)) if self.translator else f'Error selecting auth button: {str(e)}'}{Style.RESET_ALL}")
                         continue
                 if auth_btn:
                     break
@@ -808,115 +810,20 @@ class OAuthHandler:
                                         usage_element = self.browser.ele("css:div[class='flex flex-col gap-4 lg:flex-row'] div:nth-child(1) div:nth-child(1) span:nth-child(2)")
                                         if usage_element:
                                             usage_text = usage_element.text
-                                            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
-                                            
-                                            def check_usage_limits(usage_str):
-                                                try:
-                                                    parts = usage_str.split('/')
-                                                    if len(parts) != 2:
-                                                        return False
-                                                    current = int(parts[0].strip())
-                                                    limit = int(parts[1].strip())
-                                                    return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
-                                                except:
-                                                    return False
-
-                                            if check_usage_limits(usage_text):
-                                                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
-                                                if self._delete_current_account():
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
-                                                    if self.auth_type == "google":
-                                                        return self.handle_google_auth()
-                                                    else:
-                                                        return self.handle_github_auth()
-                                                else:
-                                                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
-                                            else:
-                                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
+                                            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_usage_count', usage=usage_text) if self.translator else f'Found usage count: {usage_text}'}{Style.RESET_ALL}")
                                     except Exception as e:
-                                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
-                                    
-                                    # Remove the browser stay open prompt and input wait
-                                    return True, {"email": actual_email, "token": token}
-                        
-                        # Also check URL as backup
-                        current_url = self.browser.url
-                        if "cursor.com/settings" in current_url:
-                            print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.already_on_settings_page') if self.translator else 'Already on settings page!'}{Style.RESET_ALL}")
-                            time.sleep(1)
-                            cookies = self.browser.cookies()
-                            for cookie in cookies:
-                                if cookie.get("name") == "WorkosCursorSessionToken":
-                                    value = cookie.get("value", "")
-                                    token = get_token_from_cookie(value, self.translator)
-                                    if token:
-                                        # Get email and check usage here too
-                                        try:
-                                            email_element = self.browser.ele("css:div[class='flex w-full flex-col gap-2'] div:nth-child(2) p:nth-child(2)")
-                                            if email_element:
-                                                actual_email = email_element.text
-                                                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_email', email=actual_email) if self.translator else f'Found email: {actual_email}'}{Style.RESET_ALL}")
-                                        except Exception as e:
-                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_email', error=str(e)) if self.translator else f'Could not find email: {str(e)}'}{Style.RESET_ALL}")
-                                            actual_email = "user@cursor.sh"
+                                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_usage_count', error=str(e)) if self.translator else f'Could not find usage count: {str(e)}'}{Style.RESET_ALL}")
                                         
-                                        # Check usage count
-                                        try:
-                                            usage_element = self.browser.ele("css:div[class='flex flex-col gap-4 lg:flex-row'] div:nth-child(1) div:nth-child(1) span:nth-child(2)")
-                                            if usage_element:
-                                                usage_text = usage_element.text
-                                                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
-                                                
-                                                def check_usage_limits(usage_str):
-                                                    try:
-                                                        parts = usage_str.split('/')
-                                                        if len(parts) != 2:
-                                                            return False
-                                                        current = int(parts[0].strip())
-                                                        limit = int(parts[1].strip())
-                                                        return (limit == 50 and current >= 50) or (limit == 150 and current >= 150)
-                                                    except:
-                                                        return False
-
-                                            if check_usage_limits(usage_text):
-                                                print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
-                                                if self._delete_current_account():
-                                                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
-                                                    if self.auth_type == "google":
-                                                        return self.handle_google_auth()
-                                                    else:
-                                                        return self.handle_github_auth()
-                                                else:
-                                                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
-                                            else:
-                                                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
-                                        except Exception as e:
-                                            print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
-                                        
-                                        # Remove the browser stay open prompt and input wait
-                                        return True, {"email": actual_email, "token": token}
-                        elif current_url != last_url:
-                            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.page_changed_checking_auth') if self.translator else 'Page changed, checking auth...'}{Style.RESET_ALL}")
-                            last_url = current_url
-                            time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                                    return True, actual_email
                     except Exception as e:
-                        print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.status_check_error', error=str(e)) if self.translator else f'Status check error: {str(e)}'}{Style.RESET_ALL}")
-                        time.sleep(1)
-                        continue
-                    time.sleep(1)
-                    
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_timeout') if self.translator else 'Authentication timeout'}{Style.RESET_ALL}")
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_checking_cookies', error=str(e)) if self.translator else f'Error checking cookies: {str(e)}'}{Style.RESET_ALL}")
+                        time.sleep(5)
+                        
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.timeout') if self.translator else 'Timeout during authentication'}{Style.RESET_ALL}")
                 return False, None
-                
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_button_not_found') if self.translator else 'Authentication button not found'}{Style.RESET_ALL}")
-            return False, None
-            
         except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_failed', error=str(e)) if self.translator else f'Authentication failed: {str(e)}'}{Style.RESET_ALL}")
+            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed', error=str(e)) if self.translator else f'OAuth failed: {str(e)}'}{Style.RESET_ALL}")
             return False, None
-        finally:
-            if self.browser:
-                self.browser.quit()
 
     def _extract_auth_info(self):
         """Extract authentication information after successful OAuth"""
