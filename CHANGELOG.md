@@ -1,6 +1,14 @@
 # Change Log
 
-## v1.9.03
+## v1.9.04
+1. Add: Opera GX Support | 添加 Opera GX 支持
+2. Same as v1.9.03 | 與 v1.9.03 相同
+3. Hotfix: Some Issues | 修復一些問題
+4. Add: Bypass Cursor JWT EXP Problem | 添加繞過 Cursor JWT EXP 問題
+5. Fix: Cursor editor redirects to logout page and logout automatically | 修復 Cursor 編輯器重定向到登出頁面並自動登出
+6. Fix: Some Issues | 修復一些問題
+
+## v1.9.03[Skip & Merge to v1.9.04]
 1. Hotfix: Some Issues | 修復一些問題
 2. Add: Bypass Cursor JWT EXP Problem | 添加繞過 Cursor JWT EXP 問題
 3. Fix: Cursor editor redirects to logout page and logout automatically | 修復 Cursor 編輯器重定向到登出頁面並自動登出

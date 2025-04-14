@@ -305,7 +305,8 @@ class OAuthHandler:
                     'brave': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'BraveSoftware', 'Brave-Browser', 'User Data'),
                     'edge': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Microsoft', 'Edge', 'User Data'),
                     'firefox': os.path.join(os.environ.get('APPDATA', ''), 'Mozilla', 'Firefox', 'Profiles'),
-                    'opera': os.path.join(os.environ.get('APPDATA', ''), 'Opera Software', 'Opera Stable')
+                    'opera': os.path.join(os.environ.get('APPDATA', ''), 'Opera Software', 'Opera Stable'),
+                    'operagx': os.path.join(os.environ.get('APPDATA', ''), 'Opera Software', 'Opera GX Stable')
                 }
             elif sys.platform == 'darwin':  # macOS
                 user_data_dirs = {
@@ -313,7 +314,8 @@ class OAuthHandler:
                     'brave': os.path.expanduser('~/Library/Application Support/BraveSoftware/Brave-Browser'),
                     'edge': os.path.expanduser('~/Library/Application Support/Microsoft Edge'),
                     'firefox': os.path.expanduser('~/Library/Application Support/Firefox/Profiles'),
-                    'opera': os.path.expanduser('~/Library/Application Support/com.operasoftware.Opera')
+                    'opera': os.path.expanduser('~/Library/Application Support/com.operasoftware.Opera'),
+                    'operagx': os.path.expanduser('~/Library/Application Support/com.operasoftware.OperaGX')
                 }
             else:  # Linux
                 user_data_dirs = {
@@ -321,7 +323,8 @@ class OAuthHandler:
                     'brave': os.path.expanduser('~/.config/BraveSoftware/Brave-Browser'),
                     'edge': os.path.expanduser('~/.config/microsoft-edge'),
                     'firefox': os.path.expanduser('~/.mozilla/firefox'),
-                    'opera': os.path.expanduser('~/.config/opera')
+                    'opera': os.path.expanduser('~/.config/opera'),
+                    'operagx': os.path.expanduser('~/.config/opera-gx')
                 }
             
             # 获取选定浏览器的用户数据目录，如果找不到则使用 Chrome 的
