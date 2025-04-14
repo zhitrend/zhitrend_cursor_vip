@@ -1,5 +1,11 @@
 # Change Log
 
+## v1.9.05
+1. Refactor: Using match-case to refactor language mapping and menu selection logic, making the code clearer and more maintainable. | 使用 match-case 重构语言映射和菜单选择逻辑，使代码更清晰、可维护性更高。
+2. Ci: Update the Python version in the ARM64 Docker build container to 3.10, making it more compatible and easier to migrate in the future. | 更新 ARM64 Docker 构建容器中的 Python 版本至 3.10，兼容性更强，方便未来迁移。
+3. Fix: f-string backslash expression errors in multiple files | 修復多個文件中的 f-string 反斜杠表達式錯誤
+4. Fix: Some Issues | 修復一些問題
+
 ## v1.9.04
 1. Add: Opera GX Support | 添加 Opera GX 支持
 2. Same as v1.9.03 | 與 v1.9.03 相同
