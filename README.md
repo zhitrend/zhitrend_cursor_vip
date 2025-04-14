@@ -7,10 +7,10 @@
 
 <p align="center">
 
-[![Release](https://www.pinnumber.rr.nu/github/release/yeongpin/cursor-free-vip.svg)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
+[![Release](https://www.pinnumber.rr.nu/github/release/yeongpin/cursor-free-vip.svg?)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-[![Stars](https://www.pinnumber.rr.nu/github/stars/yeongpin/cursor-free-vip/stars.svg)](https://github.com/yeongpin/cursor-free-vip/stargazers)
-[![Downloads](https://www.pinnumber.rr.nu/github/downloads/yeongpin/cursor-free-vip/total.svg)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
+[![Stars](https://www.pinnumber.rr.nu/github/stars/yeongpin/cursor-free-vip/stars.svg?)](https://github.com/yeongpin/cursor-free-vip/stargazers)
+[![Downloads](https://www.pinnumber.rr.nu/github/downloads/yeongpin/cursor-free-vip/total.svg?)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 <a href="https://buymeacoffee.com/yeongpin" target="_blank"><img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Me-FFDA33"></a>
 
 </p>
