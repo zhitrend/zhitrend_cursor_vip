@@ -6,6 +6,7 @@ import random
 import webbrowser
 import sys
 import json
+import logging  # Added for detailed logging
 from DrissionPage import ChromiumPage, ChromiumOptions
 from cursor_auth import CursorAuth
 from utils import get_random_wait_time, get_default_browser_path
@@ -15,6 +16,16 @@ from get_user_token import get_token_from_cookie
 
 # Initialize colorama
 init()
+
+# Set up logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # Define emoji constants
 EMOJI = {
@@ -61,6 +72,7 @@ class OAuthHandler:
                     profiles.append((item, profile_names.get(item, item)))
             return sorted(profiles)
         except Exception as e:
+            logger.error(f"Error loading Chrome profiles: {str(e)}")  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('chrome_profile.error_loading', error=str(e)) if self.translator else f'Error loading Chrome profiles: {e}'}{Style.RESET_ALL}")
             return []
 
@@ -73,7 +85,6 @@ class OAuthHandler:
             browser_type_display = browser_type.capitalize()
             
             if self.translator:
-                # 动态使用浏览器类型
                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('browser_profile.select_profile', browser=browser_type_display)}{Style.RESET_ALL}")
                 print(f"{Fore.CYAN}{self.translator.get('browser_profile.profile_list', browser=browser_type_display)}{Style.RESET_ALL}")
             else:
@@ -91,19 +102,15 @@ class OAuthHandler:
                         state_data = json.load(f)
                     profiles_data = state_data.get('profile', {}).get('info_cache', {})
                     
-                    # Create a list of available profiles
                     profiles = []
                     for profile_id, profile_info in profiles_data.items():
                         name = profile_info.get('name', profile_id)
-                        # Mark the default profile
                         if profile_id.lower() == 'default':
                             name = f"{name} (Default)"
                         profiles.append((profile_id, name))
                     
-                    # Sort profiles by name
                     profiles.sort(key=lambda x: x[1])
                     
-                    # Show available profiles
                     if self.translator:
                         print(f"{Fore.CYAN}0. {self.translator.get('menu.exit')}{Style.RESET_ALL}")
                     else:
@@ -112,7 +119,6 @@ class OAuthHandler:
                     for i, (profile_id, name) in enumerate(profiles, 1):
                         print(f"{Fore.CYAN}{i}. {name}{Style.RESET_ALL}")
                     
-                    # Get user's choice
                     max_choice = len(profiles)
                     choice_str = input(f"\n{Fore.CYAN}{self.translator.get('menu.input_choice', choices=f'0-{max_choice}') if self.translator else f'Please enter your choice (0-{max_choice})'}{Style.RESET_ALL}")
                     
@@ -142,19 +148,18 @@ class OAuthHandler:
                             print(f"{Fore.RED}{EMOJI['ERROR']} Invalid selection. Please try again.{Style.RESET_ALL}")
                         return self._select_profile()
                 else:
-                    # No Local State file, use Default profile
                     print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('browser_profile.no_profiles', browser=browser_type_display) if self.translator else f'No {browser_type_display} profiles found'}{Style.RESET_ALL}")
                     self.selected_profile = "Default"
                     return True
                     
             except Exception as e:
-                # Error loading profiles, use Default profile
+                logger.error(f"Error loading profiles: {str(e)}")  # Enhanced logging
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('browser_profile.error_loading', error=str(e), browser=browser_type_display) if self.translator else f'Error loading {browser_type_display} profiles: {str(e)}'}{Style.RESET_ALL}")
                 self.selected_profile = "Default"
                 return True
             
         except Exception as e:
-            # General error, use Default profile
+            logger.error(f"Profile selection error: {str(e)}")  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.profile_selection_error', error=str(e)) if self.translator else f'Error during profile selection: {str(e)}'}{Style.RESET_ALL}")
             self.selected_profile = "Default"
             return True
@@ -162,17 +167,16 @@ class OAuthHandler:
     def setup_browser(self):
         """Setup browser for OAuth flow using selected profile"""
         try:
+            logger.info("Initializing browser setup")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.initializing_browser_setup') if self.translator else 'Initializing browser setup...'}{Style.RESET_ALL}")
             
-            # Platform-specific initialization
             platform_name = platform.system().lower()
+            logger.info(f"Detected platform: {platform_name}")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.detected_platform', platform=platform_name) if self.translator else f'Detected platform: {platform_name}'}{Style.RESET_ALL}")
             
-            # 从配置中获取浏览器类型
             config = get_config(self.translator)
             browser_type = config.get('Browser', 'default_browser', fallback='chrome')
             
-            # Get browser paths and user data directory
             user_data_dir = self._get_user_data_directory()
             browser_path = self._get_browser_path()
             
@@ -185,11 +189,12 @@ class OAuthHandler:
                     "- macOS: Google Chrome, Chromium\n" +
                     "- Linux: Google Chrome, Chromium, google-chrome-stable"
                 )
+                logger.error("No compatible browser found")  # Enhanced logging
                 raise Exception(error_msg)
             
+            logger.info(f"Found browser data directory: {user_data_dir}")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_browser_data_directory', path=user_data_dir) if self.translator else f'Found browser data directory: {user_data_dir}'}{Style.RESET_ALL}")
             
-            # Show warning about closing browser first - 使用动态提示
             if self.translator:
                 warning_msg = self.translator.get('oauth.warning_browser_close', browser=browser_type)
             else:
@@ -199,31 +204,33 @@ class OAuthHandler:
             
             choice = input(f"{Fore.YELLOW} {self.translator.get('menu.continue_prompt', choices='y/N')} {Style.RESET_ALL}").lower()
             if choice != 'y':
+                logger.info("Operation cancelled by user")  # Enhanced logging
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.operation_cancelled_by_user') if self.translator else 'Operation cancelled by user'}{Style.RESET_ALL}")
                 return False
 
-            # Kill existing browser processes
             self._kill_browser_processes()
             
-            # Let user select a profile
             if not self._select_profile():
+                logger.info("Operation cancelled by user during profile selection")  # Enhanced logging
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('menu.operation_cancelled_by_user') if self.translator else 'Operation cancelled by user'}{Style.RESET_ALL}")
                 return False
             
-            # Configure browser options
             co = self._configure_browser_options(browser_path, user_data_dir, self.selected_profile)
             
+            logger.info(f"Starting browser at: {browser_path}")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_browser', path=browser_path) if self.translator else f'Starting browser at: {browser_path}'}{Style.RESET_ALL}")
             self.browser = ChromiumPage(co)
             
-            # Verify browser launched successfully
             if not self.browser:
-                raise Exception(f"{self.translator.get('oauth.browser_failed_to_start', error=str(e)) if self.translator else 'Failed to initialize browser instance'}")
+                logger.error("Failed to initialize browser instance")  # Enhanced logging
+                raise Exception(f"{self.translator.get('oauth.browser_failed_to_start') if self.translator else 'Failed to initialize browser instance'}")
             
+            logger.info("Browser setup completed successfully")  # Enhanced logging
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.browser_setup_completed') if self.translator else 'Browser setup completed successfully'}{Style.RESET_ALL}")
             return True
             
         except Exception as e:
+            logger.error(f"Browser setup failed: {str(e)}", exc_info=True)  # Enhanced logging with stack trace
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.browser_setup_failed', error=str(e)) if self.translator else f'Browser setup failed: {str(e)}'}{Style.RESET_ALL}")
             if "DevToolsActivePort file doesn't exist" in str(e):
                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.try_running_without_sudo_admin') if self.translator else 'Try running without sudo/administrator privileges'}{Style.RESET_ALL}")
@@ -236,12 +243,10 @@ class OAuthHandler:
     def _kill_browser_processes(self):
         """Kill existing browser processes based on platform and browser type"""
         try:
-            # 从配置中获取浏览器类型
             config = get_config(self.translator)
             browser_type = config.get('Browser', 'default_browser', fallback='chrome')
             browser_type = browser_type.lower()
             
-            # 根据浏览器类型和平台定义要关闭的进程
             browser_processes = {
                 'chrome': {
                     'win': ['chrome.exe', 'chromium.exe'],
@@ -270,7 +275,6 @@ class OAuthHandler:
                 }
             }
             
-            # 获取平台类型
             if os.name == 'nt':
                 platform_type = 'win'
             elif sys.platform == 'darwin':
@@ -278,34 +282,31 @@ class OAuthHandler:
             else:
                 platform_type = 'linux'
             
-            # 获取要关闭的进程列表
             processes = browser_processes.get(browser_type, browser_processes['chrome']).get(platform_type, [])
             
-            if self.translator:
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.killing_browser_processes', browser=browser_type) if self.translator else f'Killing {browser_type} processes...'}{Style.RESET_ALL}")
+            logger.info(f"Killing {browser_type} processes: {processes}")  # Enhanced logging
+            print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.killing_browser_processes', browser=browser_type) if self.translator else f'Killing {browser_type} processes...'}{Style.RESET_ALL}")
             
-            # 根据平台关闭进程
-            if os.name == 'nt':  # Windows
+            if os.name == 'nt':
                 for proc in processes:
                     os.system(f'taskkill /f /im {proc} >nul 2>&1')
-            else:  # Linux/Mac
+            else:
                 for proc in processes:
                     os.system(f'pkill -f {proc} >/dev/null 2>&1')
             
-            time.sleep(1)  # Wait for processes to close
+            time.sleep(1)
         except Exception as e:
+            logger.warning(f"Could not kill browser processes: {str(e)}")  # Enhanced logging
             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.warning_could_not_kill_existing_browser_processes', error=str(e)) if self.translator else f'Warning: Could not kill existing browser processes: {e}'}{Style.RESET_ALL}")
 
     def _get_user_data_directory(self):
         """Get the default user data directory based on browser type and platform"""
         try:
-            # 从配置中获取浏览器类型
             config = get_config(self.translator)
             browser_type = config.get('Browser', 'default_browser', fallback='chrome')
             browser_type = browser_type.lower()
             
-            # 根据操作系统和浏览器类型获取用户数据目录
-            if os.name == 'nt':  # Windows
+            if os.name == 'nt':
                 user_data_dirs = {
                     'chrome': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Google', 'Chrome', 'User Data'),
                     'brave': os.path.join(os.environ.get('LOCALAPPDATA', ''), 'BraveSoftware', 'Brave-Browser', 'User Data'),
@@ -314,7 +315,7 @@ class OAuthHandler:
                     'opera': os.path.join(os.environ.get('APPDATA', ''), 'Opera Software', 'Opera Stable'),
                     'operagx': os.path.join(os.environ.get('APPDATA', ''), 'Opera Software', 'Opera GX Stable')
                 }
-            elif sys.platform == 'darwin':  # macOS
+            elif sys.platform == 'darwin':
                 user_data_dirs = {
                     'chrome': os.path.expanduser('~/Library/Application Support/Google/Chrome'),
                     'brave': os.path.expanduser('~/Library/Application Support/BraveSoftware/Brave-Browser'),
@@ -323,7 +324,7 @@ class OAuthHandler:
                     'opera': os.path.expanduser('~/Library/Application Support/com.operasoftware.Opera'),
                     'operagx': os.path.expanduser('~/Library/Application Support/com.operasoftware.OperaGX')
                 }
-            else:  # Linux
+            else:
                 user_data_dirs = {
                     'chrome': os.path.expanduser('~/.config/google-chrome'),
                     'brave': os.path.expanduser('~/.config/BraveSoftware/Brave-Browser'),
@@ -333,19 +334,20 @@ class OAuthHandler:
                     'operagx': os.path.expanduser('~/.config/opera-gx')
                 }
             
-            # 获取选定浏览器的用户数据目录，如果找不到则使用 Chrome 的
             user_data_dir = user_data_dirs.get(browser_type)
             
             if user_data_dir and os.path.exists(user_data_dir):
+                logger.info(f"Found {browser_type} user data directory: {user_data_dir}")  # Enhanced logging
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.found_browser_user_data_dir', browser=browser_type, path=user_data_dir) if self.translator else f'Found {browser_type} user data directory: {user_data_dir}'}{Style.RESET_ALL}")
                 return user_data_dir
             else:
+                logger.warning(f"{browser_type} user data directory not found at {user_data_dir}, trying Chrome")  # Enhanced logging
                 print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('oauth.user_data_dir_not_found', browser=browser_type, path=user_data_dir) if self.translator else f'{browser_type} user data directory not found at {user_data_dir}, will try Chrome instead'}{Style.RESET_ALL}")
-                return user_data_dirs['chrome']  # 回退到 Chrome 目录
+                return user_data_dirs['chrome']
             
         except Exception as e:
+            logger.error(f"Error getting user data directory: {str(e)}")  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_getting_user_data_directory', error=str(e)) if self.translator else f'Error getting user data directory: {e}'}{Style.RESET_ALL}")
-            # 在出错时提供一个默认目录
             if os.name == 'nt':
                 return os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Google', 'Chrome', 'User Data')
             elif sys.platform == 'darwin':
@@ -356,26 +358,24 @@ class OAuthHandler:
     def _get_browser_path(self):
         """Get appropriate browser path based on platform and selected browser type"""
         try:
-            # 从配置中获取浏览器类型
             config = get_config(self.translator)
             browser_type = config.get('Browser', 'default_browser', fallback='chrome')
             browser_type = browser_type.lower()
             
-            # 首先检查配置中是否有明确指定的浏览器路径
             browser_path = config.get('Browser', f'{browser_type}_path', fallback=None)
             if browser_path and os.path.exists(browser_path):
+                logger.info(f"Using configured {browser_type} path: {browser_path}")  # Enhanced logging
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.using_configured_browser_path', browser=browser_type, path=browser_path) if self.translator else f'Using configured {browser_type} path: {browser_path}'}{Style.RESET_ALL}")
                 return browser_path
             
-            # 尝试获取默认路径
             browser_path = get_default_browser_path(browser_type)
             if browser_path and os.path.exists(browser_path):
                 return browser_path
             
+            logger.info("Searching for alternative browser installations")  # Enhanced logging
             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.searching_for_alternative_browser_installations') if self.translator else 'Searching for alternative browser installations...'}{Style.RESET_ALL}")
             
-            # 如果未找到配置中指定的浏览器，则尝试查找其他兼容浏览器
-            if os.name == 'nt':  # Windows
+            if os.name == 'nt':
                 possible_paths = []
                 if browser_type == 'brave':
                     possible_paths = [
@@ -400,16 +400,17 @@ class OAuthHandler:
                         os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera', 'launcher.exe'),
                         os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera', 'opera.exe'),
                         os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera GX', 'launcher.exe'),
-                        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Opera GX', 'opera.exe')
+                        os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Programs', 'Oper
+a GX', 'opera.exe')
                     ]
-                else:  # 默认为 Chrome
+                else:
                     possible_paths = [
                         os.path.join(os.environ.get('PROGRAMFILES', ''), 'Google', 'Chrome', 'Application', 'chrome.exe'),
                         os.path.join(os.environ.get('PROGRAMFILES(X86)', ''), 'Google', 'Chrome', 'Application', 'chrome.exe'),
                         os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Google', 'Chrome', 'Application', 'chrome.exe')
                     ]
                 
-            elif sys.platform == 'darwin':  # macOS
+            elif sys.platform == 'darwin':
                 possible_paths = []
                 if browser_type == 'brave':
                     possible_paths = ['/Applications/Brave Browser.app/Contents/MacOS/Brave Browser']
@@ -417,10 +418,10 @@ class OAuthHandler:
                     possible_paths = ['/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge']
                 elif browser_type == 'firefox':
                     possible_paths = ['/Applications/Firefox.app/Contents/MacOS/firefox']
-                else:  # 默认为 Chrome
+                else:
                     possible_paths = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome']
                 
-            else:  # Linux
+            else:
                 possible_paths = []
                 if browser_type == 'brave':
                     possible_paths = ['/usr/bin/brave-browser', '/usr/bin/brave']
@@ -428,28 +429,29 @@ class OAuthHandler:
                     possible_paths = ['/usr/bin/microsoft-edge']
                 elif browser_type == 'firefox':
                     possible_paths = ['/usr/bin/firefox']
-                else:  # 默认为 Chrome
+                else:
                     possible_paths = [
-                        '/usr/bin/google-chrome-stable',  # 优先检查 google-chrome-stable
+                        '/usr/bin/google-chrome-stable',
                         '/usr/bin/google-chrome',
                         '/usr/bin/chromium',
                         '/usr/bin/chromium-browser'
                     ]
                 
-            # 检查每个可能的路径
             for path in possible_paths:
                 if os.path.exists(path):
+                    logger.info(f"Found browser at: {path}")  # Enhanced logging
                     print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.found_browser_at', path=path) if self.translator else f'Found browser at: {path}'}{Style.RESET_ALL}")
                     return path
             
-            # 如果找不到指定浏览器，则尝试使用 Chrome
             if browser_type != 'chrome':
+                logger.warning(f"Could not find {browser_type}, trying Chrome")  # Enhanced logging
                 print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('oauth.browser_not_found_trying_chrome', browser=browser_type) if self.translator else f'Could not find {browser_type}, trying Chrome instead'}{Style.RESET_ALL}")
                 return self._get_chrome_path()
             
             return None
             
         except Exception as e:
+            logger.error(f"Error finding browser path: {str(e)}", exc_info=True)  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_finding_browser_path', error=str(e)) if self.translator else f'Error finding browser path: {e}'}{Style.RESET_ALL}")
             return None
 
@@ -460,13 +462,11 @@ class OAuthHandler:
             co.set_paths(browser_path=browser_path, user_data_path=user_data_dir)
             co.set_argument(f'--profile-directory={active_profile}')
             
-            # Basic options
             co.set_argument('--no-first-run')
             co.set_argument('--no-default-browser-check')
             co.set_argument('--disable-gpu')
-            co.set_argument('--remote-debugging-port=9222')  # 明确指定调试端口
+            co.set_argument('--remote-debugging-port=9222')
             
-            # Platform-specific options
             if sys.platform.startswith('linux'):
                 co.set_argument('--no-sandbox')
                 co.set_argument('--disable-dev-shm-usage')
@@ -477,57 +477,67 @@ class OAuthHandler:
                 co.set_argument('--disable-features=TranslateUI')
                 co.set_argument('--disable-features=RendererCodeIntegrity')
             
+            logger.info("Browser options configured successfully")  # Enhanced logging
             return co
             
         except Exception as e:
+            logger.error(f"Error configuring browser options: {str(e)}", exc_info=True)  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_configuring_browser_options', error=str(e)) if self.translator else f'Error configuring browser options: {e}'}{Style.RESET_ALL}")
             raise
 
     def handle_google_auth(self):
         """Handle Google OAuth authentication"""
         try:
+            logger.info("Starting Google OAuth authentication")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.google_start') if self.translator else 'Starting Google OAuth authentication...'}{Style.RESET_ALL}")
             
-            # Setup browser
             if not self.setup_browser():
+                logger.error("Browser failed to initialize")  # Enhanced logging
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.browser_failed') if self.translator else 'Browser failed to initialize'}{Style.RESET_ALL}")
                 return False, None
             
-            # Navigate to auth URL
             try:
+                logger.info("Navigating to authentication page")  # Enhanced logging
                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.navigating_to_authentication_page') if self.translator else 'Navigating to authentication page...'}{Style.RESET_ALL}")
                 self.browser.get("https://authenticator.cursor.sh/sign-up")
                 time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                logger.info(f"Current URL after navigation: {self.browser.url}")  # Enhanced logging
                 
-                # Look for Google auth button
                 selectors = [
                     "//a[contains(@href,'GoogleOAuth')]",
                     "//a[contains(@class,'auth-method-button') and contains(@href,'GoogleOAuth')]",
-                    "(//a[contains(@class,'auth-method-button')])[1]"  # First auth button as fallback
+                    "(//a[contains(@class,'auth-method-button')])[1]"
                 ]
                 
                 auth_btn = None
                 for selector in selectors:
+                    logger.debug(f"Trying selector: {selector}")  # Enhanced logging
                     try:
-                        auth_btn = self.browser.ele(f"xpath:{selector}", timeout=2)
+                        auth_btn = self.browser.ele(f"xpath:{selector}", timeout=5)  # Increased timeout
                         if auth_btn and auth_btn.is_displayed():
+                            logger.info(f"Found Google auth button with selector: {selector}")  # Enhanced logging
                             break
-                    except:
+                    except Exception as e:
+                        logger.warning(f"Selector {selector} failed: {str(e)}")  # Enhanced logging
                         continue
                 
                 if not auth_btn:
+                    logger.error("Could not find Google authentication button")  # Enhanced logging
                     raise Exception("Could not find Google authentication button")
                 
-                # Click the button and wait for page load
+                logger.debug(f"Button state - displayed: {auth_btn.is_displayed()}, enabled: {auth_btn.is_enabled()}")  # Enhanced logging
                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_google_authentication') if self.translator else 'Starting Google authentication...'}{Style.RESET_ALL}")
-                auth_btn.click()
+                try:
+                    auth_btn.click()
+                except Exception as e:
+                    logger.warning(f"Standard click failed: {str(e)}, attempting JavaScript click")  # Enhanced logging
+                    self.browser.run_js("arguments[0].click();", auth_btn)
                 time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
                 
-                # Check if we're on account selection page
                 if "accounts.google.com" in self.browser.url:
+                    logger.info("On Google account selection page")  # Enhanced logging
                     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.please_select_your_google_account_to_continue') if self.translator else 'Please select your Google account to continue...'}{Style.RESET_ALL}")
                     
-                    # 获取配置中是否启用 alert 选项
                     config = get_config(self.translator)
                     show_alert = config.getboolean('OAuth', 'show_selection_alert', fallback=False)
                     
@@ -538,43 +548,49 @@ class OAuthHandler:
                             alert('{alert_message}');
                             """)
                         except:
-                            pass  # Alert is optional
+                            logger.warning("Failed to display alert")  # Enhanced logging
+                            pass
                 
-                # Wait for authentication to complete
                 auth_info = self._wait_for_auth()
                 if not auth_info:
+                    logger.error("Authentication timeout")  # Enhanced logging
                     print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.timeout') if self.translator else 'Timeout'}{Style.RESET_ALL}")
                     return False, None
                 
+                logger.info("Google authentication successful")  # Enhanced logging
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.success') if self.translator else 'Success'}{Style.RESET_ALL}")
                 return True, auth_info
                 
             except Exception as e:
+                logger.error(f"Authentication error: {str(e)}", exc_info=True)  # Enhanced logging
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_error', error=str(e)) if self.translator else f'Authentication error: {str(e)}'}{Style.RESET_ALL}")
                 return False, None
             finally:
                 try:
                     if self.browser:
                         self.browser.quit()
+                        logger.info("Browser closed")  # Enhanced logging
                 except:
+                    logger.warning("Failed to close browser")  # Enhanced logging
                     pass
             
         except Exception as e:
+            logger.error(f"Google OAuth failed: {str(e)}", exc_info=True)  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed', error=str(e))}{Style.RESET_ALL}")
             return False, None
 
     def _wait_for_auth(self):
         """Wait for authentication to complete and extract auth info"""
         try:
-            max_wait = 300  # 5 minutes
+            max_wait = 300
             start_time = time.time()
-            check_interval = 2  # Check every 2 seconds
+            check_interval = 2
             
+            logger.info("Waiting for authentication (timeout: 5 minutes)")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['WAIT']} {self.translator.get('oauth.waiting_for_authentication', timeout='5 minutes') if self.translator else 'Waiting for authentication (timeout: 5 minutes)'}{Style.RESET_ALL}")
             
             while time.time() - start_time < max_wait:
                 try:
-                    # Check for authentication cookies
                     cookies = self.browser.cookies()
                     
                     for cookie in cookies:
@@ -582,7 +598,7 @@ class OAuthHandler:
                             value = cookie.get("value", "")
                             token = get_token_from_cookie(value, self.translator)
                             if token:
-                                # Get email from settings page
+                                logger.info("Authentication successful, getting account info")  # Enhanced logging
                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.authentication_successful_getting_account_info') if self.translator else 'Authentication successful, getting account info...'}{Style.RESET_ALL}")
                                 self.browser.get("https://www.cursor.com/settings")
                                 time.sleep(3)
@@ -592,15 +608,17 @@ class OAuthHandler:
                                     email_element = self.browser.ele("css:div[class='flex w-full flex-col gap-2'] div:nth-child(2) p:nth-child(2)")
                                     if email_element:
                                         email = email_element.text
+                                        logger.info(f"Found email: {email}")  # Enhanced logging
                                         print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_email', email=email) if self.translator else f'Found email: {email}'}{Style.RESET_ALL}")
                                 except:
-                                    email = "user@cursor.sh"  # Fallback email
+                                    logger.warning("Could not find email, using fallback")  # Enhanced logging
+                                    email = "user@cursor.sh"
                                 
-                                # Check usage count
                                 try:
                                     usage_element = self.browser.ele("css:div[class='flex flex-col gap-4 lg:flex-row'] div:nth-child(1) div:nth-child(1) span:nth-child(2)")
                                     if usage_element:
                                         usage_text = usage_element.text
+                                        logger.info(f"Usage count: {usage_text}")  # Enhanced logging
                                         print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                         
                                         def check_usage_limits(usage_str):
@@ -615,136 +633,165 @@ class OAuthHandler:
                                                 return False
 
                                         if check_usage_limits(usage_text):
+                                            logger.info("Account has reached maximum usage, deleting")  # Enhanced logging
                                             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                             if self._delete_current_account():
+                                                logger.info("Starting new authentication process")  # Enhanced logging
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
                                                 if self.auth_type == "google":
                                                     return self.handle_google_auth()
                                                 else:
                                                     return self.handle_github_auth()
                                             else:
+                                                logger.error("Failed to delete expired account")  # Enhanced logging
                                                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
                                         else:
+                                            logger.info(f"Account is still valid (Usage: {usage_text})")  # Enhanced logging
                                             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                 except Exception as e:
+                                    logger.warning(f"Could not check usage count: {str(e)}")  # Enhanced logging
                                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                 
                                 return {"email": email, "token": token}
                     
-                    # Also check URL as backup
                     if "cursor.com/settings" in self.browser.url:
+                        logger.info("Detected successful login via URL")  # Enhanced logging
                         print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.detected_successful_login') if self.translator else 'Detected successful login'}{Style.RESET_ALL}")
                     
                 except Exception as e:
+                    logger.warning(f"Error during auth wait: {str(e)}")  # Enhanced logging
                     print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.waiting_for_authentication', error=str(e)) if self.translator else f'Waiting for authentication... ({str(e)})'}{Style.RESET_ALL}")
                 
                 time.sleep(check_interval)
             
+            logger.error("Authentication timeout")  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_timeout') if self.translator else 'Authentication timeout'}{Style.RESET_ALL}")
             return None
             
         except Exception as e:
+            logger.error(f"Error waiting for authentication: {str(e)}", exc_info=True)  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_waiting_for_authentication', error=str(e)) if self.translator else f'Error while waiting for authentication: {str(e)}'}{Style.RESET_ALL}")
             return None
         
     def handle_github_auth(self):
         """Handle GitHub OAuth authentication"""
         try:
+            logger.info("Starting GitHub OAuth authentication")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.github_start')}{Style.RESET_ALL}")
             
-            # Setup browser
             if not self.setup_browser():
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.browser_failed', error=str(e)) if self.translator else 'Browser failed to initialize'}{Style.RESET_ALL}")
+                logger.error("Browser failed to initialize")  # Enhanced logging
+                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.browser_failed') if self.translator else 'Browser failed to initialize'}{Style.RESET_ALL}")
                 return False, None
             
-            # Navigate to auth URL
-            try:
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.navigating_to_authentication_page') if self.translator else 'Navigating to authentication page...'}{Style.RESET_ALL}")
-                self.browser.get("https://authenticator.cursor.sh/sign-up")
-                time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
-                
-                # Look for GitHub auth button
-                selectors = [
-                    "//a[contains(@href,'GitHubOAuth')]",
-                    "//a[contains(@class,'auth-method-button') and contains(@href,'GitHubOAuth')]",
-                    "(//a[contains(@class,'auth-method-button')])[2]"  # Second auth button as fallback
-                ]
-                
-                auth_btn = None
-                for selector in selectors:
-                    try:
-                        auth_btn = self.browser.ele(f"xpath:{selector}", timeout=2)
-                        if auth_btn and auth_btn.is_displayed():
-                            break
-                    except:
-                        continue
-                
-                if not auth_btn:
-                    raise Exception("Could not find GitHub authentication button")
-                
-                # Click the button and wait for page load
-                print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_github_authentication') if self.translator else 'Starting GitHub authentication...'}{Style.RESET_ALL}")
-                auth_btn.click()
-                time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
-                
-                # Wait for authentication to complete
-                auth_info = self._wait_for_auth()
-                if not auth_info:
-                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.timeout') if self.translator else 'Timeout'}{Style.RESET_ALL}")
-                    return False, None
-                
-                print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.success')}{Style.RESET_ALL}")
-                return True, auth_info
-                
-            except Exception as e:
-                print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_error', error=str(e)) if self.translator else f'Authentication error: {str(e)}'}{Style.RESET_ALL}")
-                return False, None
-            finally:
+            # Retry navigation up to 3 times
+            max_retries = 3
+            for attempt in range(max_retries):
                 try:
-                    if self.browser:
-                        self.browser.quit()
-                except:
-                    pass
+                    logger.info(f"Attempt {attempt + 1}/{max_retries}: Navigating to authentication page")  # Enhanced logging
+                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.navigating_to_authentication_page') if self.translator else 'Navigating to authentication page...'}{Style.RESET_ALL}")
+                    self.browser.get("https://authenticator.cursor.sh/sign-up")
+                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                    logger.info(f"Current URL after navigation: {self.browser.url}")  # Enhanced logging
+                    
+                    # Updated selectors for GitHub button
+                    selectors = [
+                        "//a[contains(@href,'GitHubOAuth')]",  # Primary selector
+                        "//a[contains(@class,'auth-method-button') and contains(@href,'GitHubOAuth')]",  # Class-based
+                        "(//a[contains(@class,'auth-method-button')])[2]",  # Second button fallback
+                        "//a[contains(text(),'GitHub')]",  # Text-based fallback
+                        "//a[@href='/auth/github']"  # Additional fallback
+                    ]
+                    
+                    auth_btn = None
+                    for selector in selectors:
+                        logger.debug(f"Trying selector: {selector}")  # Enhanced logging
+                        try:
+                            auth_btn = self.browser.ele(f"xpath:{selector}", timeout=5)  # Increased timeout
+                            if auth_btn and auth_btn.is_displayed():
+                                logger.info(f"Found GitHub auth button with selector: {selector}")  # Enhanced logging
+                                break
+                        except Exception as e:
+                            logger.warning(f"Selector {selector} failed: {str(e)}")  # Enhanced logging
+                            continue
+                    
+                    if not auth_btn:
+                        logger.error("Could not find GitHub authentication button")  # Enhanced logging
+                        raise Exception("Could not find GitHub authentication button")
+                    
+                    logger.debug(f"Button state - displayed: {auth_btn.is_displayed()}, enabled: {auth_btn.is_enabled()}")  # Enhanced logging
+                    print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_github_authentication') if self.translator else 'Starting GitHub authentication...'}{Style.RESET_ALL}")
+                    try:
+                        auth_btn.click()
+                    except Exception as e:
+                        logger.warning(f"Standard click failed: {str(e)}, attempting JavaScript click")  # Enhanced logging
+                        self.browser.run_js("arguments[0].click();", auth_btn)
+                    time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+                    logger.info(f"Current URL after clicking GitHub button: {self.browser.url}")  # Enhanced logging
+                    
+                    auth_info = self._wait_for_auth()
+                    if not auth_info:
+                        logger.error("Authentication timeout")  # Enhanced logging
+                        print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.timeout') if self.translator else 'Timeout'}{Style.RESET_ALL}")
+                        return False, None
+                    
+                    logger.info("GitHub authentication successful")  # Enhanced logging
+                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.success')}{Style.RESET_ALL}")
+                    return True, auth_info
+                    
+                except Exception as e:
+                    logger.error(f"Attempt {attempt + 1} failed: {str(e)}", exc_info=True)  # Enhanced logging
+                    print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_error', error=str(e)) if self.translator else f'Authentication error: {str(e)}'}{Style.RESET_ALL}")
+                    if attempt < max_retries - 1:
+                        logger.info("Retrying navigation")  # Enhanced logging
+                        time.sleep(2)
+                        continue
+                    return False, None
+                finally:
+                    try:
+                        if self.browser and attempt == max_retries - 1:
+                            self.browser.quit()
+                            logger.info("Browser closed")  # Enhanced logging
+                    except:
+                        logger.warning("Failed to close browser")  # Enhanced logging
+                        pass
             
         except Exception as e:
+            logger.error(f"GitHub OAuth failed: {str(e)}", exc_info=True)  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed', error=str(e))}{Style.RESET_ALL}")
             return False, None
         
     def _handle_oauth(self, auth_type):
-        """Handle OAuth authentication for both Google and GitHub
-        
-        Args:
-            auth_type (str): Type of authentication ('google' or 'github')
-        """
+        """Handle OAuth authentication for both Google and GitHub"""
         try:
             if not self.setup_browser():
                 return False, None
                 
-            # Navigate to auth URL
             self.browser.get("https://authenticator.cursor.sh/sign-up")
             time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
+            logger.info(f"Current URL in _handle_oauth: {self.browser.url}")  # Enhanced logging
             
-            # Set selectors based on auth type
             if auth_type == "google":
                 selectors = [
                     "//a[@class='rt-reset rt-BaseButton rt-r-size-3 rt-variant-surface rt-high-contrast rt-Button auth-method-button_AuthMethodButton__irESX'][contains(@href,'GoogleOAuth')]",
                     "(//a[@class='rt-reset rt-BaseButton rt-r-size-3 rt-variant-surface rt-high-contrast rt-Button auth-method-button_AuthMethodButton__irESX'])[1]"
                 ]
-            else:  # github
+            else:
                 selectors = [
                     "(//a[@class='rt-reset rt-BaseButton rt-r-size-3 rt-variant-surface rt-high-contrast rt-Button auth-method-button_AuthMethodButton__irESX'])[2]"
                 ]
             
-            # Wait for the button to be available
             auth_btn = None
-            max_button_wait = 30  # 30 seconds
+            max_button_wait = 30
             button_start_time = time.time()
             
             while time.time() - button_start_time < max_button_wait:
                 for selector in selectors:
+                    logger.debug(f"Trying selector in _handle_oauth: {selector}")  # Enhanced logging
                     try:
                         auth_btn = self.browser.ele(f"xpath:{selector}", timeout=1)
                         if auth_btn and auth_btn.is_displayed():
+                            logger.info(f"Found auth button in _handle_oauth: {selector}")  # Enhanced logging
                             break
                     except:
                         continue
@@ -753,11 +800,10 @@ class OAuthHandler:
                 time.sleep(1)
             
             if auth_btn:
-                # Click the button and wait for page load
+                logger.debug(f"Button state in _handle_oauth - displayed: {auth_btn.is_displayed()}, enabled: {auth_btn.is_enabled()}")  # Enhanced logging
                 auth_btn.click()
                 time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
                 
-                # Check if we're on account selection page
                 if auth_type == "google" and "accounts.google.com" in self.browser.url:
                     alert_message = self.translator.get('oauth.please_select_your_google_account_to_continue') if self.translator else 'Please select your Google account to continue with Cursor authentication'
                     try:
@@ -765,13 +811,13 @@ class OAuthHandler:
                         alert('{alert_message}');
                         """)
                     except Exception as e:
+                        logger.warning(f"Alert display failed: {str(e)}")  # Enhanced logging
                         print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.alert_display_failed', error=str(e)) if self.translator else f'Alert display failed: {str(e)}'}{Style.RESET_ALL}")
                     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.please_select_your_google_account_manually_to_continue_with_cursor_authentication') if self.translator else 'Please select your Google account manually to continue with Cursor authentication...'}{Style.RESET_ALL}")
                 
                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.waiting_for_authentication_to_complete') if self.translator else 'Waiting for authentication to complete...'}{Style.RESET_ALL}")
                 
-                # Wait for authentication to complete
-                max_wait = 300  # 5 minutes
+                max_wait = 300
                 start_time = time.time()
                 last_url = self.browser.url
                 
@@ -779,7 +825,6 @@ class OAuthHandler:
                 
                 while time.time() - start_time < max_wait:
                     try:
-                        # Check for authentication cookies
                         cookies = self.browser.cookies()
                         
                         for cookie in cookies:
@@ -787,27 +832,28 @@ class OAuthHandler:
                                 value = cookie.get("value", "")
                                 token = get_token_from_cookie(value, self.translator)
                                 if token:
+                                    logger.info("Authentication successful in _handle_oauth")  # Enhanced logging
                                     print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.authentication_successful') if self.translator else 'Authentication successful!'}{Style.RESET_ALL}")
-                                    # Navigate to settings page
                                     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.navigating_to_settings_page') if self.translator else 'Navigating to settings page...'}{Style.RESET_ALL}")
                                     self.browser.get("https://www.cursor.com/settings")
-                                    time.sleep(3)  # Wait for settings page to load
+                                    time.sleep(3)
                                     
-                                    # Get email from settings page
                                     try:
                                         email_element = self.browser.ele("css:div[class='flex w-full flex-col gap-2'] div:nth-child(2) p:nth-child(2)")
                                         if email_element:
                                             actual_email = email_element.text
+                                            logger.info(f"Found email: {actual_email}")  # Enhanced logging
                                             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_email', email=actual_email) if self.translator else f'Found email: {actual_email}'}{Style.RESET_ALL}")
                                     except Exception as e:
+                                        logger.warning(f"Could not find email: {str(e)}")  # Enhanced logging
                                         print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_email', error=str(e)) if self.translator else f'Could not find email: {str(e)}'}{Style.RESET_ALL}")
                                         actual_email = "user@cursor.sh"
                                     
-                                    # Check usage count
                                     try:
                                         usage_element = self.browser.ele("css:div[class='flex flex-col gap-4 lg:flex-row'] div:nth-child(1) div:nth-child(1) span:nth-child(2)")
                                         if usage_element:
                                             usage_text = usage_element.text
+                                            logger.info(f"Usage count: {usage_text}")  # Enhanced logging
                                             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                             
                                             def check_usage_limits(usage_str):
@@ -822,26 +868,30 @@ class OAuthHandler:
                                                     return False
 
                                             if check_usage_limits(usage_text):
+                                                logger.info("Account has reached maximum usage, deleting")  # Enhanced logging
                                                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                 if self._delete_current_account():
+                                                    logger.info("Starting new authentication process")  # Enhanced logging
                                                     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
                                                     if self.auth_type == "google":
                                                         return self.handle_google_auth()
                                                     else:
                                                         return self.handle_github_auth()
                                                 else:
+                                                    logger.error("Failed to delete expired account")  # Enhanced logging
                                                     print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
                                             else:
+                                                logger.info(f"Account is still valid (Usage: {usage_text})")  # Enhanced logging
                                                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                     except Exception as e:
+                                        logger.warning(f"Could not check usage count: {str(e)}")  # Enhanced logging
                                         print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                     
-                                    # Remove the browser stay open prompt and input wait
                                     return True, {"email": actual_email, "token": token}
                         
-                        # Also check URL as backup
                         current_url = self.browser.url
                         if "cursor.com/settings" in current_url:
+                            logger.info("Already on settings page")  # Enhanced logging
                             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.already_on_settings_page') if self.translator else 'Already on settings page!'}{Style.RESET_ALL}")
                             time.sleep(1)
                             cookies = self.browser.cookies()
@@ -850,21 +900,22 @@ class OAuthHandler:
                                     value = cookie.get("value", "")
                                     token = get_token_from_cookie(value, self.translator)
                                     if token:
-                                        # Get email and check usage here too
                                         try:
                                             email_element = self.browser.ele("css:div[class='flex w-full flex-col gap-2'] div:nth-child(2) p:nth-child(2)")
                                             if email_element:
                                                 actual_email = email_element.text
+                                                logger.info(f"Found email: {actual_email}")  # Enhanced logging
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_email', email=actual_email) if self.translator else f'Found email: {actual_email}'}{Style.RESET_ALL}")
                                         except Exception as e:
+                                            logger.warning(f"Could not find email: {str(e)}")  # Enhanced logging
                                             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_find_email', error=str(e)) if self.translator else f'Could not find email: {str(e)}'}{Style.RESET_ALL}")
                                             actual_email = "user@cursor.sh"
                                         
-                                        # Check usage count
                                         try:
                                             usage_element = self.browser.ele("css:div[class='flex flex-col gap-4 lg:flex-row'] div:nth-child(1) div:nth-child(1) span:nth-child(2)")
                                             if usage_element:
                                                 usage_text = usage_element.text
+                                                logger.info(f"Usage count: {usage_text}")  # Enhanced logging
                                                 print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.usage_count', usage=usage_text) if self.translator else f'Usage count: {usage_text}'}{Style.RESET_ALL}")
                                                 
                                                 def check_usage_limits(usage_str):
@@ -879,49 +930,58 @@ class OAuthHandler:
                                                         return False
 
                                             if check_usage_limits(usage_text):
+                                                logger.info("Account has reached maximum usage, deleting")  # Enhanced logging
                                                 print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.account_has_reached_maximum_usage', deleting='deleting') if self.translator else 'Account has reached maximum usage, deleting...'}{Style.RESET_ALL}")
                                                 if self._delete_current_account():
+                                                    logger.info("Starting new authentication process")  # Enhanced logging
                                                     print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.starting_new_authentication_process') if self.translator else 'Starting new authentication process...'}{Style.RESET_ALL}")
                                                     if self.auth_type == "google":
                                                         return self.handle_google_auth()
                                                     else:
                                                         return self.handle_github_auth()
                                                 else:
+                                                    logger.error("Failed to delete expired account")  # Enhanced logging
                                                     print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.failed_to_delete_expired_account') if self.translator else 'Failed to delete expired account'}{Style.RESET_ALL}")
                                             else:
+                                                logger.info(f"Account is still valid (Usage: {usage_text})")  # Enhanced logging
                                                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.account_is_still_valid', usage=usage_text) if self.translator else f'Account is still valid (Usage: {usage_text})'}{Style.RESET_ALL}")
                                         except Exception as e:
+                                            logger.warning(f"Could not check usage count: {str(e)}")  # Enhanced logging
                                             print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.could_not_check_usage_count', error=str(e)) if self.translator else f'Could not check usage count: {str(e)}'}{Style.RESET_ALL}")
                                         
-                                        # Remove the browser stay open prompt and input wait
                                         return True, {"email": actual_email, "token": token}
                         elif current_url != last_url:
+                            logger.info(f"Page changed to {current_url}")  # Enhanced logging
                             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.page_changed_checking_auth') if self.translator else 'Page changed, checking auth...'}{Style.RESET_ALL}")
                             last_url = current_url
                             time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
                     except Exception as e:
+                        logger.warning(f"Status check error: {str(e)}")  # Enhanced logging
                         print(f"{Fore.YELLOW}{EMOJI['INFO']} {self.translator.get('oauth.status_check_error', error=str(e)) if self.translator else f'Status check error: {str(e)}'}{Style.RESET_ALL}")
                         time.sleep(1)
                         continue
                     time.sleep(1)
                     
+                logger.error("Authentication timeout")  # Enhanced logging
                 print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_timeout') if self.translator else 'Authentication timeout'}{Style.RESET_ALL}")
                 return False, None
                 
+            logger.error("Authentication button not found")  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_button_not_found') if self.translator else 'Authentication button not found'}{Style.RESET_ALL}")
             return False, None
             
         except Exception as e:
+            logger.error(f"Authentication failed: {str(e)}", exc_info=True)  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.authentication_failed', error=str(e)) if self.translator else f'Authentication failed: {str(e)}'}{Style.RESET_ALL}")
             return False, None
         finally:
             if self.browser:
                 self.browser.quit()
+                logger.info("Browser closed in _handle_oauth")  # Enhanced logging
 
     def _extract_auth_info(self):
         """Extract authentication information after successful OAuth"""
         try:
-            # Get cookies with retry
             max_retries = 3
             for attempt in range(max_retries):
                 try:
@@ -934,7 +994,7 @@ class OAuthHandler:
                         raise
                     time.sleep(1)
             
-            # Debug cookie information
+            logger.info(f"Found {len(cookies)} cookies")  # Enhanced logging
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.found_cookies', count=len(cookies)) if self.translator else f'Found {len(cookies)} cookies'}{Style.RESET_ALL}")
             
             email = None
@@ -947,12 +1007,14 @@ class OAuthHandler:
                         value = cookie.get("value", "")
                         token = get_token_from_cookie(value, self.translator)
                     except Exception as e:
+                        logger.error(f"Failed to extract token: {str(e)}")  # Enhanced logging
                         error_message = f'Failed to extract auth info: {str(e)}' if not self.translator else self.translator.get('oauth.failed_to_extract_auth_info', error=str(e))
                         print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
                 elif name == "cursor_email":
                     email = cookie.get("value")
                     
             if email and token:
+                logger.info(f"Authentication successful - Email: {email}")  # Enhanced logging
                 print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.authentication_successful', email=email) if self.translator else f'Authentication successful - Email: {email}'}{Style.RESET_ALL}")
                 return True, {"email": email, "token": token}
             else:
@@ -961,11 +1023,13 @@ class OAuthHandler:
                     missing.append("email")
                 if not token:
                     missing.append("token")
+                logger.error(f"Missing authentication data: {', '.join(missing)}")  # Enhanced logging
                 error_message = f"Missing authentication data: {', '.join(missing)}" if not self.translator else self.translator.get('oauth.missing_authentication_data', data=', '.join(missing))
                 print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
                 return False, None
             
         except Exception as e:
+            logger.error(f"Failed to extract auth info: {str(e)}", exc_info=True)  # Enhanced logging
             error_message = f'Failed to extract auth info: {str(e)}' if not self.translator else self.translator.get('oauth.failed_to_extract_auth_info', error=str(e))
             print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
             return False, None
@@ -999,9 +1063,9 @@ class OAuthHandler:
             """
             
             result = self.browser.run_js(delete_js)
+            logger.info(f"Delete account result: {result}")  # Enhanced logging
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} Delete account result: {result}{Style.RESET_ALL}")
             
-            # Navigate back to auth page
             print(f"{Fore.CYAN}{EMOJI['INFO']} {self.translator.get('oauth.redirecting_to_authenticator_cursor_sh') if self.translator else 'Redirecting to authenticator.cursor.sh...'}{Style.RESET_ALL}")
             self.browser.get("https://authenticator.cursor.sh/sign-up")
             time.sleep(get_random_wait_time(self.config, 'page_load_wait'))
@@ -1009,17 +1073,14 @@ class OAuthHandler:
             return True
             
         except Exception as e:
+            logger.error(f"Failed to delete account: {str(e)}", exc_info=True)  # Enhanced logging
             error_message = f'Failed to delete account: {str(e)}' if not self.translator else self.translator.get('oauth.failed_to_delete_account', error=str(e))
             print(f"{Fore.RED}{EMOJI['ERROR']} {error_message}{Style.RESET_ALL}")
             return False
 
 def main(auth_type, translator=None):
-    """Main function to handle OAuth authentication
-    
-    Args:
-        auth_type (str): Type of authentication ('google' or 'github')
-        translator: Translator instance for internationalization
-    """
+    """Main function to handle OAuth authentication"""
+    logger.info(f"Starting OAuth main with auth_type: {auth_type}")  # Enhanced logging
     handler = OAuthHandler(translator, auth_type)
     
     if auth_type.lower() == 'google':
@@ -1029,24 +1090,26 @@ def main(auth_type, translator=None):
         print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('oauth.github_start') if translator else 'Github start'}{Style.RESET_ALL}")
         success, auth_info = handler.handle_github_auth()
     else:
+        logger.error("Invalid authentication type")  # Enhanced logging
         print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('oauth.invalid_authentication_type') if translator else 'Invalid authentication type'}{Style.RESET_ALL}")
         return False
         
     if success and auth_info:
-        # Update Cursor authentication
         auth_manager = CursorAuth(translator)
         if auth_manager.update_auth(
             email=auth_info["email"],
             access_token=auth_info["token"],
             refresh_token=auth_info["token"]
         ):
+            logger.info("Auth update success")  # Enhanced logging
             print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {translator.get('oauth.auth_update_success') if translator else 'Auth update success'}{Style.RESET_ALL}")
-            # Close the browser after successful authentication
             if handler.browser:
                 handler.browser.quit()
+                logger.info("Browser closed")  # Enhanced logging
                 print(f"{Fore.CYAN}{EMOJI['INFO']} {translator.get('oauth.browser_closed') if translator else 'Browser closed'}{Style.RESET_ALL}")
             return True
         else:
+            logger.error("Auth update failed")  # Enhanced logging
             print(f"{Fore.RED}{EMOJI['ERROR']} {translator.get('oauth.auth_update_failed') if translator else 'Auth update failed'}{Style.RESET_ALL}")
             
-    return False 
+    return False
