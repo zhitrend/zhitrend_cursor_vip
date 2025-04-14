@@ -13,7 +13,7 @@
 <!--
 [![Download](https://img.shields.io/github/downloads/yeongpin/cursor-free-vip/total?style=flat-square&logo=github&color=52c411)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 -->
-[![Downloads](https://www.pinnumber.rr.nu/github/downloads/yeongpin/cursor-free-vip/total.svg)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
+[![Downloads](https://www.pinnumber.rr.nu/github/downloads/yeongpin/cursor-free-vip/total_number.svg)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 <a href="https://buymeacoffee.com/yeongpin" target="_blank"><img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Me-FFDA33"></a>
 
 </p>
