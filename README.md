@@ -7,10 +7,10 @@
 
 <p align="center">
 
-[![Release](https://img.shields.io/github/v/release/yeongpin/cursor-free-vip?style=flat-square&logo=github&color=blue)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
+[![Release](https://img.shields.io/endpoint?url=https://www.pinnumber.rr.nu/badges/release/yeongpin/cursor-free-vip)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC_BY--NC--ND_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-[![Stars](https://img.shields.io/github/stars/yeongpin/cursor-free-vip?style=flat-square&logo=github)](https://github.com/yeongpin/cursor-free-vip/stargazers)
-[![Download](https://img.shields.io/github/downloads/yeongpin/cursor-free-vip/total?style=flat-square&logo=github&color=52c41a1)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
+[![Stars](https://img.shields.io/endpoint?url=https://www.pinnumber.rr.nu/badges/stars/yeongpin/cursor-free-vip)](https://github.com/yeongpin/cursor-free-vip/stargazers)
+[![Downloads](https://img.shields.io/endpoint?url=https://www.pinnumber.rr.nu/badges/downloads/yeongpin/cursor-free-vip/total)](https://github.com/yeongpin/cursor-free-vip/releases/latest)
 <a href="https://buymeacoffee.com/yeongpin" target="_blank"><img alt="Buy Me a Coffee" src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Me-FFDA33"></a>
 
 </p>
