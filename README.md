@@ -39,11 +39,11 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
   <img src="./images/pro_2025-04-05_18-47-56.png" alt="new" width="800" style="border-radius: 6px;"/><br>
 </p>
 
-##### If you don't have browser, you can download it from 
-[Google Chrome](https://www.google.com/intl/en_pk/chrome/) or [Opera](https://www.opera.com/download) or [Edge](https://www.microsoft.com/en-us/edge) or [Firefox](https://www.mozilla.org/en-US/firefox/new/) or [Brave](https://www.brave.com/download/)
+##### If you don't have browser, you can download it from  
 
-##### 如果沒有瀏覽器，可以從
-[Google Chrome](https://www.google.com/intl/en_pk/chrome/) 或 [Opera](https://www.opera.com/download) 或 [Edge](https://www.microsoft.com/en-us/edge) 或 [Firefox](https://www.mozilla.org/en-US/firefox/new/) 或 [Brave](https://www.brave.com/download/) 下載
+##### 如果沒有瀏覽器，可以從这里下載  
+
+[Google Chrome](https://www.google.com/intl/en_pk/chrome/) | [Opera](https://www.opera.com/download) | [Edge](https://www.microsoft.com/en-us/edge) | [Firefox](https://www.mozilla.org/en-US/firefox/new/) | [Brave](https://www.brave.com/download/)
 
 </div>
 
@@ -71,11 +71,11 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 
 ## 💻 System Support | 系統支持
 
-| Windows |  x64  | ✅ | macOS |     Intel     | ✅ |
-|:-------:|:-----:|:-:|:-----:|:-------------:|:-:|
-| Windows |  x86  | ✅ | macOS | Apple Silicon | ✅ |
-|  Linux  |  x64  | ✅ | Linux |      x86      | ✅ |
-|  Linux  | ARM64 | ✅ | Linux |     ARM64     | ✅ |
+| Operating System | Architecture      | Supported |
+|------------------|-------------------|-----------|
+| Windows          | x64, x86          | ✅         |
+| macOS            | Intel, Apple Silicon | ✅      |
+| Linux            | x64, x86, ARM64   | ✅         |
 
 ## 👀 How to use | 如何使用
 

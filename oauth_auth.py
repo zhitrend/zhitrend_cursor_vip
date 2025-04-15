@@ -1,3 +1,4 @@
+# oauth_auth.py
 import os
 from colorama import Fore, Style, init
 import time
@@ -30,7 +31,7 @@ class OAuthHandler:
     def __init__(self, translator=None, auth_type=None):
         self.translator = translator
         self.config = get_config(translator)
-        self.auth_type = auth_type  # make sure the auth_type is not None
+        self.auth_type = auth_type
         os.environ['BROWSER_HEADLESS'] = 'False'
         self.browser = None
         self.selected_profile = None
@@ -182,7 +183,7 @@ class OAuthHandler:
                     f"{self.translator.get('oauth.supported_browsers', platform=platform_name)}\n" + 
                     "- Windows: Google Chrome, Chromium\n" +
                     "- macOS: Google Chrome, Chromium\n" +
-                    "- Linux: Google Chrome, Chromium, chromium-browser"
+                    "- Linux: Google Chrome, Chromium, google-chrome-stable"
                 )
                 raise Exception(error_msg)
             
@@ -244,7 +245,7 @@ class OAuthHandler:
             browser_processes = {
                 'chrome': {
                     'win': ['chrome.exe', 'chromium.exe'],
-                    'linux': ['chrome', 'chromium', 'chromium-browser'],
+                    'linux': ['chrome', 'chromium', 'chromium-browser', 'google-chrome-stable'],
                     'mac': ['Chrome', 'Chromium']
                 },
                 'brave': {
@@ -428,7 +429,12 @@ class OAuthHandler:
                 elif browser_type == 'firefox':
                     possible_paths = ['/usr/bin/firefox']
                 else:  # 默认为 Chrome
-                    possible_paths = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium', '/usr/bin/chromium-browser']
+                    possible_paths = [
+                        '/usr/bin/google-chrome-stable',  # 优先检查 google-chrome-stable
+                        '/usr/bin/google-chrome',
+                        '/usr/bin/chromium',
+                        '/usr/bin/chromium-browser'
+                    ]
                 
             # 检查每个可能的路径
             for path in possible_paths:
@@ -436,7 +442,7 @@ class OAuthHandler:
                     print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.found_browser_at', path=path) if self.translator else f'Found browser at: {path}'}{Style.RESET_ALL}")
                     return path
             
-            # 如果找不到指定浏览器，则尝试使用Chrome
+            # 如果找不到指定浏览器，则尝试使用 Chrome
             if browser_type != 'chrome':
                 print(f"{Fore.YELLOW}{EMOJI['WARNING']} {self.translator.get('oauth.browser_not_found_trying_chrome', browser=browser_type) if self.translator else f'Could not find {browser_type}, trying Chrome instead'}{Style.RESET_ALL}")
                 return self._get_chrome_path()
@@ -445,29 +451,6 @@ class OAuthHandler:
             
         except Exception as e:
             print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_finding_browser_path', error=str(e)) if self.translator else f'Error finding browser path: {e}'}{Style.RESET_ALL}")
-            return None
-        
-    def _get_chrome_path(self):
-        """Fallback method to get Chrome path"""
-        try:
-            if os.name == 'nt':  # Windows
-                possible_paths = [
-                    os.path.join(os.environ.get('PROGRAMFILES', ''), 'Google', 'Chrome', 'Application', 'chrome.exe'),
-                    os.path.join(os.environ.get('PROGRAMFILES(X86)', ''), 'Google', 'Chrome', 'Application', 'chrome.exe'),
-                    os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Google', 'Chrome', 'Application', 'chrome.exe')
-                ]
-            elif sys.platform == 'darwin':  # macOS
-                possible_paths = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome']
-            else:  # Linux
-                possible_paths = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium', '/usr/bin/chromium-browser']
-            
-            for path in possible_paths:
-                if os.path.exists(path):
-                    print(f"{Fore.GREEN}{EMOJI['SUCCESS']} {self.translator.get('oauth.found_chrome_at', path=path) if self.translator else f'Found Chrome at: {path}'}{Style.RESET_ALL}")
-                    return path
-            return None
-        except Exception as e:
-            print(f"{Fore.RED}{EMOJI['ERROR']} {self.translator.get('oauth.error_finding_chrome_path', error=str(e)) if self.translator else f'Error finding Chrome path: {e}'}{Style.RESET_ALL}")
             return None
 
     def _configure_browser_options(self, browser_path, user_data_dir, active_profile):
@@ -481,6 +464,7 @@ class OAuthHandler:
             co.set_argument('--no-first-run')
             co.set_argument('--no-default-browser-check')
             co.set_argument('--disable-gpu')
+            co.set_argument('--remote-debugging-port=9222')  # 明确指定调试端口
             
             # Platform-specific options
             if sys.platform.startswith('linux'):
