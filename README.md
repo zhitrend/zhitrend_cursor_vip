@@ -43,7 +43,7 @@ Always clean your browser's cache and cookies. If possible, use a VPN to create 
 
 ##### 如果沒有瀏覽器，可以從这里下載  
 
-[Google Chrome](https://www.google.com/intl/en_pk/chrome/) or [Opera](https://www.opera.com/download) or [Edge](https://www.microsoft.com/en-us/edge) or [Firefox](https://www.mozilla.org/en-US/firefox/new/) or [Brave](https://www.brave.com/download/)
+[Google Chrome](https://www.google.com/intl/en_pk/chrome/) | [Opera](https://www.opera.com/download) | [Edge](https://www.microsoft.com/en-us/edge) | [Firefox](https://www.mozilla.org/en-US/firefox/new/) | [Brave](https://www.brave.com/download/)
 
 </div>
 
