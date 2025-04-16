@@ -1,17 +1,17 @@
 # Change Log
 
 ## v1.9.05
-1. Refactor: Using match-case to refactor language mapping and menu selection logic, making the code clearer and more maintainable. | 使用 match-case 重构语言映射和菜单选择逻辑，使代码更清晰、可维护性更高。
-2. Ci: Update the Python version in the ARM64 Docker build container to 3.10, making it more compatible and easier to migrate in the future. | 更新 ARM64 Docker 构建容器中的 Python 版本至 3.10，兼容性更强，方便未来迁移。
-3. Fix: f-string backslash expression errors in multiple files | 修復多個文件中的 f-string 反斜杠表達式錯誤
-4. Sync AUR new version 1.9.04 | 同步 AUR 新版本 1.9.04
-5. Fix: missing license install on pkgbuild @michaeldavis246611119 mention here | 修復 pkgbuild 中缺少授權安裝 @michaeldavis246611119 提到這裡
-6. Fix: readme table | 修復 readme 表格
-7. Fix: google-chrome package name problem, add "google-chrome-stable" [Bug]: Chrome error | Arch | gnome | AUR chrome #242 [Discussion]: how to use the new feature, Register with Google Account #249 [Discussion]: Having issues using the script in Ubuntu #487 [Bug]: Can open chromium bin in linux #616 | 修復 google-chrome 包名稱問題，添加 "google-chrome-stable" [Bug]: Chrome error | Arch | gnome | AUR chrome #242 [Discussion]: how to use the new feature, Register with Google Account #249 [Discussion]: Having issues using the script in Ubuntu #487 [Bug]: Can open chromium bin in linux #616
-8. Fix: exception error log | 修復異常錯誤日誌
-9. Fix: github oauth error [Bug]: #564 | 修復 github oauth 錯誤 [Bug]: #564
-10. Fix: ChromiumOptions.arguments type error: list object has no attribute 'get' | 修復 ChromiumOptions.arguments 類型錯誤：list 對象沒有屬性 'get'
-11. Fix: Some Issues | 修復一些問題
+1. Refactor: Use match-case to simplify language mapping and menu logic, improving clarity and maintainability.
+2. CI: Update Python to 3.10 in ARM64 Docker build container for better compatibility and future migration.
+3. Fix: Correct f-string backslash errors in multiple files.
+4. Sync: Update to AUR version 1.9.04.
+5. Fix: Missing license install in pkgbuild @michaeldavis246611119.
+6. Fix: Correct readme table formatting.
+7. Fix: Resolve google-chrome package name issue, add "google-chrome-stable".
+8. Fix: Resolve exception error logs.
+9. Fix: Address GitHub OAuth error [Bug]: #564.
+10. Fix: Correct ChromiumOptions.arguments type error: 'list' object has no 'get'.
+11. Fix: Miscellaneous issues.
 
 ## v1.9.04
 1. Add: Opera GX Support | 添加 Opera GX 支持
