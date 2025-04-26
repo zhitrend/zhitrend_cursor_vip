@@ -36,6 +36,7 @@ Install via [AUR](https://aur.archlinux.org/packages/cursor-free-vip-git)
 
 ```bash
 yay -S cursor-free-vip-git
+
 ```
 
 ### **Windows**
